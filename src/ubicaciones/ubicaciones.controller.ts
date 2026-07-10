@@ -15,7 +15,7 @@ import { UbicacionesService } from './ubicaciones.service';
 
 @Controller('ubicaciones')
 export class UbicacionesController {
-  constructor(private readonly ubicacionesService: UbicacionesService) {}
+  constructor(private readonly ubicacionesService: UbicacionesService) { }
 
   @Post()
   create(@Body() createUbicacionDto: CreateUbicacionDto) {
@@ -25,6 +25,13 @@ export class UbicacionesController {
   @Get()
   findAll() {
     return this.ubicacionesService.findAll();
+  }
+
+  @Get('usuario/:idUsuario')
+  findByUsuario(
+    @Param('idUsuario', ParseIntPipe) idUsuario: number,
+  ) {
+    return this.ubicacionesService.findByUsuario(idUsuario);
   }
 
   @Get(':id')

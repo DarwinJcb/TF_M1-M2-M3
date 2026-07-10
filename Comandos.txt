@@ -13,3 +13,13 @@ URL: http://localhost:3000/usuarios
   "numeroTelefono": "0999999999",
   "correo": "darwin@example.com"
 }
+
+Método: GET
+URL: http://localhost:3000/usuarios/1
+
+Método: PATCH
+URL: http://localhost:3000/usuarios/1
+{
+  "biografia": "Estudiante universitario de Desarrollo de Software",
+  "ciudad": "Quito"
+}

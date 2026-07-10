@@ -6,7 +6,7 @@ import { UpdateUbicacionDto } from './dto/update-ubicacion.dto';
 
 @Injectable()
 export class UbicacionesService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) { }
 
   async create(createUbicacionDto: CreateUbicacionDto) {
     await this.verificarUsuario(createUbicacionDto.UsuarioFK);
@@ -18,6 +18,16 @@ export class UbicacionesService {
 
   findAll() {
     return this.prisma.ubicacion.findMany();
+  }
+
+  async findByUsuario(idUsuario: number) {
+    await this.verificarUsuario(idUsuario);
+
+    return this.prisma.ubicacion.findMany({
+      where: {
+        UsuarioFK: idUsuario,
+      },
+    });
   }
 
   async findOne(id: number) {
