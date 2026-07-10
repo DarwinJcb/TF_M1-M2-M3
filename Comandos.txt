@@ -130,3 +130,30 @@ URL: http://localhost:3000/planes-suscripcion
   "contenido": "Acceso completo a todos los beneficios",
   "mensajesIlimitados": true
 }
+
+
+Método: POST
+URL: http://localhost:3000/ventajas
+{
+  "descripcion": "Puede enviar hasta 20 mensajes diarios",
+  "PlanSuscripcionFK": 1
+}
+
+Método: GET
+URL: http://localhost:3000/ventajas/plan/1
+
+Método: GET
+GET http://localhost:3000/planes-suscripcion/1
+
+
+
+
+
+
+
+
+
+
+
+
+

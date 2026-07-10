@@ -9,6 +9,7 @@ import { PlanesSuscripcionModule } from './planes-suscripcion/planes-suscripcion
 import { UbicacionesModule } from './ubicaciones/ubicaciones.module';
 import { UsuariosModule } from './usuarios/usuarios.module';
 import { VentajasModule } from './ventajas/ventajas.module';
+import { RestriccionesModule } from './restricciones/restricciones.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { VentajasModule } from './ventajas/ventajas.module';
     MusicasModule,
     PlanesSuscripcionModule,
     VentajasModule,
+    RestriccionesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
