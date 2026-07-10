@@ -7,7 +7,10 @@ async function bootstrap(): Promise<void> {
   await app.listen(process.env.PORT ?? 3000);
 }
 
-bootstrap().catch((error: unknown) => {
-  console.error('Error al iniciar la aplicación:', error);
+bootstrap().catch((error: unknown): void => {
+  const message =
+    error instanceof Error ? error.message : 'Error desconocido';
+
+  console.error('Error al iniciar la aplicación:', message);
   process.exitCode = 1;
 });
