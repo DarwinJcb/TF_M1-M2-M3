@@ -15,7 +15,7 @@ import { FotosService } from './fotos.service';
 
 @Controller('fotos')
 export class FotosController {
-  constructor(private readonly fotosService: FotosService) { }
+  constructor(private readonly fotosService: FotosService) {}
 
   @Post()
   create(@Body() createFotoDto: CreateFotoDto) {
@@ -28,9 +28,7 @@ export class FotosController {
   }
 
   @Get('usuario/:idUsuario')
-  findByUsuario(
-    @Param('idUsuario', ParseIntPipe) idUsuario: number,
-  ) {
+  findByUsuario(@Param('idUsuario', ParseIntPipe) idUsuario: number) {
     return this.fotosService.findByUsuario(idUsuario);
   }
 

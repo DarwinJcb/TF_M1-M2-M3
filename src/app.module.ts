@@ -8,13 +8,8 @@ import { UbicacionesModule } from './ubicaciones/ubicaciones.module';
 import { UsuariosModule } from './usuarios/usuarios.module';
 
 @Module({
-  imports: [
-    UsuariosModule,
-    UbicacionesModule,
-    InteresesModule,
-    FotosModule,
-  ],
+  imports: [UsuariosModule, UbicacionesModule, InteresesModule, FotosModule],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule { }
+export class AppModule {}

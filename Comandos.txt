@@ -70,3 +70,9 @@ URL: http://localhost:3000/intereses/1
   "dedicacion": "Estudiante de desarrollo de software"
 }
 
+Método: POST
+URL: http://localhost:3000/fotos
+{
+  "urlFoto": "https://ejemplo.com/foto-perfil-1.jpg",
+  "UsuarioFK": 1
+}

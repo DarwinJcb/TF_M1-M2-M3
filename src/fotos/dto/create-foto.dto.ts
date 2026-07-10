@@ -2,10 +2,10 @@
 import { IsInt, IsNotEmpty, IsString } from 'class-validator';
 
 export class CreateFotoDto {
-    @IsString()
-    @IsNotEmpty()
-    urlFoto: string;
+  @IsString()
+  @IsNotEmpty()
+  urlFoto: string;
 
-    @IsInt()
-    UsuarioFK: number;
+  @IsInt()
+  UsuarioFK: number;
 }
