@@ -229,10 +229,8 @@ model Reporte {
   fechaReporte        DateTime @default(now())
   UsuarioReportanteFK Int
   UsuarioReportadoFK  Int
-
-  usuarioReportante Usuario @relation("ReportesRealizados", fields: [UsuarioReportanteFK], references: [IdUsuario])
-
-  usuarioReportado Usuario @relation("ReportesRecibidos", fields: [UsuarioReportadoFK], references: [IdUsuario])
+  usuarioReportante   Usuario  @relation("ReportesRealizados", fields: [UsuarioReportanteFK], references: [IdUsuario])
+  usuarioReportado    Usuario  @relation("ReportesRecibidos", fields: [UsuarioReportadoFK], references: [IdUsuario])
 }
 
 // DONACIONES

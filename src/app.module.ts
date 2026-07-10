@@ -8,6 +8,7 @@ import { MusicasModule } from './musicas/musicas.module';
 import { PlanesSuscripcionModule } from './planes-suscripcion/planes-suscripcion.module';
 import { UbicacionesModule } from './ubicaciones/ubicaciones.module';
 import { UsuariosModule } from './usuarios/usuarios.module';
+import { VentajasModule } from './ventajas/ventajas.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { UsuariosModule } from './usuarios/usuarios.module';
     FotosModule,
     MusicasModule,
     PlanesSuscripcionModule,
+    VentajasModule,
   ],
   controllers: [AppController],
   providers: [AppService],
