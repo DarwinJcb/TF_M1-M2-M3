@@ -201,6 +201,10 @@ POST http://localhost:3000/restricciones
   "PlanSuscripcionFK": 1
 }
 
+GET http://localhost:3000/restricciones/generales
+GET http://localhost:3000/restricciones/plan/1
+GET http://localhost:3000/planes-suscripcion/1
+
 
 
 
