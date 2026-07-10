@@ -2,9 +2,9 @@
 import { IsInt } from 'class-validator';
 
 export class CreateSuscripcionUsuarioDto {
-    @IsInt()
-    UsuarioFK: number;
+  @IsInt()
+  UsuarioFK: number;
 
-    @IsInt()
-    PlanSuscripcionFK: number;
+  @IsInt()
+  PlanSuscripcionFK: number;
 }

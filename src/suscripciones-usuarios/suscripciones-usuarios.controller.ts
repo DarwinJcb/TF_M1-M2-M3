@@ -17,12 +17,10 @@ import { SuscripcionesUsuariosService } from './suscripciones-usuarios.service';
 export class SuscripcionesUsuariosController {
   constructor(
     private readonly suscripcionesUsuariosService: SuscripcionesUsuariosService,
-  ) { }
+  ) {}
 
   @Post()
-  create(
-    @Body() createSuscripcionUsuarioDto: CreateSuscripcionUsuarioDto,
-  ) {
+  create(@Body() createSuscripcionUsuarioDto: CreateSuscripcionUsuarioDto) {
     return this.suscripcionesUsuariosService.create(
       createSuscripcionUsuarioDto,
     );
@@ -34,9 +32,7 @@ export class SuscripcionesUsuariosController {
   }
 
   @Get('usuario/:idUsuario')
-  findByUsuario(
-    @Param('idUsuario', ParseIntPipe) idUsuario: number,
-  ) {
+  findByUsuario(@Param('idUsuario', ParseIntPipe) idUsuario: number) {
     return this.suscripcionesUsuariosService.findByUsuario(idUsuario);
   }
 
