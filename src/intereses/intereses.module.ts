@@ -1,3 +1,4 @@
+/* src/intereses/intereses.module.ts */
 import { Module } from '@nestjs/common';
 import { InteresesService } from './intereses.service';
 import { InteresesController } from './intereses.controller';

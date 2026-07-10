@@ -1,3 +1,4 @@
+/* src/intereses/intereses.controller.ts */
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
 import { InteresesService } from './intereses.service';
 import { CreateInteresDto } from './dto/create-interes.dto';
@@ -5,7 +6,7 @@ import { UpdateInteresDto } from './dto/update-interes.dto';
 
 @Controller('intereses')
 export class InteresesController {
-  constructor(private readonly interesesService: InteresesService) {}
+  constructor(private readonly interesesService: InteresesService) { }
 
   @Post()
   create(@Body() createInteresDto: CreateInteresDto) {

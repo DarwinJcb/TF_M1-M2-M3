@@ -1,3 +1,4 @@
+/* src/interes/dto/update-interes.dto.ts: */
 import { PartialType } from '@nestjs/mapped-types';
 import { CreateInteresDto } from './create-interes.dto';
 

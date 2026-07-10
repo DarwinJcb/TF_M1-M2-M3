@@ -1,3 +1,4 @@
+/* src/intereses/intereses.service.ts */
 import { Injectable } from '@nestjs/common';
 import { CreateInteresDto } from './dto/create-interes.dto';
 import { UpdateInteresDto } from './dto/update-interes.dto';

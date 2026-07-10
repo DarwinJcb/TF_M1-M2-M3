@@ -1,1 +1,2 @@
-export class Interes {}
+/* src/interes/entities/interes.entity.ts: */
+export class Interes { }
