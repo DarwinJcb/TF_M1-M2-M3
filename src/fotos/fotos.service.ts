@@ -1,27 +1,88 @@
 /* src/fotos/fotos.service.ts */
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { PrismaService } from '../prisma/prisma.service';
 import { CreateFotoDto } from './dto/create-foto.dto';
 import { UpdateFotoDto } from './dto/update-foto.dto';
 
 @Injectable()
 export class FotosService {
-  create(createFotoDto: CreateFotoDto) {
-    return 'This action adds a new foto';
+  constructor(private readonly prisma: PrismaService) { }
+
+  async create(createFotoDto: CreateFotoDto) {
+    await this.verificarUsuario(createFotoDto.UsuarioFK);
+
+    return this.prisma.foto.create({
+      data: createFotoDto,
+    });
   }
 
   findAll() {
-    return `This action returns all fotos`;
+    return this.prisma.foto.findMany();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} foto`;
+  async findByUsuario(idUsuario: number) {
+    await this.verificarUsuario(idUsuario);
+
+    return this.prisma.foto.findMany({
+      where: {
+        UsuarioFK: idUsuario,
+      },
+    });
   }
 
-  update(id: number, updateFotoDto: UpdateFotoDto) {
-    return `This action updates a #${id} foto`;
+  async findOne(id: number) {
+    const foto = await this.prisma.foto.findUnique({
+      where: {
+        IdFoto: id,
+      },
+    });
+
+    if (!foto) {
+      throw new NotFoundException(`No existe una foto con el ID ${id}.`);
+    }
+
+    return foto;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} foto`;
+  async update(id: number, updateFotoDto: UpdateFotoDto) {
+    await this.findOne(id);
+
+    if (updateFotoDto.UsuarioFK !== undefined) {
+      await this.verificarUsuario(updateFotoDto.UsuarioFK);
+    }
+
+    return this.prisma.foto.update({
+      where: {
+        IdFoto: id,
+      },
+      data: updateFotoDto,
+    });
+  }
+
+  async remove(id: number) {
+    await this.findOne(id);
+
+    return this.prisma.foto.delete({
+      where: {
+        IdFoto: id,
+      },
+    });
+  }
+
+  private async verificarUsuario(idUsuario: number): Promise<void> {
+    const usuario = await this.prisma.usuario.findUnique({
+      where: {
+        IdUsuario: idUsuario,
+      },
+      select: {
+        IdUsuario: true,
+      },
+    });
+
+    if (!usuario) {
+      throw new NotFoundException(
+        `No existe un usuario con el ID ${idUsuario}.`,
+      );
+    }
   }
 }
