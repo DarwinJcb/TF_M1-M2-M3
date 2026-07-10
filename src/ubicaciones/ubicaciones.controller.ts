@@ -1,12 +1,21 @@
 /* src/ubicaciones/ubicaciones.controller.ts: */
-import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  ParseIntPipe,
+  Patch,
+  Post,
+} from '@nestjs/common';
 import { CreateUbicacionDto } from './dto/create-ubicacion.dto';
 import { UpdateUbicacionDto } from './dto/update-ubicacion.dto';
 import { UbicacionesService } from './ubicaciones.service';
 
 @Controller('ubicaciones')
 export class UbicacionesController {
-  constructor(private readonly ubicacionesService: UbicacionesService) { }
+  constructor(private readonly ubicacionesService: UbicacionesService) {}
 
   @Post()
   create(@Body() createUbicacionDto: CreateUbicacionDto) {
