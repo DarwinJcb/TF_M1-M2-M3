@@ -1,12 +1,12 @@
 /* src/ubicaciones/ubicaciones.controller.ts: */
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { UbicacionesService } from './ubicaciones.service';
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, } from '@nestjs/common';
 import { CreateUbicacionDto } from './dto/create-ubicacion.dto';
 import { UpdateUbicacionDto } from './dto/update-ubicacion.dto';
+import { UbicacionesService } from './ubicaciones.service';
 
 @Controller('ubicaciones')
 export class UbicacionesController {
-  constructor(private readonly ubicacionesService: UbicacionesService) {}
+  constructor(private readonly ubicacionesService: UbicacionesService) { }
 
   @Post()
   create(@Body() createUbicacionDto: CreateUbicacionDto) {
@@ -19,17 +19,20 @@ export class UbicacionesController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.ubicacionesService.findOne(+id);
+  findOne(@Param('id', ParseIntPipe) id: number) {
+    return this.ubicacionesService.findOne(id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUbicacionDto: UpdateUbicacionDto) {
-    return this.ubicacionesService.update(+id, updateUbicacionDto);
+  update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() updateUbicacionDto: UpdateUbicacionDto,
+  ) {
+    return this.ubicacionesService.update(id, updateUbicacionDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.ubicacionesService.remove(+id);
+  remove(@Param('id', ParseIntPipe) id: number) {
+    return this.ubicacionesService.remove(id);
   }
 }
