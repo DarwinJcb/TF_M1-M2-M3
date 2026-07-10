@@ -1,3 +1,4 @@
+/* src/ubicaciones/ubicaciones.service.ts: */
 import { Injectable } from '@nestjs/common';
 import { CreateUbicacionDto } from './dto/create-ubicacion.dto';
 import { UpdateUbicacionDto } from './dto/update-ubicacion.dto';

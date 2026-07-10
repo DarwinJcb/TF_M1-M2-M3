@@ -1,3 +1,4 @@
+/* src/ubicaciones/ubicaciones.module.ts: */
 import { Module } from '@nestjs/common';
 import { UbicacionesService } from './ubicaciones.service';
 import { UbicacionesController } from './ubicaciones.controller';
