@@ -1,0 +1,15 @@
+Método: POST
+URL: http://localhost:3000/usuarios
+{
+  "nombre": "Darwin",
+  "edad": 25,
+  "biografia": "Estudiante de Desarrollo de Software",
+  "peso": 70.5,
+  "altura": 1.75,
+  "nacionalidad": "Ecuatoriana",
+  "genero": "MASCULINO",
+  "ciudad": "Cuenca",
+  "pais": "Ecuador",
+  "numeroTelefono": "0999999999",
+  "correo": "darwin@example.com"
+}
