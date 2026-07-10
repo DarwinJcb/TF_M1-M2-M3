@@ -40,16 +40,15 @@ export class PlanesSuscripcionService {
   }
 
   async findOne(id: number) {
-    const planSuscripcion =
-      await this.prisma.planSuscripcion.findUnique({
-        where: {
-          IdPlanSuscripcion: id,
-        },
-        include: {
-          ventajas: true,
-          restricciones: true,
-        },
-      });
+    const planSuscripcion = await this.prisma.planSuscripcion.findUnique({
+      where: {
+        IdPlanSuscripcion: id,
+      },
+      include: {
+        ventajas: true,
+        restricciones: true,
+      },
+    });
 
     if (!planSuscripcion) {
       throw new NotFoundException(
@@ -60,22 +59,18 @@ export class PlanesSuscripcionService {
     return planSuscripcion;
   }
 
-  async update(
-    id: number,
-    updatePlanSuscripcionDto: UpdatePlanSuscripcionDto,
-  ) {
+  async update(id: number, updatePlanSuscripcionDto: UpdatePlanSuscripcionDto) {
     await this.findOne(id);
 
     if (updatePlanSuscripcionDto.tipoPlan !== undefined) {
-      const planConMismoTipo =
-        await this.prisma.planSuscripcion.findFirst({
-          where: {
-            tipoPlan: updatePlanSuscripcionDto.tipoPlan,
-            NOT: {
-              IdPlanSuscripcion: id,
-            },
+      const planConMismoTipo = await this.prisma.planSuscripcion.findFirst({
+        where: {
+          tipoPlan: updatePlanSuscripcionDto.tipoPlan,
+          NOT: {
+            IdPlanSuscripcion: id,
           },
-        });
+        },
+      });
 
       if (planConMismoTipo) {
         throw new ConflictException(

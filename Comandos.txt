@@ -91,3 +91,42 @@ URL: http://localhost:3000/musicas
 
 Método: GET
 URL: http://localhost:3000/musicas/usuario/1
+
+Método: POST
+URL: http://localhost:3000/planes-suscripcion
+{
+  "tipoPlan": "BRONZE",
+  "valor": 4.99,
+  "contenido": "Plan básico con funciones limitadas",
+  "mensajesIlimitados": false
+}
+
+Método: GET
+URL: http://localhost:3000/planes-suscripcion
+
+Método: POST
+URL: http://localhost:3000/planes-suscripcion
+{
+  "tipoPlan": "GOLD",
+  "valor": 9.99,
+  "contenido": "Mayor cantidad de funciones y beneficios",
+  "mensajesIlimitados": false
+}
+
+Método: POST
+URL: http://localhost:3000/planes-suscripcion
+{
+  "tipoPlan": "PREMIUM",
+  "valor": 14.99,
+  "contenido": "Funciones premium y mensajes ilimitados",
+  "mensajesIlimitados": true
+}
+
+Método: POST
+URL: http://localhost:3000/planes-suscripcion
+{
+  "tipoPlan": "PLATINUM",
+  "valor": 19.99,
+  "contenido": "Acceso completo a todos los beneficios",
+  "mensajesIlimitados": true
+}

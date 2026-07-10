@@ -17,7 +17,7 @@ import { PlanesSuscripcionService } from './planes-suscripcion.service';
 export class PlanesSuscripcionController {
   constructor(
     private readonly planesSuscripcionService: PlanesSuscripcionService,
-  ) { }
+  ) {}
 
   @Post()
   create(@Body() createPlanSuscripcionDto: CreatePlanSuscripcionDto) {
@@ -39,10 +39,7 @@ export class PlanesSuscripcionController {
     @Param('id', ParseIntPipe) id: number,
     @Body() updatePlanSuscripcionDto: UpdatePlanSuscripcionDto,
   ) {
-    return this.planesSuscripcionService.update(
-      id,
-      updatePlanSuscripcionDto,
-    );
+    return this.planesSuscripcionService.update(id, updatePlanSuscripcionDto);
   }
 
   @Delete(':id')
