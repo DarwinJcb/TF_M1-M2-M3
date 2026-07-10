@@ -46,5 +46,27 @@ URL: http://localhost:3000/ubicaciones/1
 Método: GET
 URL: http://localhost:3000/ubicaciones/1
 
+Método: POST
+URL: http://localhost:3000/intereses
+{
+  "signoZodiacal": "ARIES",
+  "queBusca": "Una relación seria",
+  "ubicacion": "Norte",
+  "ciudad": "Quito",
+  "pais": "Ecuador",
+  "hobby": "Escuchar música",
+  "dedicacion": "Estudiante",
+  "UsuarioFK": 1
+}
 
+Método: GET
+URL: http://localhost:3000/intereses
+
+Método: PATCH
+URL: http://localhost:3000/intereses/1
+{
+  "signoZodiacal": "TAURO",
+  "hobby": "Programar",
+  "dedicacion": "Estudiante de desarrollo de software"
+}
 
