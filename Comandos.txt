@@ -76,3 +76,18 @@ URL: http://localhost:3000/fotos
   "urlFoto": "https://ejemplo.com/foto-perfil-1.jpg",
   "UsuarioFK": 1
 }
+
+Método: GET
+URL: http://localhost:3000/fotos/usuario/1
+
+
+Método: POST
+URL: http://localhost:3000/musicas
+{
+  "nombreCancion": "Bohemian Rhapsody",
+  "tipoMusica": "Rock",
+  "UsuarioFK": 1
+}
+
+Método: GET
+URL: http://localhost:3000/musicas/usuario/1
