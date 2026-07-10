@@ -7,10 +7,10 @@ import { InteresesModule } from './intereses/intereses.module';
 import { MusicasModule } from './musicas/musicas.module';
 import { PlanesSuscripcionModule } from './planes-suscripcion/planes-suscripcion.module';
 import { RestriccionesModule } from './restricciones/restricciones.module';
+import { SuscripcionesUsuariosModule } from './suscripciones-usuarios/suscripciones-usuarios.module';
 import { UbicacionesModule } from './ubicaciones/ubicaciones.module';
 import { UsuariosModule } from './usuarios/usuarios.module';
 import { VentajasModule } from './ventajas/ventajas.module';
-import { SuscripcionesUsuariosModule } from './suscripciones-usuarios/suscripciones-usuarios.module';
 
 @Module({
   imports: [
@@ -27,4 +27,5 @@ import { SuscripcionesUsuariosModule } from './suscripciones-usuarios/suscripcio
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+
+export class AppModule { }
