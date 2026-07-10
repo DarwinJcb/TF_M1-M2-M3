@@ -188,6 +188,19 @@ Método: GET
 GET http://localhost:3000/planes-suscripcion/4
 
 
+Restricción General:
+POST http://localhost:3000/restricciones
+{
+  "descripcion": "Está prohibido publicar contenido ofensivo"
+}
+
+Restricción BRONZE:
+POST http://localhost:3000/restricciones
+{
+  "descripcion": "No incluye mensajes ilimitados",
+  "PlanSuscripcionFK": 1
+}
+
 
 
 
