@@ -60,20 +60,19 @@ enum EstadoTransmision {
 // USUARIOS
 
 model Usuario {
-  IdUsuario       Int             @id @default(autoincrement())
-  nombre          String
-  edad            Int
-  biografia       String?
-  peso            Float?
-  altura          Float?
-  nacionalidad    String
-  genero          Genero
-  ciudad          String
-  pais            String
-  numeroTelefono  String          @unique
-  correo          String          @unique
-  estadoActividad EstadoActividad @default(DESCONECTADO)
-
+  IdUsuario              Int                 @id @default(autoincrement())
+  nombre                 String
+  edad                   Int
+  biografia              String?
+  peso                   Float?
+  altura                 Float?
+  nacionalidad           String
+  genero                 Genero
+  ciudad                 String
+  pais                   String
+  numeroTelefono         String              @unique
+  correo                 String              @unique
+  estadoActividad        EstadoActividad     @default(DESCONECTADO)
   interes                Interes?
   fotos                  Foto[]
   ubicaciones            Ubicacion[]
