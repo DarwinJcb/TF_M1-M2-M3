@@ -1,2 +1,19 @@
 /* src/ubicaciones/dto/create-ubicacion.dto.ts: */
-export class CreateUbicacionDto { }
+import { IsInt, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+
+export class CreateUbicacionDto {
+    @IsOptional()
+    @IsString()
+    ubicacion?: string;
+
+    @IsString()
+    @IsNotEmpty()
+    ciudad: string;
+
+    @IsString()
+    @IsNotEmpty()
+    pais: string;
+
+    @IsInt()
+    UsuarioFK: number;
+}
