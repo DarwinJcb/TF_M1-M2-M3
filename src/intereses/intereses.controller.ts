@@ -15,7 +15,7 @@ import { InteresesService } from './intereses.service';
 
 @Controller('intereses')
 export class InteresesController {
-  constructor(private readonly interesesService: InteresesService) { }
+  constructor(private readonly interesesService: InteresesService) {}
 
   @Post()
   create(@Body() createInteresDto: CreateInteresDto) {
@@ -28,9 +28,7 @@ export class InteresesController {
   }
 
   @Get('usuario/:idUsuario')
-  findByUsuario(
-    @Param('idUsuario', ParseIntPipe) idUsuario: number,
-  ) {
+  findByUsuario(@Param('idUsuario', ParseIntPipe) idUsuario: number) {
     return this.interesesService.findByUsuario(idUsuario);
   }
 

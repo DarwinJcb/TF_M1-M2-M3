@@ -10,7 +10,7 @@ import { UpdateInteresDto } from './dto/update-interes.dto';
 
 @Injectable()
 export class InteresesService {
-  constructor(private readonly prisma: PrismaService) { }
+  constructor(private readonly prisma: PrismaService) {}
 
   async create(createInteresDto: CreateInteresDto) {
     await this.verificarUsuario(createInteresDto.UsuarioFK);
@@ -62,9 +62,7 @@ export class InteresesService {
     });
 
     if (!interes) {
-      throw new NotFoundException(
-        `No existe un interés con el ID ${id}.`,
-      );
+      throw new NotFoundException(`No existe un interés con el ID ${id}.`);
     }
 
     return interes;
@@ -82,10 +80,7 @@ export class InteresesService {
         },
       });
 
-      if (
-        interesDelUsuario &&
-        interesDelUsuario.IdInteres !== id
-      ) {
+      if (interesDelUsuario && interesDelUsuario.IdInteres !== id) {
         throw new ConflictException(
           `El usuario con el ID ${updateInteresDto.UsuarioFK} ya tiene intereses registrados.`,
         );
