@@ -23,3 +23,28 @@ URL: http://localhost:3000/usuarios/1
   "biografia": "Estudiante universitario de Desarrollo de Software",
   "ciudad": "Quito"
 }
+
+Método: POST
+URL: http://localhost:3000/ubicaciones
+{
+  "ubicacion": "Centro Histórico",
+  "ciudad": "Quito",
+  "pais": "Ecuador",
+  "UsuarioFK": 1
+}
+
+Método: GET
+URL: http://localhost:3000/ubicaciones/1
+
+Método: PATCH
+URL: http://localhost:3000/ubicaciones/1
+{
+  "ubicacion": "La Carolina",
+  "ciudad": "Quito"
+}
+
+Método: GET
+URL: http://localhost:3000/ubicaciones/1
+
+
+

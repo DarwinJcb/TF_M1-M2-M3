@@ -4,9 +4,11 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UbicacionesModule } from './ubicaciones/ubicaciones.module';
 import { UsuariosModule } from './usuarios/usuarios.module';
+import { InteresesModule } from './intereses/intereses.module';
+import { InteresesModule } from './intereses/intereses.module';
 
 @Module({
-  imports: [UsuariosModule, UbicacionesModule],
+  imports: [UsuariosModule, UbicacionesModule, InteresesModule],
   controllers: [AppController],
   providers: [AppService],
 })
