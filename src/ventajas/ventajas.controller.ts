@@ -1,12 +1,21 @@
 /* src/ventajas/ventajas.controller.ts: */
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { VentajasService } from './ventajas.service';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  ParseIntPipe,
+  Patch,
+  Post,
+} from '@nestjs/common';
 import { CreateVentajaDto } from './dto/create-ventaja.dto';
 import { UpdateVentajaDto } from './dto/update-ventaja.dto';
+import { VentajasService } from './ventajas.service';
 
 @Controller('ventajas')
 export class VentajasController {
-  constructor(private readonly ventajasService: VentajasService) { }
+  constructor(private readonly ventajasService: VentajasService) {}
 
   @Post()
   create(@Body() createVentajaDto: CreateVentajaDto) {
@@ -18,18 +27,29 @@ export class VentajasController {
     return this.ventajasService.findAll();
   }
 
+  @Get('plan/:idPlanSuscripcion')
+  findByPlan(
+    @Param('idPlanSuscripcion', ParseIntPipe)
+    idPlanSuscripcion: number,
+  ) {
+    return this.ventajasService.findByPlan(idPlanSuscripcion);
+  }
+
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.ventajasService.findOne(+id);
+  findOne(@Param('id', ParseIntPipe) id: number) {
+    return this.ventajasService.findOne(id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateVentajaDto: UpdateVentajaDto) {
-    return this.ventajasService.update(+id, updateVentajaDto);
+  update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() updateVentajaDto: UpdateVentajaDto,
+  ) {
+    return this.ventajasService.update(id, updateVentajaDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.ventajasService.remove(+id);
+  remove(@Param('id', ParseIntPipe) id: number) {
+    return this.ventajasService.remove(id);
   }
 }

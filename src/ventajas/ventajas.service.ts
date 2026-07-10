@@ -1,27 +1,90 @@
 /* src/ventajas/ventajas.service.ts: */
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { PrismaService } from '../prisma/prisma.service';
 import { CreateVentajaDto } from './dto/create-ventaja.dto';
 import { UpdateVentajaDto } from './dto/update-ventaja.dto';
 
 @Injectable()
 export class VentajasService {
-  create(createVentajaDto: CreateVentajaDto) {
-    return 'This action adds a new ventaja';
+  constructor(private readonly prisma: PrismaService) {}
+
+  async create(createVentajaDto: CreateVentajaDto) {
+    await this.verificarPlanSuscripcion(createVentajaDto.PlanSuscripcionFK);
+
+    return this.prisma.ventaja.create({
+      data: createVentajaDto,
+    });
   }
 
   findAll() {
-    return `This action returns all ventajas`;
+    return this.prisma.ventaja.findMany();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} ventaja`;
+  async findByPlan(idPlanSuscripcion: number) {
+    await this.verificarPlanSuscripcion(idPlanSuscripcion);
+
+    return this.prisma.ventaja.findMany({
+      where: {
+        PlanSuscripcionFK: idPlanSuscripcion,
+      },
+    });
   }
 
-  update(id: number, updateVentajaDto: UpdateVentajaDto) {
-    return `This action updates a #${id} ventaja`;
+  async findOne(id: number) {
+    const ventaja = await this.prisma.ventaja.findUnique({
+      where: {
+        IdVentaja: id,
+      },
+    });
+
+    if (!ventaja) {
+      throw new NotFoundException(`No existe una ventaja con el ID ${id}.`);
+    }
+
+    return ventaja;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} ventaja`;
+  async update(id: number, updateVentajaDto: UpdateVentajaDto) {
+    await this.findOne(id);
+
+    if (updateVentajaDto.PlanSuscripcionFK !== undefined) {
+      await this.verificarPlanSuscripcion(updateVentajaDto.PlanSuscripcionFK);
+    }
+
+    return this.prisma.ventaja.update({
+      where: {
+        IdVentaja: id,
+      },
+      data: updateVentajaDto,
+    });
+  }
+
+  async remove(id: number) {
+    await this.findOne(id);
+
+    return this.prisma.ventaja.delete({
+      where: {
+        IdVentaja: id,
+      },
+    });
+  }
+
+  private async verificarPlanSuscripcion(
+    idPlanSuscripcion: number,
+  ): Promise<void> {
+    const planSuscripcion = await this.prisma.planSuscripcion.findUnique({
+      where: {
+        IdPlanSuscripcion: idPlanSuscripcion,
+      },
+      select: {
+        IdPlanSuscripcion: true,
+      },
+    });
+
+    if (!planSuscripcion) {
+      throw new NotFoundException(
+        `No existe un plan de suscripción con el ID ${idPlanSuscripcion}.`,
+      );
+    }
   }
 }
