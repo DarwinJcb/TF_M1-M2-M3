@@ -146,6 +146,48 @@ Método: GET
 GET http://localhost:3000/planes-suscripcion/1
 
 
+Método: POST
+URL: http://localhost:3000/ventajas
+{
+  "descripcion": "Mayor visibilidad del perfil",
+  "PlanSuscripcionFK": 2
+}
+
+Método: GET
+URL: http://localhost:3000/ventajas/plan/2
+
+Método: GET
+GET http://localhost:3000/planes-suscripcion/2
+
+
+Método: POST
+URL: http://localhost:3000/ventajas
+{
+  "descripcion": "Puede enviar mensajes ilimitados",
+  "PlanSuscripcionFK": 3
+}
+
+Método: GET
+URL: http://localhost:3000/ventajas/plan/3
+
+Método: GET
+GET http://localhost:3000/planes-suscripcion/3
+
+
+Método: POST
+URL: http://localhost:3000/ventajas
+{
+  "descripcion": "Acceso prioritario a todas las funciones",
+  "PlanSuscripcionFK": 4
+}
+
+Método: GET
+URL: http://localhost:3000/ventajas/plan/4
+
+Método: GET
+GET http://localhost:3000/planes-suscripcion/4
+
+
 
 
 
