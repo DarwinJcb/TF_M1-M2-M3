@@ -1,10 +1,11 @@
+/* src/restricciones/restricciones.service.ts: */
 import { Injectable } from '@nestjs/common';
-import { CreateRestriccioneDto } from './dto/create-restriccion.dto';
-import { UpdateRestriccioneDto } from './dto/update-restriccion.dto';
+import { CreateRestriccionDto } from './dto/create-restriccion.dto';
+import { UpdateRestriccionDto } from './dto/update-restriccion.dto';
 
 @Injectable()
 export class RestriccionesService {
-  create(createRestriccioneDto: CreateRestriccioneDto) {
+  create(createRestriccioneDto: CreateRestriccionDto) {
     return 'This action adds a new restriccione';
   }
 
@@ -16,7 +17,7 @@ export class RestriccionesService {
     return `This action returns a #${id} restriccione`;
   }
 
-  update(id: number, updateRestriccioneDto: UpdateRestriccioneDto) {
+  update(id: number, updateRestriccioneDto: UpdateRestriccionDto) {
     return `This action updates a #${id} restriccione`;
   }
 

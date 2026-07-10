@@ -1,4 +1,6 @@
-import { PartialType } from '@nestjs/mapped-types';
-import { CreateRestriccioneDto } from './create-restriccion.dto';
+/* src/restricciones/dto/update-restriccion.dto.ts: */
 
-export class UpdateRestriccioneDto extends PartialType(CreateRestriccioneDto) {}
+import { PartialType } from '@nestjs/mapped-types';
+import { CreateRestriccionDto } from './create-restriccion.dto';
+
+export class UpdateRestriccionDto extends PartialType(CreateRestriccionDto) {}
