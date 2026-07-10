@@ -15,7 +15,7 @@ import { MusicasService } from './musicas.service';
 
 @Controller('musicas')
 export class MusicasController {
-  constructor(private readonly musicasService: MusicasService) { }
+  constructor(private readonly musicasService: MusicasService) {}
 
   @Post()
   create(@Body() createMusicaDto: CreateMusicaDto) {
@@ -28,9 +28,7 @@ export class MusicasController {
   }
 
   @Get('usuario/:idUsuario')
-  findByUsuario(
-    @Param('idUsuario', ParseIntPipe) idUsuario: number,
-  ) {
+  findByUsuario(@Param('idUsuario', ParseIntPipe) idUsuario: number) {
     return this.musicasService.findByUsuario(idUsuario);
   }
 
