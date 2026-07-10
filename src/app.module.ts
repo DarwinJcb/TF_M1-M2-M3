@@ -5,10 +5,9 @@ import { AppService } from './app.service';
 import { FotosModule } from './fotos/fotos.module';
 import { InteresesModule } from './intereses/intereses.module';
 import { MusicasModule } from './musicas/musicas.module';
+import { PlanesSuscripcionModule } from './planes-suscripcion/planes-suscripcion.module';
 import { UbicacionesModule } from './ubicaciones/ubicaciones.module';
 import { UsuariosModule } from './usuarios/usuarios.module';
-import { PlanesSuscripcionModule } from './planes-suscripcion/planes-suscripcion.module';
-
 
 @Module({
   imports: [
@@ -22,4 +21,4 @@ import { PlanesSuscripcionModule } from './planes-suscripcion/planes-suscripcion
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule { }

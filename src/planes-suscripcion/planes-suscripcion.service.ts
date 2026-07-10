@@ -1,27 +1,104 @@
 /* src/planes-suscripcion/planes-suscripcion.service.ts: */
-import { Injectable } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
+import { PrismaService } from '../prisma/prisma.service';
 import { CreatePlanSuscripcionDto } from './dto/create-plan-suscripcion.dto';
 import { UpdatePlanSuscripcionDto } from './dto/update-plan-suscripcion.dto';
 
 @Injectable()
 export class PlanesSuscripcionService {
-  create(createPlanSuscripcionDto: CreatePlanSuscripcionDto) {
-    return 'This action adds a new planSuscripcion';
+  constructor(private readonly prisma: PrismaService) {}
+
+  async create(createPlanSuscripcionDto: CreatePlanSuscripcionDto) {
+    const planExistente = await this.prisma.planSuscripcion.findUnique({
+      where: {
+        tipoPlan: createPlanSuscripcionDto.tipoPlan,
+      },
+    });
+
+    if (planExistente) {
+      throw new ConflictException(
+        `El plan ${createPlanSuscripcionDto.tipoPlan} ya está registrado.`,
+      );
+    }
+
+    return this.prisma.planSuscripcion.create({
+      data: createPlanSuscripcionDto,
+    });
   }
 
   findAll() {
-    return `This action returns all planSuscripcion`;
+    return this.prisma.planSuscripcion.findMany({
+      include: {
+        ventajas: true,
+        restricciones: true,
+      },
+    });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} planesSuscripcion`;
+  async findOne(id: number) {
+    const planSuscripcion =
+      await this.prisma.planSuscripcion.findUnique({
+        where: {
+          IdPlanSuscripcion: id,
+        },
+        include: {
+          ventajas: true,
+          restricciones: true,
+        },
+      });
+
+    if (!planSuscripcion) {
+      throw new NotFoundException(
+        `No existe un plan de suscripción con el ID ${id}.`,
+      );
+    }
+
+    return planSuscripcion;
   }
 
-  update(id: number, updatePlanesSuscripcionDto: UpdatePlanSuscripcionDto) {
-    return `This action updates a #${id} planSuscripcion`;
+  async update(
+    id: number,
+    updatePlanSuscripcionDto: UpdatePlanSuscripcionDto,
+  ) {
+    await this.findOne(id);
+
+    if (updatePlanSuscripcionDto.tipoPlan !== undefined) {
+      const planConMismoTipo =
+        await this.prisma.planSuscripcion.findFirst({
+          where: {
+            tipoPlan: updatePlanSuscripcionDto.tipoPlan,
+            NOT: {
+              IdPlanSuscripcion: id,
+            },
+          },
+        });
+
+      if (planConMismoTipo) {
+        throw new ConflictException(
+          `El plan ${updatePlanSuscripcionDto.tipoPlan} ya está registrado.`,
+        );
+      }
+    }
+
+    return this.prisma.planSuscripcion.update({
+      where: {
+        IdPlanSuscripcion: id,
+      },
+      data: updatePlanSuscripcionDto,
+    });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} planSuscripcion`;
+  async remove(id: number) {
+    await this.findOne(id);
+
+    return this.prisma.planSuscripcion.delete({
+      where: {
+        IdPlanSuscripcion: id,
+      },
+    });
   }
 }
