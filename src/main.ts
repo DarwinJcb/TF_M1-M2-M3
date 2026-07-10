@@ -8,8 +8,7 @@ async function bootstrap(): Promise<void> {
 }
 
 bootstrap().catch((error: unknown): void => {
-  const message =
-    error instanceof Error ? error.message : 'Error desconocido';
+  const message = error instanceof Error ? error.message : 'Error desconocido';
 
   console.error('Error al iniciar la aplicación:', message);
   process.exitCode = 1;
