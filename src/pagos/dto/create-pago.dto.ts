@@ -2,10 +2,10 @@
 import { IsInt, IsNumber, Min } from 'class-validator';
 
 export class CreatePagoDto {
-    @IsNumber()
-    @Min(0.01)
-    monto: number;
+  @IsNumber()
+  @Min(0.01)
+  monto: number;
 
-    @IsInt()
-    SuscripcionUsuarioFK: number;
+  @IsInt()
+  SuscripcionUsuarioFK: number;
 }

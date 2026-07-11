@@ -5,13 +5,13 @@ import { AppService } from './app.service';
 import { FotosModule } from './fotos/fotos.module';
 import { InteresesModule } from './intereses/intereses.module';
 import { MusicasModule } from './musicas/musicas.module';
+import { PagosModule } from './pagos/pagos.module';
 import { PlanesSuscripcionModule } from './planes-suscripcion/planes-suscripcion.module';
 import { RestriccionesModule } from './restricciones/restricciones.module';
 import { SuscripcionesUsuariosModule } from './suscripciones-usuarios/suscripciones-usuarios.module';
 import { UbicacionesModule } from './ubicaciones/ubicaciones.module';
 import { UsuariosModule } from './usuarios/usuarios.module';
 import { VentajasModule } from './ventajas/ventajas.module';
-import { PagosModule } from './pagos/pagos.module';
 
 @Module({
   imports: [
@@ -29,4 +29,4 @@ import { PagosModule } from './pagos/pagos.module';
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule { }
+export class AppModule {}

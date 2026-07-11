@@ -6,12 +6,10 @@ import { UpdatePagoDto } from './dto/update-pago.dto';
 
 @Injectable()
 export class PagosService {
-  constructor(private readonly prisma: PrismaService) { }
+  constructor(private readonly prisma: PrismaService) {}
 
   async create(createPagoDto: CreatePagoDto) {
-    await this.verificarSuscripcionUsuario(
-      createPagoDto.SuscripcionUsuarioFK,
-    );
+    await this.verificarSuscripcionUsuario(createPagoDto.SuscripcionUsuarioFK);
 
     return this.prisma.pago.create({
       data: createPagoDto,
@@ -101,15 +99,14 @@ export class PagosService {
   private async verificarSuscripcionUsuario(
     idSuscripcionUsuario: number,
   ): Promise<void> {
-    const suscripcionUsuario =
-      await this.prisma.suscripcionUsuario.findUnique({
-        where: {
-          IdSuscripcionUsuario: idSuscripcionUsuario,
-        },
-        select: {
-          IdSuscripcionUsuario: true,
-        },
-      });
+    const suscripcionUsuario = await this.prisma.suscripcionUsuario.findUnique({
+      where: {
+        IdSuscripcionUsuario: idSuscripcionUsuario,
+      },
+      select: {
+        IdSuscripcionUsuario: true,
+      },
+    });
 
     if (!suscripcionUsuario) {
       throw new NotFoundException(

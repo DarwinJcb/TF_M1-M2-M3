@@ -15,7 +15,7 @@ import { PagosService } from './pagos.service';
 
 @Controller('pagos')
 export class PagosController {
-  constructor(private readonly pagosService: PagosService) { }
+  constructor(private readonly pagosService: PagosService) {}
 
   @Post()
   create(@Body() createPagoDto: CreatePagoDto) {

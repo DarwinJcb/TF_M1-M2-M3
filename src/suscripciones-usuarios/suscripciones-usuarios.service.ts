@@ -10,14 +10,10 @@ import { UpdateSuscripcionUsuarioDto } from './dto/update-suscripcion-usuario.dt
 
 @Injectable()
 export class SuscripcionesUsuariosService {
-  constructor(private readonly prisma: PrismaService) { }
+  constructor(private readonly prisma: PrismaService) {}
 
-  async create(
-    createSuscripcionUsuarioDto: CreateSuscripcionUsuarioDto,
-  ) {
-    await this.verificarUsuario(
-      createSuscripcionUsuarioDto.UsuarioFK,
-    );
+  async create(createSuscripcionUsuarioDto: CreateSuscripcionUsuarioDto) {
+    await this.verificarUsuario(createSuscripcionUsuarioDto.UsuarioFK);
 
     await this.verificarPlanSuscripcion(
       createSuscripcionUsuarioDto.PlanSuscripcionFK,
@@ -57,16 +53,15 @@ export class SuscripcionesUsuariosService {
   async findByUsuario(idUsuario: number) {
     await this.verificarUsuario(idUsuario);
 
-    const suscripcion =
-      await this.prisma.suscripcionUsuario.findUnique({
-        where: {
-          UsuarioFK: idUsuario,
-        },
-        include: {
-          planSuscripcion: true,
-          pagos: true,
-        },
-      });
+    const suscripcion = await this.prisma.suscripcionUsuario.findUnique({
+      where: {
+        UsuarioFK: idUsuario,
+      },
+      include: {
+        planSuscripcion: true,
+        pagos: true,
+      },
+    });
 
     if (!suscripcion) {
       throw new NotFoundException(
@@ -78,17 +73,16 @@ export class SuscripcionesUsuariosService {
   }
 
   async findOne(id: number) {
-    const suscripcion =
-      await this.prisma.suscripcionUsuario.findUnique({
-        where: {
-          IdSuscripcionUsuario: id,
-        },
-        include: {
-          usuario: true,
-          planSuscripcion: true,
-          pagos: true,
-        },
-      });
+    const suscripcion = await this.prisma.suscripcionUsuario.findUnique({
+      where: {
+        IdSuscripcionUsuario: id,
+      },
+      include: {
+        usuario: true,
+        planSuscripcion: true,
+        pagos: true,
+      },
+    });
 
     if (!suscripcion) {
       throw new NotFoundException(
@@ -106,9 +100,7 @@ export class SuscripcionesUsuariosService {
     await this.findOne(id);
 
     if (updateSuscripcionUsuarioDto.UsuarioFK !== undefined) {
-      await this.verificarUsuario(
-        updateSuscripcionUsuarioDto.UsuarioFK,
-      );
+      await this.verificarUsuario(updateSuscripcionUsuarioDto.UsuarioFK);
 
       const suscripcionDelUsuario =
         await this.prisma.suscripcionUsuario.findUnique({
@@ -127,9 +119,7 @@ export class SuscripcionesUsuariosService {
       }
     }
 
-    if (
-      updateSuscripcionUsuarioDto.PlanSuscripcionFK !== undefined
-    ) {
+    if (updateSuscripcionUsuarioDto.PlanSuscripcionFK !== undefined) {
       await this.verificarPlanSuscripcion(
         updateSuscripcionUsuarioDto.PlanSuscripcionFK,
       );
@@ -176,15 +166,14 @@ export class SuscripcionesUsuariosService {
   private async verificarPlanSuscripcion(
     idPlanSuscripcion: number,
   ): Promise<void> {
-    const planSuscripcion =
-      await this.prisma.planSuscripcion.findUnique({
-        where: {
-          IdPlanSuscripcion: idPlanSuscripcion,
-        },
-        select: {
-          IdPlanSuscripcion: true,
-        },
-      });
+    const planSuscripcion = await this.prisma.planSuscripcion.findUnique({
+      where: {
+        IdPlanSuscripcion: idPlanSuscripcion,
+      },
+      select: {
+        IdPlanSuscripcion: true,
+      },
+    });
 
     if (!planSuscripcion) {
       throw new NotFoundException(

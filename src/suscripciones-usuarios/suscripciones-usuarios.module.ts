@@ -9,4 +9,4 @@ import { SuscripcionesUsuariosService } from './suscripciones-usuarios.service';
   controllers: [SuscripcionesUsuariosController],
   providers: [SuscripcionesUsuariosService],
 })
-export class SuscripcionesUsuariosModule { }
+export class SuscripcionesUsuariosModule {}
