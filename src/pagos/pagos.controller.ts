@@ -1,8 +1,17 @@
 /* src/pagos/pagos.controller.ts: */
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { PagosService } from './pagos.service';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  ParseIntPipe,
+  Patch,
+  Post,
+} from '@nestjs/common';
 import { CreatePagoDto } from './dto/create-pago.dto';
 import { UpdatePagoDto } from './dto/update-pago.dto';
+import { PagosService } from './pagos.service';
 
 @Controller('pagos')
 export class PagosController {
@@ -18,18 +27,29 @@ export class PagosController {
     return this.pagosService.findAll();
   }
 
+  @Get('suscripcion/:idSuscripcionUsuario')
+  findBySuscripcion(
+    @Param('idSuscripcionUsuario', ParseIntPipe)
+    idSuscripcionUsuario: number,
+  ) {
+    return this.pagosService.findBySuscripcion(idSuscripcionUsuario);
+  }
+
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.pagosService.findOne(+id);
+  findOne(@Param('id', ParseIntPipe) id: number) {
+    return this.pagosService.findOne(id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updatePagoDto: UpdatePagoDto) {
-    return this.pagosService.update(+id, updatePagoDto);
+  update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() updatePagoDto: UpdatePagoDto,
+  ) {
+    return this.pagosService.update(id, updatePagoDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.pagosService.remove(+id);
+  remove(@Param('id', ParseIntPipe) id: number) {
+    return this.pagosService.remove(id);
   }
 }

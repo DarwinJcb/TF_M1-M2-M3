@@ -1,2 +1,11 @@
 /* src/pagos/dto/create-pago.dto.ts: */
-export class CreatePagoDto { }
+import { IsInt, IsNumber, Min } from 'class-validator';
+
+export class CreatePagoDto {
+    @IsNumber()
+    @Min(0.01)
+    monto: number;
+
+    @IsInt()
+    SuscripcionUsuarioFK: number;
+}
