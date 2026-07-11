@@ -206,7 +206,14 @@ GET http://localhost:3000/restricciones/plan/1
 GET http://localhost:3000/planes-suscripcion/1
 
 
+POST http://localhost:3000/suscripciones-usuarios
+{
+  "UsuarioFK": 1,
+  "PlanSuscripcionFK": 1
+}
 
+
+GET http://localhost:3000/suscripciones-usuarios/usuario/1
 
 
 
