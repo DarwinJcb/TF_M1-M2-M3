@@ -300,3 +300,13 @@ POST http://localhost:3000/mensajes
 }
 
 GET http://localhost:3000/mensajes/chat/1
+
+
+POST http://localhost:3000/reportes
+{
+  "motivo": "Comportamiento inapropiado durante la conversación",
+  "UsuarioReportanteFK": 1,
+  "UsuarioReportadoFK": 2
+}
+
+GET http://localhost:3000/reportes/reportado/2
