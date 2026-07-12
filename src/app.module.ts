@@ -6,6 +6,7 @@ import { CondicionesComunicacionModule } from './condiciones-comunicacion/condic
 import { FotosModule } from './fotos/fotos.module';
 import { InteraccionesModule } from './interacciones/interacciones.module';
 import { InteresesModule } from './intereses/intereses.module';
+import { MatchesModule } from './matches/matches.module';
 import { MusicasModule } from './musicas/musicas.module';
 import { PagosModule } from './pagos/pagos.module';
 import { PlanesSuscripcionModule } from './planes-suscripcion/planes-suscripcion.module';
@@ -14,7 +15,6 @@ import { SuscripcionesUsuariosModule } from './suscripciones-usuarios/suscripcio
 import { UbicacionesModule } from './ubicaciones/ubicaciones.module';
 import { UsuariosModule } from './usuarios/usuarios.module';
 import { VentajasModule } from './ventajas/ventajas.module';
-import { MatchesModule } from './matches/matches.module';
 
 @Module({
   imports: [
@@ -35,4 +35,4 @@ import { MatchesModule } from './matches/matches.module';
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule { }
