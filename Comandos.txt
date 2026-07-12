@@ -266,3 +266,17 @@ POST http://localhost:3000/interacciones
 }
 
 GET http://localhost:3000/interacciones/emisor/1
+
+
+POST http://localhost:3000/interacciones
+{
+  "tipoInteraccion": "LIKE",
+  "UsuarioEmisorFK": 2,
+  "UsuarioReceptorFK": 1
+}
+
+POST http://localhost:3000/matches
+{
+  "UsuarioUnoFK": 1,
+  "UsuarioDosFK": 2
+}

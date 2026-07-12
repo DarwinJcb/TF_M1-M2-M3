@@ -15,7 +15,7 @@ import { MatchesService } from './matches.service';
 
 @Controller('matches')
 export class MatchesController {
-  constructor(private readonly matchesService: MatchesService) { }
+  constructor(private readonly matchesService: MatchesService) {}
 
   @Post()
   create(@Body() createMatchDto: CreateMatchDto) {
@@ -28,9 +28,7 @@ export class MatchesController {
   }
 
   @Get('usuario/:idUsuario')
-  findByUsuario(
-    @Param('idUsuario', ParseIntPipe) idUsuario: number,
-  ) {
+  findByUsuario(@Param('idUsuario', ParseIntPipe) idUsuario: number) {
     return this.matchesService.findByUsuario(idUsuario);
   }
 

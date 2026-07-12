@@ -2,9 +2,9 @@
 import { IsInt } from 'class-validator';
 
 export class CreateMatchDto {
-    @IsInt()
-    UsuarioUnoFK: number;
+  @IsInt()
+  UsuarioUnoFK: number;
 
-    @IsInt()
-    UsuarioDosFK: number;
+  @IsInt()
+  UsuarioDosFK: number;
 }
