@@ -1,2 +1,14 @@
 /* src/mensajes/dto/create-mensaje.dto.ts: */
-export class CreateMensajeDto { }
+import { IsInt, IsNotEmpty, IsString } from 'class-validator';
+
+export class CreateMensajeDto {
+    @IsString()
+    @IsNotEmpty()
+    contenido: string;
+
+    @IsInt()
+    ChatFK: number;
+
+    @IsInt()
+    UsuarioEmisorFK: number;
+}
