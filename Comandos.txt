@@ -1119,7 +1119,7 @@ GET http://localhost:3000/interacciones/emisor/1
             "pais": "Ecuador",
             "numeroTelefono": "0999999992",
             "correo": "ana.usuario2@example.com",
-            "estadoActividad": "DESCONECTADO"
+            "estadoActividad": "ONLINE"
         }
     }
 ]
@@ -1146,32 +1146,6 @@ GET http://localhost:3000/interacciones/emisor/2
             "numeroTelefono": "0999999999",
             "correo": "darwin@example.com",
             "estadoActividad": "DESCONECTADO"
-        }
-    }
-]
-
-GET http://localhost:3000/interacciones/emisor/1
-[
-    {
-        "IdInteraccion": 1,
-        "tipoInteraccion": "LIKE",
-        "fechaInteraccion": "2026-07-12T19:49:42.558Z",
-        "UsuarioEmisorFK": 1,
-        "UsuarioReceptorFK": 2,
-        "usuarioReceptor": {
-            "IdUsuario": 2,
-            "nombre": "Ana",
-            "edad": 24,
-            "biografia": "Me gusta viajar y escuchar música",
-            "peso": 58,
-            "altura": 1.65,
-            "nacionalidad": "Ecuatoriana",
-            "genero": "FEMENINO",
-            "ciudad": "Quito",
-            "pais": "Ecuador",
-            "numeroTelefono": "0999999992",
-            "correo": "ana.usuario2@example.com",
-            "estadoActividad": "ONLINE"
         }
     }
 ]
@@ -1985,4 +1959,37 @@ GET http://localhost:3000/donaciones/receptor/2
         }
     }
 ]
+
+
+PATCH http://localhost:3000/transmisiones/1
+{
+  "estado": "FINALIZADA"
+}
+
+
+REINICIAR LA BASE:
+BEGIN;
+
+TRUNCATE TABLE
+  "Mensaje",
+  "Chat",
+  "Donacion",
+  "Transmision",
+  "Reporte",
+  "Interaccion",
+  "Match",
+  "Pago",
+  "Suscripcion",
+  "Ventaja",
+  "Restriccion",
+  "PlanSuscripcion",
+  "Musica",
+  "Foto",
+  "Ubicacion",
+  "Interes",
+  "CondicionComunicacion",
+  "Usuario"
+RESTART IDENTITY CASCADE;
+
+COMMIT;
 
