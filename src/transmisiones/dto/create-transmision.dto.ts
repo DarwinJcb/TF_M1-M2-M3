@@ -2,6 +2,6 @@
 import { IsInt } from 'class-validator';
 
 export class CreateTransmisionDto {
-    @IsInt()
-    UsuarioFK: number;
+  @IsInt()
+  UsuarioFK: number;
 }

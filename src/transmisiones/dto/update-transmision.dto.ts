@@ -3,6 +3,6 @@ import { IsEnum } from 'class-validator';
 import { EstadoTransmision } from '../../generated/prisma/enums';
 
 export class UpdateTransmisionDto {
-    @IsEnum(EstadoTransmision)
-    estadoTransmision: EstadoTransmision;
+  @IsEnum(EstadoTransmision)
+  estado: EstadoTransmision;
 }

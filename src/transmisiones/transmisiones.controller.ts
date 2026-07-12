@@ -15,17 +15,11 @@ import { TransmisionesService } from './transmisiones.service';
 
 @Controller('transmisiones')
 export class TransmisionesController {
-  constructor(
-    private readonly transmisionesService: TransmisionesService,
-  ) { }
+  constructor(private readonly transmisionesService: TransmisionesService) {}
 
   @Post()
-  create(
-    @Body() createTransmisionDto: CreateTransmisionDto,
-  ) {
-    return this.transmisionesService.create(
-      createTransmisionDto,
-    );
+  create(@Body() createTransmisionDto: CreateTransmisionDto) {
+    return this.transmisionesService.create(createTransmisionDto);
   }
 
   @Get()
@@ -39,9 +33,7 @@ export class TransmisionesController {
   }
 
   @Get('usuario/:idUsuario')
-  findByUsuario(
-    @Param('idUsuario', ParseIntPipe) idUsuario: number,
-  ) {
+  findByUsuario(@Param('idUsuario', ParseIntPipe) idUsuario: number) {
     return this.transmisionesService.findByUsuario(idUsuario);
   }
 
@@ -55,10 +47,7 @@ export class TransmisionesController {
     @Param('id', ParseIntPipe) id: number,
     @Body() updateTransmisionDto: UpdateTransmisionDto,
   ) {
-    return this.transmisionesService.update(
-      id,
-      updateTransmisionDto,
-    );
+    return this.transmisionesService.update(id, updateTransmisionDto);
   }
 
   @Delete(':id')

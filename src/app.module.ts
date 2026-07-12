@@ -15,10 +15,10 @@ import { PlanesSuscripcionModule } from './planes-suscripcion/planes-suscripcion
 import { ReportesModule } from './reportes/reportes.module';
 import { RestriccionesModule } from './restricciones/restricciones.module';
 import { SuscripcionesUsuariosModule } from './suscripciones-usuarios/suscripciones-usuarios.module';
+import { TransmisionesModule } from './transmisiones/transmisiones.module';
 import { UbicacionesModule } from './ubicaciones/ubicaciones.module';
 import { UsuariosModule } from './usuarios/usuarios.module';
 import { VentajasModule } from './ventajas/ventajas.module';
-import { TransmisionesModule } from './transmisiones/transmisiones.module';
 
 @Module({
   imports: [
