@@ -1,2 +1,10 @@
 /* src/matches/dto/create-match.dto.ts: */
-export class CreateMatchDto { }
+import { IsInt } from 'class-validator';
+
+export class CreateMatchDto {
+    @IsInt()
+    UsuarioUnoFK: number;
+
+    @IsInt()
+    UsuarioDosFK: number;
+}

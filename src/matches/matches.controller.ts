@@ -1,8 +1,17 @@
 /* src/matches/matches.controller.ts: */
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { MatchesService } from './matches.service';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  ParseIntPipe,
+  Patch,
+  Post,
+} from '@nestjs/common';
 import { CreateMatchDto } from './dto/create-match.dto';
 import { UpdateMatchDto } from './dto/update-match.dto';
+import { MatchesService } from './matches.service';
 
 @Controller('matches')
 export class MatchesController {
@@ -18,18 +27,28 @@ export class MatchesController {
     return this.matchesService.findAll();
   }
 
+  @Get('usuario/:idUsuario')
+  findByUsuario(
+    @Param('idUsuario', ParseIntPipe) idUsuario: number,
+  ) {
+    return this.matchesService.findByUsuario(idUsuario);
+  }
+
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.matchesService.findOne(+id);
+  findOne(@Param('id', ParseIntPipe) id: number) {
+    return this.matchesService.findOne(id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateMatchDto: UpdateMatchDto) {
-    return this.matchesService.update(+id, updateMatchDto);
+  update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() updateMatchDto: UpdateMatchDto,
+  ) {
+    return this.matchesService.update(id, updateMatchDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.matchesService.remove(+id);
+  remove(@Param('id', ParseIntPipe) id: number) {
+    return this.matchesService.remove(id);
   }
 }
