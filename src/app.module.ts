@@ -15,7 +15,7 @@ import { PagosModule } from './pagos/pagos.module';
 import { PlanesSuscripcionModule } from './planes-suscripcion/planes-suscripcion.module';
 import { ReportesModule } from './reportes/reportes.module';
 import { RestriccionesModule } from './restricciones/restricciones.module';
-import { SuscripcionesUsuariosModule } from './suscripciones-usuarios/suscripciones-usuarios.module';
+import { SuscripcionesModule } from './suscripciones/suscripciones.module';
 import { TransmisionesModule } from './transmisiones/transmisiones.module';
 import { UbicacionesModule } from './ubicaciones/ubicaciones.module';
 import { UsuariosModule } from './usuarios/usuarios.module';
@@ -31,7 +31,7 @@ import { VentajasModule } from './ventajas/ventajas.module';
     PlanesSuscripcionModule,
     VentajasModule,
     RestriccionesModule,
-    SuscripcionesUsuariosModule,
+    SuscripcionesModule,
     PagosModule,
     CondicionesComunicacionModule,
     InteraccionesModule,

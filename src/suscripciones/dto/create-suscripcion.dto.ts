@@ -1,7 +1,7 @@
-/* src/suscripciones-usuarios/dto/create-suscripcion-usuario.dto.ts: */
+/* src/suscripciones/dto/create-suscripcion.dto.ts: */
 import { IsInt } from 'class-validator';
 
-export class CreateSuscripcionUsuarioDto {
+export class CreateSuscripcionDto {
   @IsInt()
   UsuarioFK: number;
 

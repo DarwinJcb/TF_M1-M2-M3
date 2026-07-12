@@ -7,5 +7,5 @@ export class CreatePagoDto {
   monto: number;
 
   @IsInt()
-  SuscripcionUsuarioFK: number;
+  SuscripcionFK: number;
 }

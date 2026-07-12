@@ -1,4 +1,4 @@
-/**
+/*
  * prisma/schema.prisma:
  */
 generator client {
@@ -60,7 +60,7 @@ enum EstadoTransmision {
 // USUARIOS
 
 model Usuario {
-  IdUsuario              Int                 @id @default(autoincrement())
+  IdUsuario              Int             @id @default(autoincrement())
   nombre                 String
   edad                   Int
   biografia              String?
@@ -70,24 +70,24 @@ model Usuario {
   genero                 Genero
   ciudad                 String
   pais                   String
-  numeroTelefono         String              @unique
-  correo                 String              @unique
-  estadoActividad        EstadoActividad     @default(DESCONECTADO)
+  numeroTelefono         String          @unique
+  correo                 String          @unique
+  estadoActividad        EstadoActividad @default(DESCONECTADO)
   interes                Interes?
   fotos                  Foto[]
   ubicaciones            Ubicacion[]
   musicas                Musica[]
-  suscripcion            SuscripcionUsuario?
+  suscripcion            Suscripcion?
   mensajesEnviados       Mensaje[]
   transmisiones          Transmision[]
-  interaccionesEnviadas  Interaccion[]       @relation("InteraccionesEnviadas")
-  interaccionesRecibidas Interaccion[]       @relation("InteraccionesRecibidas")
-  matchesComoUsuarioUno  Match[]             @relation("MatchesUsuarioUno")
-  matchesComoUsuarioDos  Match[]             @relation("MatchesUsuarioDos")
-  reportesRealizados     Reporte[]           @relation("ReportesRealizados")
-  reportesRecibidos      Reporte[]           @relation("ReportesRecibidos")
-  donacionesEnviadas     Donacion[]          @relation("DonacionesEnviadas")
-  donacionesRecibidas    Donacion[]          @relation("DonacionesRecibidas")
+  interaccionesEnviadas  Interaccion[]   @relation("InteraccionesEnviadas")
+  interaccionesRecibidas Interaccion[]   @relation("InteraccionesRecibidas")
+  matchesComoUsuarioUno  Match[]         @relation("MatchesUsuarioUno")
+  matchesComoUsuarioDos  Match[]         @relation("MatchesUsuarioDos")
+  reportesRealizados     Reporte[]       @relation("ReportesRealizados")
+  reportesRecibidos      Reporte[]       @relation("ReportesRecibidos")
+  donacionesEnviadas     Donacion[]      @relation("DonacionesEnviadas")
+  donacionesRecibidas    Donacion[]      @relation("DonacionesRecibidas")
 }
 
 // DATOS DE INTERÉS
@@ -102,8 +102,7 @@ model Interes {
   hobby         String?
   dedicacion    String?
   UsuarioFK     Int            @unique
-
-  usuario Usuario @relation(fields: [UsuarioFK], references: [IdUsuario])
+  usuario       Usuario        @relation(fields: [UsuarioFK], references: [IdUsuario])
 }
 
 // FOTOS
@@ -148,54 +147,48 @@ model PlanSuscripcion {
   contenido          String?
   mensajesIlimitados Boolean  @default(false)
 
-  suscripciones SuscripcionUsuario[]
+  suscripciones Suscripcion[]
   ventajas      Ventaja[]
   restricciones Restriccion[]
 }
 
-// SUSCRIPCIONES DE USUARIOS
+// SUSCRIPCIONES
 
-model SuscripcionUsuario {
-  IdSuscripcionUsuario Int @id @default(autoincrement())
-  UsuarioFK            Int @unique
-  PlanSuscripcionFK    Int
-
-  usuario Usuario @relation(fields: [UsuarioFK], references: [IdUsuario])
-
-  planSuscripcion PlanSuscripcion @relation(fields: [PlanSuscripcionFK], references: [IdPlanSuscripcion])
-
-  pagos Pago[]
+model Suscripcion {
+  IdSuscripcion     Int             @id @default(autoincrement())
+  UsuarioFK         Int             @unique
+  PlanSuscripcionFK Int
+  usuario           Usuario         @relation(fields: [UsuarioFK], references: [IdUsuario])
+  planSuscripcion   PlanSuscripcion @relation(fields: [PlanSuscripcionFK], references: [IdPlanSuscripcion])
+  pagos             Pago[]
 }
 
 // PAGOS
 
 model Pago {
-  IdPago               Int      @id @default(autoincrement())
-  monto                Decimal  @db.Decimal(10, 2)
-  fechaPago            DateTime @default(now())
-  SuscripcionUsuarioFK Int
-
-  suscripcionUsuario SuscripcionUsuario @relation(fields: [SuscripcionUsuarioFK], references: [IdSuscripcionUsuario])
+  IdPago        Int         @id @default(autoincrement())
+  monto         Decimal     @db.Decimal(10, 2)
+  fechaPago     DateTime    @default(now())
+  SuscripcionFK Int
+  suscripcion   Suscripcion @relation(fields: [SuscripcionFK], references: [IdSuscripcion])
 }
 
 // VENTAJAS O BENEFICIOS
 
 model Ventaja {
-  IdVentaja         Int    @id @default(autoincrement())
+  IdVentaja         Int             @id @default(autoincrement())
   descripcion       String
   PlanSuscripcionFK Int
-
-  planSuscripcion PlanSuscripcion @relation(fields: [PlanSuscripcionFK], references: [IdPlanSuscripcion])
+  planSuscripcion   PlanSuscripcion @relation(fields: [PlanSuscripcionFK], references: [IdPlanSuscripcion])
 }
 
 // RESTRICCIONES GENERALES O POR PLAN
 
 model Restriccion {
-  IdRestriccion     Int    @id @default(autoincrement())
+  IdRestriccion     Int              @id @default(autoincrement())
   descripcion       String
   PlanSuscripcionFK Int?
-
-  planSuscripcion PlanSuscripcion? @relation(fields: [PlanSuscripcionFK], references: [IdPlanSuscripcion])
+  planSuscripcion   PlanSuscripcion? @relation(fields: [PlanSuscripcionFK], references: [IdPlanSuscripcion])
 }
 
 // CONDICIONES DE COMUNICACIÓN
@@ -213,10 +206,8 @@ model Interaccion {
   fechaInteraccion  DateTime        @default(now())
   UsuarioEmisorFK   Int
   UsuarioReceptorFK Int
-
-  usuarioEmisor Usuario @relation("InteraccionesEnviadas", fields: [UsuarioEmisorFK], references: [IdUsuario])
-
-  usuarioReceptor Usuario @relation("InteraccionesRecibidas", fields: [UsuarioReceptorFK], references: [IdUsuario])
+  usuarioEmisor     Usuario         @relation("InteraccionesEnviadas", fields: [UsuarioEmisorFK], references: [IdUsuario])
+  usuarioReceptor   Usuario         @relation("InteraccionesRecibidas", fields: [UsuarioReceptorFK], references: [IdUsuario])
 
   @@unique([UsuarioEmisorFK, UsuarioReceptorFK])
 }
@@ -236,18 +227,15 @@ model Reporte {
 // DONACIONES
 
 model Donacion {
-  IdDonacion        Int      @id @default(autoincrement())
-  monto             Decimal  @db.Decimal(10, 2)
-  fechaDonacion     DateTime @default(now())
+  IdDonacion        Int          @id @default(autoincrement())
+  monto             Decimal      @db.Decimal(10, 2)
+  fechaDonacion     DateTime     @default(now())
   UsuarioDonanteFK  Int
   UsuarioReceptorFK Int
   TransmisionFK     Int?
-
-  usuarioDonante Usuario @relation("DonacionesEnviadas", fields: [UsuarioDonanteFK], references: [IdUsuario])
-
-  usuarioReceptor Usuario @relation("DonacionesRecibidas", fields: [UsuarioReceptorFK], references: [IdUsuario])
-
-  transmision Transmision? @relation(fields: [TransmisionFK], references: [IdTransmision])
+  usuarioDonante    Usuario      @relation("DonacionesEnviadas", fields: [UsuarioDonanteFK], references: [IdUsuario])
+  usuarioReceptor   Usuario      @relation("DonacionesRecibidas", fields: [UsuarioReceptorFK], references: [IdUsuario])
+  transmision       Transmision? @relation(fields: [TransmisionFK], references: [IdTransmision])
 }
 
 // MATCHES
@@ -257,12 +245,9 @@ model Match {
   fechaMatch   DateTime @default(now())
   UsuarioUnoFK Int
   UsuarioDosFK Int
-
-  usuarioUno Usuario @relation("MatchesUsuarioUno", fields: [UsuarioUnoFK], references: [IdUsuario])
-
-  usuarioDos Usuario @relation("MatchesUsuarioDos", fields: [UsuarioDosFK], references: [IdUsuario])
-
-  chat Chat?
+  usuarioUno   Usuario  @relation("MatchesUsuarioUno", fields: [UsuarioUnoFK], references: [IdUsuario])
+  usuarioDos   Usuario  @relation("MatchesUsuarioDos", fields: [UsuarioDosFK], references: [IdUsuario])
+  chat         Chat?
 
   @@unique([UsuarioUnoFK, UsuarioDosFK])
 }
@@ -270,13 +255,11 @@ model Match {
 // CHATS
 
 model Chat {
-  IdChat        Int      @id @default(autoincrement())
-  fechaCreacion DateTime @default(now())
-  MatchFK       Int      @unique
-
-  match Match @relation(fields: [MatchFK], references: [IdMatch])
-
-  mensajes Mensaje[]
+  IdChat        Int       @id @default(autoincrement())
+  fechaCreacion DateTime  @default(now())
+  MatchFK       Int       @unique
+  match         Match     @relation(fields: [MatchFK], references: [IdMatch])
+  mensajes      Mensaje[]
 }
 
 // MENSAJES
@@ -287,10 +270,8 @@ model Mensaje {
   fechaEnvio      DateTime @default(now())
   ChatFK          Int
   UsuarioEmisorFK Int
-
-  chat Chat @relation(fields: [ChatFK], references: [IdChat])
-
-  usuarioEmisor Usuario @relation(fields: [UsuarioEmisorFK], references: [IdUsuario])
+  chat            Chat     @relation(fields: [ChatFK], references: [IdChat])
+  usuarioEmisor   Usuario  @relation(fields: [UsuarioEmisorFK], references: [IdUsuario])
 }
 
 // TRANSMISIONES LIVE
@@ -301,8 +282,6 @@ model Transmision {
   fechaInicio   DateTime          @default(now())
   fechaFin      DateTime?
   UsuarioFK     Int
-
-  usuario Usuario @relation(fields: [UsuarioFK], references: [IdUsuario])
-
-  donaciones Donacion[]
+  usuario       Usuario           @relation(fields: [UsuarioFK], references: [IdUsuario])
+  donaciones    Donacion[]
 }

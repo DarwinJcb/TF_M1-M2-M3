@@ -27,12 +27,12 @@ export class PagosController {
     return this.pagosService.findAll();
   }
 
-  @Get('suscripcion/:idSuscripcionUsuario')
+  @Get('suscripcion/:idSuscripcion')
   findBySuscripcion(
-    @Param('idSuscripcionUsuario', ParseIntPipe)
-    idSuscripcionUsuario: number,
+    @Param('idSuscripcion', ParseIntPipe)
+    idSuscripcion: number,
   ) {
-    return this.pagosService.findBySuscripcion(idSuscripcionUsuario);
+    return this.pagosService.findBySuscripcion(idSuscripcion);
   }
 
   @Get(':id')

@@ -9,12 +9,12 @@ export class PagosService {
   constructor(private readonly prisma: PrismaService) {}
 
   async create(createPagoDto: CreatePagoDto) {
-    await this.verificarSuscripcionUsuario(createPagoDto.SuscripcionUsuarioFK);
+    await this.verificarSuscripcion(createPagoDto.SuscripcionFK);
 
     return this.prisma.pago.create({
       data: createPagoDto,
       include: {
-        suscripcionUsuario: {
+        suscripcion: {
           include: {
             usuario: true,
             planSuscripcion: true,
@@ -27,7 +27,7 @@ export class PagosService {
   findAll() {
     return this.prisma.pago.findMany({
       include: {
-        suscripcionUsuario: {
+        suscripcion: {
           include: {
             usuario: true,
             planSuscripcion: true,
@@ -37,12 +37,12 @@ export class PagosService {
     });
   }
 
-  async findBySuscripcion(idSuscripcionUsuario: number) {
-    await this.verificarSuscripcionUsuario(idSuscripcionUsuario);
+  async findBySuscripcion(idSuscripcion: number) {
+    await this.verificarSuscripcion(idSuscripcion);
 
     return this.prisma.pago.findMany({
       where: {
-        SuscripcionUsuarioFK: idSuscripcionUsuario,
+        SuscripcionFK: idSuscripcion,
       },
     });
   }
@@ -53,7 +53,7 @@ export class PagosService {
         IdPago: id,
       },
       include: {
-        suscripcionUsuario: {
+        suscripcion: {
           include: {
             usuario: true,
             planSuscripcion: true,
@@ -72,10 +72,8 @@ export class PagosService {
   async update(id: number, updatePagoDto: UpdatePagoDto) {
     await this.findOne(id);
 
-    if (updatePagoDto.SuscripcionUsuarioFK !== undefined) {
-      await this.verificarSuscripcionUsuario(
-        updatePagoDto.SuscripcionUsuarioFK,
-      );
+    if (updatePagoDto.SuscripcionFK !== undefined) {
+      await this.verificarSuscripcion(updatePagoDto.SuscripcionFK);
     }
 
     return this.prisma.pago.update({
@@ -96,21 +94,19 @@ export class PagosService {
     });
   }
 
-  private async verificarSuscripcionUsuario(
-    idSuscripcionUsuario: number,
-  ): Promise<void> {
-    const suscripcionUsuario = await this.prisma.suscripcionUsuario.findUnique({
+  private async verificarSuscripcion(idSuscripcion: number): Promise<void> {
+    const suscripcion = await this.prisma.suscripcion.findUnique({
       where: {
-        IdSuscripcionUsuario: idSuscripcionUsuario,
+        IdSuscripcion: idSuscripcion,
       },
       select: {
-        IdSuscripcionUsuario: true,
+        IdSuscripcion: true,
       },
     });
 
-    if (!suscripcionUsuario) {
+    if (!suscripcion) {
       throw new NotFoundException(
-        `No existe una suscripción de usuario con el ID ${idSuscripcionUsuario}.`,
+        `No existe una suscripción con el ID ${idSuscripcion}.`,
       );
     }
   }
