@@ -14,6 +14,7 @@ import { SuscripcionesUsuariosModule } from './suscripciones-usuarios/suscripcio
 import { UbicacionesModule } from './ubicaciones/ubicaciones.module';
 import { UsuariosModule } from './usuarios/usuarios.module';
 import { VentajasModule } from './ventajas/ventajas.module';
+import { MatchesModule } from './matches/matches.module';
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { VentajasModule } from './ventajas/ventajas.module';
     PagosModule,
     CondicionesComunicacionModule,
     InteraccionesModule,
+    MatchesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
