@@ -20,6 +20,9 @@ import { TransmisionesModule } from './transmisiones/transmisiones.module';
 import { UbicacionesModule } from './ubicaciones/ubicaciones.module';
 import { UsuariosModule } from './usuarios/usuarios.module';
 import { VentajasModule } from './ventajas/ventajas.module';
+import { PrismaUsuariosModule } from './prisma-usuarios/prisma-usuarios.module';
+import { PrismaInteraccionesModule } from './prisma-interacciones/prisma-interacciones.module';
+import { PrismaSuscripcionesModule } from './prisma-suscripciones/prisma-suscripciones.module';
 
 @Module({
   imports: [
@@ -41,6 +44,9 @@ import { VentajasModule } from './ventajas/ventajas.module';
     ReportesModule,
     TransmisionesModule,
     DonacionesModule,
+    PrismaUsuariosModule,
+    PrismaInteraccionesModule,
+    PrismaSuscripcionesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
