@@ -310,3 +310,19 @@ POST http://localhost:3000/reportes
 }
 
 GET http://localhost:3000/reportes/reportado/2
+
+
+POST http://localhost:3000/transmisiones
+{
+  "UsuarioFK": 2
+}
+
+GET http://localhost:3000/transmisiones/1
+
+GET http://localhost:3000/transmisiones/
+
+
+GET http://localhost:3000/transmisiones/live
+
+
+

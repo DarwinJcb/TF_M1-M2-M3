@@ -5,7 +5,7 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { EstadoTransmision } from '../generated/prisma/enums';
+import { EstadoActividad, EstadoTransmision } from '../generated/prisma/enums';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateTransmisionDto } from './dto/create-transmision.dto';
 import { UpdateTransmisionDto } from './dto/update-transmision.dto';
@@ -30,12 +30,23 @@ export class TransmisionesService {
       );
     }
 
-    return this.prisma.transmision.create({
-      data: createTransmisionDto,
-      include: {
-        usuario: true,
-        donaciones: true,
-      },
+    return this.prisma.$transaction(async (transaccion) => {
+      await transaccion.usuario.update({
+        where: {
+          IdUsuario: createTransmisionDto.UsuarioFK,
+        },
+        data: {
+          estadoActividad: EstadoActividad.ONLINE,
+        },
+      });
+
+      return transaccion.transmision.create({
+        data: createTransmisionDto,
+        include: {
+          usuario: true,
+          donaciones: true,
+        },
+      });
     });
   }
 

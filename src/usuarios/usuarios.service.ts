@@ -17,7 +17,9 @@ export class UsuariosService {
       where: {
         OR: [
           { correo: createUsuarioDto.correo },
-          { numeroTelefono: createUsuarioDto.numeroTelefono },
+          {
+            numeroTelefono: createUsuarioDto.numeroTelefono,
+          },
         ],
       },
     });
