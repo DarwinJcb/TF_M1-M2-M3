@@ -1,5 +1,8 @@
 /* src/transmisiones/dto/update-transmision.dto.ts: */
-import { PartialType } from '@nestjs/mapped-types';
-import { CreateTransmisionDto } from './create-transmision.dto';
+import { IsEnum } from 'class-validator';
+import { EstadoTransmision } from '../../generated/prisma/enums';
 
-export class UpdateTransmisionDto extends PartialType(CreateTransmisionDto) { }
+export class UpdateTransmisionDto {
+    @IsEnum(EstadoTransmision)
+    estadoTransmision: EstadoTransmision;
+}

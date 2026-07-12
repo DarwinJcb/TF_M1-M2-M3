@@ -1,2 +1,7 @@
 /* src/transmisiones/dto/create-transmision.dto.ts: */
-export class CreateTransmisionDto { }
+import { IsInt } from 'class-validator';
+
+export class CreateTransmisionDto {
+    @IsInt()
+    UsuarioFK: number;
+}
