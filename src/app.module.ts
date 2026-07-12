@@ -16,6 +16,7 @@ import { SuscripcionesUsuariosModule } from './suscripciones-usuarios/suscripcio
 import { UbicacionesModule } from './ubicaciones/ubicaciones.module';
 import { UsuariosModule } from './usuarios/usuarios.module';
 import { VentajasModule } from './ventajas/ventajas.module';
+import { MensajesModule } from './mensajes/mensajes.module';
 
 @Module({
   imports: [
@@ -33,8 +34,9 @@ import { VentajasModule } from './ventajas/ventajas.module';
     InteraccionesModule,
     MatchesModule,
     ChatsModule,
+    MensajesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule { }
+export class AppModule {}

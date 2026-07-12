@@ -10,7 +10,7 @@ import { UpdateChatDto } from './dto/update-chat.dto';
 
 @Injectable()
 export class ChatsService {
-  constructor(private readonly prisma: PrismaService) { }
+  constructor(private readonly prisma: PrismaService) {}
 
   async create(createChatDto: CreateChatDto) {
     await this.verificarMatch(createChatDto.MatchFK);
@@ -78,9 +78,7 @@ export class ChatsService {
     });
 
     if (!chat) {
-      throw new NotFoundException(
-        `No existe un chat con el ID ${id}.`,
-      );
+      throw new NotFoundException(`No existe un chat con el ID ${id}.`);
     }
 
     return chat;
@@ -144,9 +142,7 @@ export class ChatsService {
     });
 
     if (!match) {
-      throw new NotFoundException(
-        `No existe un match con el ID ${idMatch}.`,
-      );
+      throw new NotFoundException(`No existe un match con el ID ${idMatch}.`);
     }
   }
 }
