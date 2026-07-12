@@ -235,5 +235,34 @@ POST http://localhost:3000/condiciones-comunicacion
 
 GET http://localhost:3000/condiciones-comunicacion
 
+POST http://localhost:3000/usuarios
+{
+  "nombre": "Ana",
+  "edad": 24,
+  "biografia": "Me gusta viajar y escuchar música",
+  "peso": 58,
+  "altura": 1.65,
+  "nacionalidad": "Ecuatoriana",
+  "genero": "FEMENINO",
+  "ciudad": "Quito",
+  "pais": "Ecuador",
+  "numeroTelefono": "0999999992",
+  "correo": "ana.usuario2@example.com"
+}
 
 
+POST http://localhost:3000/interacciones
+{
+  "tipoInteraccion": "LIKE",
+  "UsuarioEmisorFK": 1,
+  "UsuarioReceptorFK": 2
+}
+
+POST http://localhost:3000/interacciones
+{
+  "tipoInteraccion": "LIKE",
+  "UsuarioEmisorFK": 1,
+  "UsuarioReceptorFK": 2
+}
+
+GET http://localhost:3000/interacciones/emisor/1

@@ -6,7 +6,7 @@ import { UpdateCondicionComunicacionDto } from './dto/update-condicion-comunicac
 
 @Injectable()
 export class CondicionesComunicacionService {
-  constructor(private readonly prisma: PrismaService) { }
+  constructor(private readonly prisma: PrismaService) {}
 
   create(createCondicionComunicacionDto: CreateCondicionComunicacionDto) {
     return this.prisma.condicionComunicacion.create({

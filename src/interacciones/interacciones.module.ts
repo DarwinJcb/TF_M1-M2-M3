@@ -1,10 +1,12 @@
 /* src/interacciones/interacciones.module.ts: */
 import { Module } from '@nestjs/common';
-import { InteraccionesService } from './interacciones.service';
+import { PrismaModule } from '../prisma/prisma.module';
 import { InteraccionesController } from './interacciones.controller';
+import { InteraccionesService } from './interacciones.service';
 
 @Module({
+  imports: [PrismaModule],
   controllers: [InteraccionesController],
   providers: [InteraccionesService],
 })
-export class InteraccionesModule { }
+export class InteraccionesModule {}

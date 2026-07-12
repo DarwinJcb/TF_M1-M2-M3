@@ -15,9 +15,7 @@ import { InteraccionesService } from './interacciones.service';
 
 @Controller('interacciones')
 export class InteraccionesController {
-  constructor(
-    private readonly interaccionesService: InteraccionesService,
-  ) { }
+  constructor(private readonly interaccionesService: InteraccionesService) {}
 
   @Post()
   create(@Body() createInteraccionDto: CreateInteraccionDto) {
@@ -30,16 +28,12 @@ export class InteraccionesController {
   }
 
   @Get('emisor/:idUsuario')
-  findByEmisor(
-    @Param('idUsuario', ParseIntPipe) idUsuario: number,
-  ) {
+  findByEmisor(@Param('idUsuario', ParseIntPipe) idUsuario: number) {
     return this.interaccionesService.findByEmisor(idUsuario);
   }
 
   @Get('receptor/:idUsuario')
-  findByReceptor(
-    @Param('idUsuario', ParseIntPipe) idUsuario: number,
-  ) {
+  findByReceptor(@Param('idUsuario', ParseIntPipe) idUsuario: number) {
     return this.interaccionesService.findByReceptor(idUsuario);
   }
 
@@ -53,10 +47,7 @@ export class InteraccionesController {
     @Param('id', ParseIntPipe) id: number,
     @Body() updateInteraccionDto: UpdateInteraccionDto,
   ) {
-    return this.interaccionesService.update(
-      id,
-      updateInteraccionDto,
-    );
+    return this.interaccionesService.update(id, updateInteraccionDto);
   }
 
   @Delete(':id')

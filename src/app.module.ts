@@ -4,6 +4,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { CondicionesComunicacionModule } from './condiciones-comunicacion/condiciones-comunicacion.module';
 import { FotosModule } from './fotos/fotos.module';
+import { InteraccionesModule } from './interacciones/interacciones.module';
 import { InteresesModule } from './intereses/intereses.module';
 import { MusicasModule } from './musicas/musicas.module';
 import { PagosModule } from './pagos/pagos.module';
@@ -13,7 +14,6 @@ import { SuscripcionesUsuariosModule } from './suscripciones-usuarios/suscripcio
 import { UbicacionesModule } from './ubicaciones/ubicaciones.module';
 import { UsuariosModule } from './usuarios/usuarios.module';
 import { VentajasModule } from './ventajas/ventajas.module';
-import { InteraccionesModule } from './interacciones/interacciones.module';
 
 @Module({
   imports: [

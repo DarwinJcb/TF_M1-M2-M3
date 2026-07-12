@@ -17,7 +17,7 @@ import { CondicionesComunicacionService } from './condiciones-comunicacion.servi
 export class CondicionesComunicacionController {
   constructor(
     private readonly condicionesComunicacionService: CondicionesComunicacionService,
-  ) { }
+  ) {}
 
   @Post()
   create(
