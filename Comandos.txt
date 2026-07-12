@@ -223,7 +223,9 @@ POST http://localhost:3000/pagos
   "SuscripcionUsuarioFK": 1
 }
 
+GET http://localhost:3000/pagos/suscripcion/1
 
+GET http://localhost:3000/suscripciones-usuarios/usuario/1
 
 
 
