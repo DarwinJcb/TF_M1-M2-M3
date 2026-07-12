@@ -119,13 +119,21 @@ export class SuscripcionesService {
       },
       data: updateSuscripcionDto,
       include: {
+        usuario: true,
         planSuscripcion: true,
+        pagos: true,
       },
     });
   }
 
   async remove(id: number) {
-    await this.findOne(id);
+    const suscripcion = await this.findOne(id);
+
+    if (suscripcion.pagos.length > 0) {
+      throw new ConflictException(
+        'No se puede eliminar la suscripción porque tiene pagos asociados.',
+      );
+    }
 
     return this.prisma.suscripcion.delete({
       where: {
