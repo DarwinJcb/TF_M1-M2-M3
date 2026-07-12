@@ -1150,6 +1150,84 @@ GET http://localhost:3000/interacciones/emisor/2
     }
 ]
 
+GET http://localhost:3000/interacciones/emisor/1
+[
+    {
+        "IdInteraccion": 1,
+        "tipoInteraccion": "LIKE",
+        "fechaInteraccion": "2026-07-12T19:49:42.558Z",
+        "UsuarioEmisorFK": 1,
+        "UsuarioReceptorFK": 2,
+        "usuarioReceptor": {
+            "IdUsuario": 2,
+            "nombre": "Ana",
+            "edad": 24,
+            "biografia": "Me gusta viajar y escuchar música",
+            "peso": 58,
+            "altura": 1.65,
+            "nacionalidad": "Ecuatoriana",
+            "genero": "FEMENINO",
+            "ciudad": "Quito",
+            "pais": "Ecuador",
+            "numeroTelefono": "0999999992",
+            "correo": "ana.usuario2@example.com",
+            "estadoActividad": "ONLINE"
+        }
+    }
+]
+
+GET http://localhost:3000/interacciones/receptor/2
+[
+    {
+        "IdInteraccion": 1,
+        "tipoInteraccion": "LIKE",
+        "fechaInteraccion": "2026-07-12T19:49:42.558Z",
+        "UsuarioEmisorFK": 1,
+        "UsuarioReceptorFK": 2,
+        "usuarioEmisor": {
+            "IdUsuario": 1,
+            "nombre": "Darwin",
+            "edad": 25,
+            "biografia": "Estudiante universitario de Desarrollo de Software",
+            "peso": 70.5,
+            "altura": 1.75,
+            "nacionalidad": "Ecuatoriana",
+            "genero": "MASCULINO",
+            "ciudad": "Quito",
+            "pais": "Ecuador",
+            "numeroTelefono": "0999999999",
+            "correo": "darwin@example.com",
+            "estadoActividad": "DESCONECTADO"
+        }
+    }
+]
+
+GET http://localhost:3000/interacciones/receptor/1
+[
+    {
+        "IdInteraccion": 2,
+        "tipoInteraccion": "LIKE",
+        "fechaInteraccion": "2026-07-12T19:49:51.799Z",
+        "UsuarioEmisorFK": 2,
+        "UsuarioReceptorFK": 1,
+        "usuarioEmisor": {
+            "IdUsuario": 2,
+            "nombre": "Ana",
+            "edad": 24,
+            "biografia": "Me gusta viajar y escuchar música",
+            "peso": 58,
+            "altura": 1.65,
+            "nacionalidad": "Ecuatoriana",
+            "genero": "FEMENINO",
+            "ciudad": "Quito",
+            "pais": "Ecuador",
+            "numeroTelefono": "0999999992",
+            "correo": "ana.usuario2@example.com",
+            "estadoActividad": "ONLINE"
+        }
+    }
+]
+
 
 POST http://localhost:3000/matches
 {
@@ -1434,6 +1512,28 @@ GET http://localhost:3000/mensajes/chat/1
     }
 ]
 
+GET http://localhost:3000/mensajes/usuario/1
+[
+    {
+        "IdMensaje": 1,
+        "contenido": "Hola Ana, ¿cómo estás?",
+        "fechaEnvio": "2026-07-12T19:56:48.774Z",
+        "ChatFK": 1,
+        "UsuarioEmisorFK": 1,
+        "chat": {
+            "IdChat": 1,
+            "fechaCreacion": "2026-07-12T19:54:31.522Z",
+            "MatchFK": 1,
+            "match": {
+                "IdMatch": 1,
+                "fechaMatch": "2026-07-12T19:52:06.336Z",
+                "UsuarioUnoFK": 1,
+                "UsuarioDosFK": 2
+            }
+        }
+    }
+]
+
 
 POST http://localhost:3000/reportes
 {
@@ -1548,6 +1648,32 @@ GET http://localhost:3000/reportes/reportado/2
     }
 ]
 
+GET http://localhost:3000/reportes/reportante/1
+[
+    {
+        "IdReporte": 1,
+        "motivo": "Comportamiento inapropiado durante la conversación",
+        "fechaReporte": "2026-07-12T19:58:58.281Z",
+        "UsuarioReportanteFK": 1,
+        "UsuarioReportadoFK": 2,
+        "usuarioReportado": {
+            "IdUsuario": 2,
+            "nombre": "Ana",
+            "edad": 24,
+            "biografia": "Me gusta viajar y escuchar música",
+            "peso": 58,
+            "altura": 1.65,
+            "nacionalidad": "Ecuatoriana",
+            "genero": "FEMENINO",
+            "ciudad": "Quito",
+            "pais": "Ecuador",
+            "numeroTelefono": "0999999992",
+            "correo": "ana.usuario2@example.com",
+            "estadoActividad": "ONLINE"
+        }
+    }
+]
+
 
 POST http://localhost:3000/transmisiones
 {
@@ -1607,7 +1733,43 @@ GET http://localhost:3000/transmisiones/
 ]
 
 GET http://localhost:3000/transmisiones/live/
-[]
+[
+  {
+    "IdTransmision": 1,
+    "estado": "LIVE",
+    "fechaInicio": "2026-07-12T20:12:34.704Z",
+    "fechaFin": null,
+    "UsuarioFK": 2,
+    "usuario": {
+      "IdUsuario": 2,
+      "nombre": "Ana",
+      "edad": 24,
+      "biografia": "Me gusta viajar y escuchar música",
+      "peso": 58,
+      "altura": 1.65,
+      "nacionalidad": "Ecuatoriana",
+      "genero": "FEMENINO",
+      "ciudad": "Quito",
+      "pais": "Ecuador",
+      "numeroTelefono": "0999999992",
+      "correo": "ana.usuario2@example.com",
+      "estadoActividad": "ONLINE"
+    },
+    "donaciones": []
+  }
+]
+
+GET http://localhost:3000/transmisiones/usuario/2
+[
+  {
+    "IdTransmision": 1,
+    "estado": "LIVE",
+    "fechaInicio": "2026-07-12T20:12:34.704Z",
+    "fechaFin": null,
+    "UsuarioFK": 2,
+    "donaciones": []
+  }
+]
 
 
 POST http://localhost:3000/donaciones
@@ -1755,3 +1917,72 @@ GET http://localhost:3000/donaciones/transmision/1
         }
     }
 ]
+
+GET http://localhost:3000/donaciones/donante/1
+[
+    {
+        "IdDonacion": 1,
+        "monto": "5.5",
+        "fechaDonacion": "2026-07-12T20:14:29.903Z",
+        "UsuarioDonanteFK": 1,
+        "UsuarioReceptorFK": 2,
+        "TransmisionFK": 1,
+        "usuarioReceptor": {
+            "IdUsuario": 2,
+            "nombre": "Ana",
+            "edad": 24,
+            "biografia": "Me gusta viajar y escuchar música",
+            "peso": 58,
+            "altura": 1.65,
+            "nacionalidad": "Ecuatoriana",
+            "genero": "FEMENINO",
+            "ciudad": "Quito",
+            "pais": "Ecuador",
+            "numeroTelefono": "0999999992",
+            "correo": "ana.usuario2@example.com",
+            "estadoActividad": "ONLINE"
+        },
+        "transmision": {
+            "IdTransmision": 1,
+            "estado": "LIVE",
+            "fechaInicio": "2026-07-12T20:12:34.704Z",
+            "fechaFin": null,
+            "UsuarioFK": 2
+        }
+    }
+]
+
+GET http://localhost:3000/donaciones/receptor/2
+[
+    {
+        "IdDonacion": 1,
+        "monto": "5.5",
+        "fechaDonacion": "2026-07-12T20:14:29.903Z",
+        "UsuarioDonanteFK": 1,
+        "UsuarioReceptorFK": 2,
+        "TransmisionFK": 1,
+        "usuarioDonante": {
+            "IdUsuario": 1,
+            "nombre": "Darwin",
+            "edad": 25,
+            "biografia": "Estudiante universitario de Desarrollo de Software",
+            "peso": 70.5,
+            "altura": 1.75,
+            "nacionalidad": "Ecuatoriana",
+            "genero": "MASCULINO",
+            "ciudad": "Quito",
+            "pais": "Ecuador",
+            "numeroTelefono": "0999999999",
+            "correo": "darwin@example.com",
+            "estadoActividad": "DESCONECTADO"
+        },
+        "transmision": {
+            "IdTransmision": 1,
+            "estado": "LIVE",
+            "fechaInicio": "2026-07-12T20:12:34.704Z",
+            "fechaFin": null,
+            "UsuarioFK": 2
+        }
+    }
+]
+
