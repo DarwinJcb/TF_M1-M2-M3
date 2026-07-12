@@ -19,6 +19,7 @@ import { TransmisionesModule } from './transmisiones/transmisiones.module';
 import { UbicacionesModule } from './ubicaciones/ubicaciones.module';
 import { UsuariosModule } from './usuarios/usuarios.module';
 import { VentajasModule } from './ventajas/ventajas.module';
+import { DonacionesModule } from './donaciones/donaciones.module';
 
 @Module({
   imports: [
@@ -39,6 +40,7 @@ import { VentajasModule } from './ventajas/ventajas.module';
     MensajesModule,
     ReportesModule,
     TransmisionesModule,
+    DonacionesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
