@@ -15,7 +15,7 @@ import { ReportesService } from './reportes.service';
 
 @Controller('reportes')
 export class ReportesController {
-  constructor(private readonly reportesService: ReportesService) { }
+  constructor(private readonly reportesService: ReportesService) {}
 
   @Post()
   create(@Body() createReporteDto: CreateReporteDto) {
@@ -28,16 +28,12 @@ export class ReportesController {
   }
 
   @Get('reportante/:idUsuario')
-  findByReportante(
-    @Param('idUsuario', ParseIntPipe) idUsuario: number,
-  ) {
+  findByReportante(@Param('idUsuario', ParseIntPipe) idUsuario: number) {
     return this.reportesService.findByReportante(idUsuario);
   }
 
   @Get('reportado/:idUsuario')
-  findByReportado(
-    @Param('idUsuario', ParseIntPipe) idUsuario: number,
-  ) {
+  findByReportado(@Param('idUsuario', ParseIntPipe) idUsuario: number) {
     return this.reportesService.findByReportado(idUsuario);
   }
 

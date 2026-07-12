@@ -2,13 +2,13 @@
 import { IsInt, IsNotEmpty, IsString } from 'class-validator';
 
 export class CreateReporteDto {
-    @IsString()
-    @IsNotEmpty()
-    motivo: string;
+  @IsString()
+  @IsNotEmpty()
+  motivo: string;
 
-    @IsInt()
-    UsuarioReportanteFK: number;
+  @IsInt()
+  UsuarioReportanteFK: number;
 
-    @IsInt()
-    UsuarioReportadoFK: number;
+  @IsInt()
+  UsuarioReportadoFK: number;
 }

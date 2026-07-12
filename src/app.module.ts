@@ -12,6 +12,7 @@ import { MensajesModule } from './mensajes/mensajes.module';
 import { MusicasModule } from './musicas/musicas.module';
 import { PagosModule } from './pagos/pagos.module';
 import { PlanesSuscripcionModule } from './planes-suscripcion/planes-suscripcion.module';
+import { ReportesModule } from './reportes/reportes.module';
 import { RestriccionesModule } from './restricciones/restricciones.module';
 import { SuscripcionesUsuariosModule } from './suscripciones-usuarios/suscripciones-usuarios.module';
 import { UbicacionesModule } from './ubicaciones/ubicaciones.module';
@@ -35,8 +36,9 @@ import { VentajasModule } from './ventajas/ventajas.module';
     MatchesModule,
     ChatsModule,
     MensajesModule,
+    ReportesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule { }
+export class AppModule {}
