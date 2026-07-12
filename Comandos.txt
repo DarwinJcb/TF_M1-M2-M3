@@ -1,5 +1,4 @@
-Método: POST
-URL: http://localhost:3000/usuarios
+POST http://localhost:3000/usuarios
 {
   "nombre": "Darwin",
   "edad": 25,
@@ -14,18 +13,60 @@ URL: http://localhost:3000/usuarios
   "correo": "darwin@example.com"
 }
 
-Método: GET
-URL: http://localhost:3000/usuarios/1
+GET: http://localhost:3000/usuarios/1
+{
+    "IdUsuario": 1,
+    "nombre": "Darwin",
+    "edad": 25,
+    "biografia": "Estudiante de Desarrollo de Software",
+    "peso": 70.5,
+    "altura": 1.75,
+    "nacionalidad": "Ecuatoriana",
+    "genero": "MASCULINO",
+    "ciudad": "Cuenca",
+    "pais": "Ecuador",
+    "numeroTelefono": "0999999999",
+    "correo": "darwin@example.com",
+    "estadoActividad": "DESCONECTADO",
+    "interes": null,
+    "fotos": [],
+    "ubicaciones": [],
+    "musicas": [],
+    "suscripcion": null
+}
 
-Método: PATCH
-URL: http://localhost:3000/usuarios/1
+PATCH http://localhost:3000/usuarios/1
 {
   "biografia": "Estudiante universitario de Desarrollo de Software",
   "ciudad": "Quito"
 }
 
-Método: POST
-URL: http://localhost:3000/ubicaciones
+GET http://localhost:3000/usuarios/
+[
+    {
+        "IdUsuario": 1,
+        "nombre": "Darwin",
+        "edad": 25,
+        "biografia": "Estudiante universitario de Desarrollo de Software",
+        "peso": 70.5,
+        "altura": 1.75,
+        "nacionalidad": "Ecuatoriana",
+        "genero": "MASCULINO",
+        "ciudad": "Quito",
+        "pais": "Ecuador",
+        "numeroTelefono": "0999999999",
+        "correo": "darwin@example.com",
+        "estadoActividad": "DESCONECTADO",
+        "interes": null,
+        "fotos": [],
+        "ubicaciones": [],
+        "musicas": [],
+        "suscripcion": null
+    }
+]
+
+
+POST http://localhost:3000/ubicaciones
 {
   "ubicacion": "Centro Histórico",
   "ciudad": "Quito",
@@ -33,21 +74,45 @@ URL: http://localhost:3000/ubicaciones
   "UsuarioFK": 1
 }
 
-Método: GET
-URL: http://localhost:3000/ubicaciones/1
+GET http://localhost:3000/ubicaciones/1
+{
+    "IdUbicacion": 1,
+    "ubicacion": "Centro Histórico",
+    "ciudad": "Quito",
+    "pais": "Ecuador",
+    "UsuarioFK": 1
+}
 
-Método: PATCH
-URL: http://localhost:3000/ubicaciones/1
+PATCH http://localhost:3000/ubicaciones/1
 {
   "ubicacion": "La Carolina",
   "ciudad": "Quito"
 }
 
-Método: GET
-URL: http://localhost:3000/ubicaciones/1
+GET http://localhost:3000/ubicaciones/
+[
+    {
+        "IdUbicacion": 1,
+        "ubicacion": "La Carolina",
+        "ciudad": "Quito",
+        "pais": "Ecuador",
+        "UsuarioFK": 1
+    }
+]
 
-Método: POST
-URL: http://localhost:3000/intereses
+GET http://localhost:3000/ubicaciones/usuario/1
+[
+    {
+        "IdUbicacion": 1,
+        "ubicacion": "La Carolina",
+        "ciudad": "Quito",
+        "pais": "Ecuador",
+        "UsuarioFK": 1
+    }
+]
+
+
+POST http://localhost:3000/intereses
 {
   "signoZodiacal": "ARIES",
   "queBusca": "Una relación seria",
@@ -59,41 +124,135 @@ URL: http://localhost:3000/intereses
   "UsuarioFK": 1
 }
 
-Método: GET
-URL: http://localhost:3000/intereses
+GET http://localhost:3000/intereses/1
+{
+    "IdInteres": 1,
+    "signoZodiacal": "ARIES",
+    "queBusca": "Una relación seria",
+    "ubicacion": "Norte",
+    "ciudad": "Quito",
+    "pais": "Ecuador",
+    "hobby": "Escuchar música",
+    "dedicacion": "Estudiante",
+    "UsuarioFK": 1
+}
 
-Método: PATCH
-URL: http://localhost:3000/intereses/1
+PATCH http://localhost:3000/intereses/1
 {
   "signoZodiacal": "TAURO",
   "hobby": "Programar",
-  "dedicacion": "Estudiante de desarrollo de software"
+  "dedicacion": "Estudiante de Desarrollo de Software"
 }
 
-Método: POST
-URL: http://localhost:3000/fotos
+GET http://localhost:3000/intereses/
+[
+    {
+        "IdInteres": 1,
+        "signoZodiacal": "TAURO",
+        "queBusca": "Una relación seria",
+        "ubicacion": "Norte",
+        "ciudad": "Quito",
+        "pais": "Ecuador",
+        "hobby": "Programar",
+        "dedicacion": "Estudiante de desarrollo de software",
+        "UsuarioFK": 1
+    }
+]
+
+GET http://localhost:3000/intereses/usuario/1
+{
+    "IdInteres": 1,
+    "signoZodiacal": "TAURO",
+    "queBusca": "Una relación seria",
+    "ubicacion": "Norte",
+    "ciudad": "Quito",
+    "pais": "Ecuador",
+    "hobby": "Programar",
+    "dedicacion": "Estudiante de desarrollo de software",
+    "UsuarioFK": 1
+}
+
+
+POST http://localhost:3000/fotos
 {
   "urlFoto": "https://ejemplo.com/foto-perfil-1.jpg",
   "UsuarioFK": 1
 }
 
-Método: GET
-URL: http://localhost:3000/fotos/usuario/1
+GET http://localhost:3000/fotos/1
+{
+    "IdFoto": 1,
+    "urlFoto": "https://ejemplo.com/foto-perfil-1.jpg",
+    "UsuarioFK": 1
+}
+
+PATCH http://localhost:3000/fotos/1
+{
+  "urlFoto": "https://ejemplo.com/fotos/darwin-actualizada.jpg"
+}
+
+GET http://localhost:3000/fotos/
+[
+    {
+        "IdFoto": 1,
+        "urlFoto": "https://ejemplo.com/fotos/darwin-actualizada.jpg",
+        "UsuarioFK": 1
+    }
+]
+
+GET http://localhost:3000/fotos/usuario/1
+[
+    {
+        "IdFoto": 1,
+        "urlFoto": "https://ejemplo.com/fotos/darwin-actualizada.jpg",
+        "UsuarioFK": 1
+    }
+]
 
 
-Método: POST
-URL: http://localhost:3000/musicas
+POST http://localhost:3000/musicas
 {
   "nombreCancion": "Bohemian Rhapsody",
   "tipoMusica": "Rock",
   "UsuarioFK": 1
 }
 
-Método: GET
-URL: http://localhost:3000/musicas/usuario/1
+GET http://localhost:3000/musicas/1
+{
+    "IdMusica": 1,
+    "nombreCancion": "Bohemian Rhapsody",
+    "tipoMusica": "Rock",
+    "UsuarioFK": 1
+}
 
-Método: POST
-URL: http://localhost:3000/planes-suscripcion
+PATCH http://localhost:3000/musicas/1
+{
+  "nombreCancion": "Somebody to Love",
+  "tipoMusica": "Rock clásico"
+}
+
+GET http://localhost:3000/musicas/
+[
+    {
+        "IdMusica": 1,
+        "nombreCancion": "Somebody to Love",
+        "tipoMusica": "Rock clásico",
+        "UsuarioFK": 1
+    }
+]
+
+GET http://localhost:3000/musicas/usuario/1
+[
+    {
+        "IdMusica": 1,
+        "nombreCancion": "Somebody to Love",
+        "tipoMusica": "Rock clásico",
+        "UsuarioFK": 1
+    }
+]
+
+
+POST http://localhost:3000/planes-suscripcion
 {
   "tipoPlan": "BRONZE",
   "valor": 4.99,
@@ -101,11 +260,7 @@ URL: http://localhost:3000/planes-suscripcion
   "mensajesIlimitados": false
 }
 
-Método: GET
-URL: http://localhost:3000/planes-suscripcion
-
-Método: POST
-URL: http://localhost:3000/planes-suscripcion
+POST http://localhost:3000/planes-suscripcion
 {
   "tipoPlan": "GOLD",
   "valor": 9.99,
@@ -113,8 +268,7 @@ URL: http://localhost:3000/planes-suscripcion
   "mensajesIlimitados": false
 }
 
-Método: POST
-URL: http://localhost:3000/planes-suscripcion
+POST http://localhost:3000/planes-suscripcion
 {
   "tipoPlan": "PREMIUM",
   "valor": 14.99,
@@ -122,8 +276,7 @@ URL: http://localhost:3000/planes-suscripcion
   "mensajesIlimitados": true
 }
 
-Método: POST
-URL: http://localhost:3000/planes-suscripcion
+POST http://localhost:3000/planes-suscripcion
 {
   "tipoPlan": "PLATINUM",
   "valor": 19.99,
@@ -131,61 +284,271 @@ URL: http://localhost:3000/planes-suscripcion
   "mensajesIlimitados": true
 }
 
-
-Método: POST
-URL: http://localhost:3000/ventajas
+GET http://localhost:3000/planes-suscripcion/1
 {
-  "descripcion": "Puede enviar hasta 20 mensajes diarios",
+    "IdPlanSuscripcion": 1,
+    "tipoPlan": "BRONZE",
+    "valor": "4.99",
+    "contenido": "Plan básico con funciones limitadas",
+    "mensajesIlimitados": false,
+    "ventajas": [],
+    "restricciones": []
+}
+
+GET http://localhost:3000/planes-suscripcion/2
+{
+    "IdPlanSuscripcion": 2,
+    "tipoPlan": "GOLD",
+    "valor": "9.99",
+    "contenido": "Mayor cantidad de funciones y beneficios",
+    "mensajesIlimitados": false,
+    "ventajas": [],
+    "restricciones": []
+}
+
+GET http://localhost:3000/planes-suscripcion/3
+{
+    "IdPlanSuscripcion": 3,
+    "tipoPlan": "PREMIUM",
+    "valor": "14.99",
+    "contenido": "Funciones premium y mensajes ilimitados",
+    "mensajesIlimitados": true,
+    "ventajas": [],
+    "restricciones": []
+}
+
+GET http://localhost:3000/planes-suscripcion/4
+{
+    "IdPlanSuscripcion": 4,
+    "tipoPlan": "PLATINUM",
+    "valor": "19.99",
+    "contenido": "Acceso completo a todos los beneficios",
+    "mensajesIlimitados": true,
+    "ventajas": [],
+    "restricciones": []
+}
+
+GET http://localhost:3000/planes-suscripcion/
+[
+    {
+        "IdPlanSuscripcion": 1,
+        "tipoPlan": "BRONZE",
+        "valor": "4.99",
+        "contenido": "Plan básico con funciones limitadas",
+        "mensajesIlimitados": false,
+        "ventajas": [],
+        "restricciones": []
+    },
+    {
+        "IdPlanSuscripcion": 2,
+        "tipoPlan": "GOLD",
+        "valor": "9.99",
+        "contenido": "Mayor cantidad de funciones y beneficios",
+        "mensajesIlimitados": false,
+        "ventajas": [],
+        "restricciones": []
+    },
+    {
+        "IdPlanSuscripcion": 3,
+        "tipoPlan": "PREMIUM",
+        "valor": "14.99",
+        "contenido": "Funciones premium y mensajes ilimitados",
+        "mensajesIlimitados": true,
+        "ventajas": [],
+        "restricciones": []
+    },
+    {
+        "IdPlanSuscripcion": 4,
+        "tipoPlan": "PLATINUM",
+        "valor": "19.99",
+        "contenido": "Acceso completo a todos los beneficios",
+        "mensajesIlimitados": true,
+        "ventajas": [],
+        "restricciones": []
+    }
+]
+
+
+POST http://localhost:3000/ventajas
+{
+  "descripcion": "Acceso a las funciones básicas de la aplicación",
   "PlanSuscripcionFK": 1
 }
 
-Método: GET
-URL: http://localhost:3000/ventajas/plan/1
-
-Método: GET
-GET http://localhost:3000/planes-suscripcion/1
-
-
-Método: POST
-URL: http://localhost:3000/ventajas
+POST http://localhost:3000/ventajas
 {
   "descripcion": "Mayor visibilidad del perfil",
   "PlanSuscripcionFK": 2
 }
 
-Método: GET
-URL: http://localhost:3000/ventajas/plan/2
-
-Método: GET
-GET http://localhost:3000/planes-suscripcion/2
-
-
-Método: POST
-URL: http://localhost:3000/ventajas
+POST http://localhost:3000/ventajas
 {
   "descripcion": "Puede enviar mensajes ilimitados",
   "PlanSuscripcionFK": 3
 }
 
-Método: GET
-URL: http://localhost:3000/ventajas/plan/3
-
-Método: GET
-GET http://localhost:3000/planes-suscripcion/3
-
-
-Método: POST
-URL: http://localhost:3000/ventajas
+POST http://localhost:3000/ventajas
 {
   "descripcion": "Acceso prioritario a todas las funciones",
   "PlanSuscripcionFK": 4
 }
 
-Método: GET
-URL: http://localhost:3000/ventajas/plan/4
+GET http://localhost:3000/ventajas/1
+{
+    "IdVentaja": 1,
+    "descripcion": "Acceso a las funciones básicas de la aplicación",
+    "PlanSuscripcionFK": 1
+}
 
-Método: GET
+GET http://localhost:3000/ventajas/2
+{
+    "IdVentaja": 2,
+    "descripcion": "Mayor visibilidad del perfil",
+    "PlanSuscripcionFK": 2
+}
+
+GET http://localhost:3000/ventajas/3
+{
+    "IdVentaja": 3,
+    "descripcion": "Puede enviar mensajes ilimitados",
+    "PlanSuscripcionFK": 3
+}
+
+GET http://localhost:3000/ventajas/4
+{
+    "IdVentaja": 4,
+    "descripcion": "Acceso prioritario a todas las funciones",
+    "PlanSuscripcionFK": 4
+}
+
+GET http://localhost:3000/ventajas/
+[
+    {
+        "IdVentaja": 1,
+        "descripcion": "Acceso a las funciones básicas de la aplicación",
+        "PlanSuscripcionFK": 1
+    },
+    {
+        "IdVentaja": 2,
+        "descripcion": "Mayor visibilidad del perfil",
+        "PlanSuscripcionFK": 2
+    },
+    {
+        "IdVentaja": 3,
+        "descripcion": "Puede enviar mensajes ilimitados",
+        "PlanSuscripcionFK": 3
+    },
+    {
+        "IdVentaja": 4,
+        "descripcion": "Acceso prioritario a todas las funciones",
+        "PlanSuscripcionFK": 4
+    }
+]
+
+GET http://localhost:3000/ventajas/plan/1
+[
+    {
+        "IdVentaja": 1,
+        "descripcion": "Acceso a las funciones básicas de la aplicación",
+        "PlanSuscripcionFK": 1
+    }
+]
+
+GET http://localhost:3000/ventajas/plan/2
+[
+    {
+        "IdVentaja": 2,
+        "descripcion": "Mayor visibilidad del perfil",
+        "PlanSuscripcionFK": 2
+    }
+]
+
+GET http://localhost:3000/ventajas/plan/3
+[
+    {
+        "IdVentaja": 3,
+        "descripcion": "Puede enviar mensajes ilimitados",
+        "PlanSuscripcionFK": 3
+    }
+]
+
+GET http://localhost:3000/ventajas/plan/4
+[
+    {
+        "IdVentaja": 4,
+        "descripcion": "Acceso prioritario a todas las funciones",
+        "PlanSuscripcionFK": 4
+    }
+]
+
+
+GET http://localhost:3000/planes-suscripcion/1
+{
+    "IdPlanSuscripcion": 1,
+    "tipoPlan": "BRONZE",
+    "valor": "4.99",
+    "contenido": "Plan básico con funciones limitadas",
+    "mensajesIlimitados": false,
+    "ventajas": [
+        {
+            "IdVentaja": 1,
+            "descripcion": "Acceso a las funciones básicas de la aplicación",
+            "PlanSuscripcionFK": 1
+        }
+    ],
+    "restricciones": []
+}
+
+GET http://localhost:3000/planes-suscripcion/2
+{
+    "IdPlanSuscripcion": 2,
+    "tipoPlan": "GOLD",
+    "valor": "9.99",
+    "contenido": "Mayor cantidad de funciones y beneficios",
+    "mensajesIlimitados": false,
+    "ventajas": [
+        {
+            "IdVentaja": 2,
+            "descripcion": "Mayor visibilidad del perfil",
+            "PlanSuscripcionFK": 2
+        }
+    ],
+    "restricciones": []
+}
+
+GET http://localhost:3000/planes-suscripcion/3
+{
+    "IdPlanSuscripcion": 3,
+    "tipoPlan": "PREMIUM",
+    "valor": "14.99",
+    "contenido": "Funciones premium y mensajes ilimitados",
+    "mensajesIlimitados": true,
+    "ventajas": [
+        {
+            "IdVentaja": 3,
+            "descripcion": "Puede enviar mensajes ilimitados",
+            "PlanSuscripcionFK": 3
+        }
+    ],
+    "restricciones": []
+}
+
 GET http://localhost:3000/planes-suscripcion/4
+{
+    "IdPlanSuscripcion": 4,
+    "tipoPlan": "PLATINUM",
+    "valor": "19.99",
+    "contenido": "Acceso completo a todos los beneficios",
+    "mensajesIlimitados": true,
+    "ventajas": [
+        {
+            "IdVentaja": 4,
+            "descripcion": "Acceso prioritario a todas las funciones",
+            "PlanSuscripcionFK": 4
+        }
+    ],
+    "restricciones": []
+}
 
 
 Restricción General:
@@ -194,7 +557,6 @@ POST http://localhost:3000/restricciones
   "descripcion": "Está prohibido publicar contenido ofensivo"
 }
 
-Restricción BRONZE:
 POST http://localhost:3000/restricciones
 {
   "descripcion": "No incluye mensajes ilimitados",
@@ -202,38 +564,267 @@ POST http://localhost:3000/restricciones
 }
 
 GET http://localhost:3000/restricciones/generales
+[
+    {
+        "IdRestriccion": 1,
+        "descripcion": "Está prohibido publicar contenido ofensivo",
+        "PlanSuscripcionFK": null
+    }
+]
+
+GET http://localhost:3000/restricciones/1
+{
+    "IdRestriccion": 1,
+    "descripcion": "Está prohibido publicar contenido ofensivo",
+    "PlanSuscripcionFK": null
+}
+
+GET http://localhost:3000/restricciones/2
+{
+    "IdRestriccion": 2,
+    "descripcion": "No incluye mensajes ilimitados",
+    "PlanSuscripcionFK": 1
+}
+
+GET http://localhost:3000/restricciones/
+[
+    {
+        "IdRestriccion": 1,
+        "descripcion": "Está prohibido publicar contenido ofensivo",
+        "PlanSuscripcionFK": null
+    },
+    {
+        "IdRestriccion": 2,
+        "descripcion": "No incluye mensajes ilimitados",
+        "PlanSuscripcionFK": 1
+    }
+]
+
 GET http://localhost:3000/restricciones/plan/1
-GET http://localhost:3000/planes-suscripcion/1
+[
+    {
+        "IdRestriccion": 2,
+        "descripcion": "No incluye mensajes ilimitados",
+        "PlanSuscripcionFK": 1
+    }
+]
 
 
-Método: POST
-POST http://localhost:3000/suscripciones-usuarios
+POST http://localhost:3000/suscripciones
 {
   "UsuarioFK": 1,
   "PlanSuscripcionFK": 1
 }
 
-GET http://localhost:3000/suscripciones-usuarios/usuario/1
+GET http://localhost:3000/suscripciones/1
+{
+    "IdSuscripcion": 1,
+    "UsuarioFK": 1,
+    "PlanSuscripcionFK": 1,
+    "usuario": {
+        "IdUsuario": 1,
+        "nombre": "Darwin",
+        "edad": 25,
+        "biografia": "Estudiante universitario de Desarrollo de Software",
+        "peso": 70.5,
+        "altura": 1.75,
+        "nacionalidad": "Ecuatoriana",
+        "genero": "MASCULINO",
+        "ciudad": "Quito",
+        "pais": "Ecuador",
+        "numeroTelefono": "0999999999",
+        "correo": "darwin@example.com",
+        "estadoActividad": "DESCONECTADO"
+    },
+    "planSuscripcion": {
+        "IdPlanSuscripcion": 1,
+        "tipoPlan": "BRONZE",
+        "valor": "4.99",
+        "contenido": "Plan básico con funciones limitadas",
+        "mensajesIlimitados": false
+    },
+    "pagos": []
+}
+
+GET http://localhost:3000/suscripciones/
+[
+    {
+        "IdSuscripcion": 1,
+        "UsuarioFK": 1,
+        "PlanSuscripcionFK": 1,
+        "usuario": {
+            "IdUsuario": 1,
+            "nombre": "Darwin",
+            "edad": 25,
+            "biografia": "Estudiante universitario de Desarrollo de Software",
+            "peso": 70.5,
+            "altura": 1.75,
+            "nacionalidad": "Ecuatoriana",
+            "genero": "MASCULINO",
+            "ciudad": "Quito",
+            "pais": "Ecuador",
+            "numeroTelefono": "0999999999",
+            "correo": "darwin@example.com",
+            "estadoActividad": "DESCONECTADO"
+        },
+        "planSuscripcion": {
+            "IdPlanSuscripcion": 1,
+            "tipoPlan": "BRONZE",
+            "valor": "4.99",
+            "contenido": "Plan básico con funciones limitadas",
+            "mensajesIlimitados": false
+        },
+        "pagos": []
+    }
+]
+
+GET http://localhost:3000/suscripciones/usuario/1
+{
+    "IdSuscripcion": 1,
+    "UsuarioFK": 1,
+    "PlanSuscripcionFK": 1,
+    "planSuscripcion": {
+        "IdPlanSuscripcion": 1,
+        "tipoPlan": "BRONZE",
+        "valor": "4.99",
+        "contenido": "Plan básico con funciones limitadas",
+        "mensajesIlimitados": false
+    },
+    "pagos": []
+}
 
 
-Método: POST
 POST http://localhost:3000/pagos
 {
   "monto": 4.99,
-  "SuscripcionUsuarioFK": 1
+  "SuscripcionFK": 1
 }
 
-GET http://localhost:3000/pagos/suscripcion/1
+GET http://localhost:3000/pagos/1
+{
+    "IdPago": 1,
+    "monto": "4.99",
+    "fechaPago": "2026-07-12T19:42:43.677Z",
+    "SuscripcionFK": 1,
+    "suscripcion": {
+        "IdSuscripcion": 1,
+        "UsuarioFK": 1,
+        "PlanSuscripcionFK": 1,
+        "usuario": {
+            "IdUsuario": 1,
+            "nombre": "Darwin",
+            "edad": 25,
+            "biografia": "Estudiante universitario de Desarrollo de Software",
+            "peso": 70.5,
+            "altura": 1.75,
+            "nacionalidad": "Ecuatoriana",
+            "genero": "MASCULINO",
+            "ciudad": "Quito",
+            "pais": "Ecuador",
+            "numeroTelefono": "0999999999",
+            "correo": "darwin@example.com",
+            "estadoActividad": "DESCONECTADO"
+        },
+        "planSuscripcion": {
+            "IdPlanSuscripcion": 1,
+            "tipoPlan": "BRONZE",
+            "valor": "4.99",
+            "contenido": "Plan básico con funciones limitadas",
+            "mensajesIlimitados": false
+        }
+    }
+}
 
-GET http://localhost:3000/suscripciones-usuarios/usuario/1
+GET http://localhost:3000/pagos/
+[
+    {
+        "IdPago": 1,
+        "monto": "4.99",
+        "fechaPago": "2026-07-12T19:42:43.677Z",
+        "SuscripcionFK": 1,
+        "suscripcion": {
+            "IdSuscripcion": 1,
+            "UsuarioFK": 1,
+            "PlanSuscripcionFK": 1,
+            "usuario": {
+                "IdUsuario": 1,
+                "nombre": "Darwin",
+                "edad": 25,
+                "biografia": "Estudiante universitario de Desarrollo de Software",
+                "peso": 70.5,
+                "altura": 1.75,
+                "nacionalidad": "Ecuatoriana",
+                "genero": "MASCULINO",
+                "ciudad": "Quito",
+                "pais": "Ecuador",
+                "numeroTelefono": "0999999999",
+                "correo": "darwin@example.com",
+                "estadoActividad": "DESCONECTADO"
+            },
+            "planSuscripcion": {
+                "IdPlanSuscripcion": 1,
+                "tipoPlan": "BRONZE",
+                "valor": "4.99",
+                "contenido": "Plan básico con funciones limitadas",
+                "mensajesIlimitados": false
+            }
+        }
+    }
+]
+
+GET http://localhost:3000/pagos/suscripcion/1
+[
+    {
+        "IdPago": 1,
+        "monto": "4.99",
+        "fechaPago": "2026-07-12T19:42:43.677Z",
+        "SuscripcionFK": 1
+    }
+]
+
+
+GET http://localhost:3000/suscripciones/usuario/1
+{
+    "IdSuscripcion": 1,
+    "UsuarioFK": 1,
+    "PlanSuscripcionFK": 1,
+    "planSuscripcion": {
+        "IdPlanSuscripcion": 1,
+        "tipoPlan": "BRONZE",
+        "valor": "4.99",
+        "contenido": "Plan básico con funciones limitadas",
+        "mensajesIlimitados": false
+    },
+    "pagos": [
+        {
+            "IdPago": 1,
+            "monto": "4.99",
+            "fechaPago": "2026-07-12T19:42:43.677Z",
+            "SuscripcionFK": 1
+        }
+    ]
+}
 
 
 POST http://localhost:3000/condiciones-comunicacion
 {
-  "descripcion": "Solo pueden comunicarse los usuarios que tengan un match."
+  "descripcion": "Solo pueden comunicarse los usuarios que tengan un Match."
 }
 
-GET http://localhost:3000/condiciones-comunicacion
+GET http://localhost:3000/condiciones-comunicacion/1
+{
+    "IdCondicionComunicacion": 1,
+    "descripcion": "Solo pueden comunicarse los usuarios que tengan un Match."
+}
+
+GET http://localhost:3000/condiciones-comunicacion/
+[
+    {
+        "IdCondicionComunicacion": 1,
+        "descripcion": "Solo pueden comunicarse los usuarios que tengan un Match."
+    }
+]
+
 
 POST http://localhost:3000/usuarios
 {
@@ -250,6 +841,92 @@ POST http://localhost:3000/usuarios
   "correo": "ana.usuario2@example.com"
 }
 
+GET http://localhost:3000/usuarios/
+[
+    {
+        "IdUsuario": 1,
+        "nombre": "Darwin",
+        "edad": 25,
+        "biografia": "Estudiante universitario de Desarrollo de Software",
+        "peso": 70.5,
+        "altura": 1.75,
+        "nacionalidad": "Ecuatoriana",
+        "genero": "MASCULINO",
+        "ciudad": "Quito",
+        "pais": "Ecuador",
+        "numeroTelefono": "0999999999",
+        "correo": "darwin@example.com",
+        "estadoActividad": "DESCONECTADO",
+        "interes": {
+            "IdInteres": 1,
+            "signoZodiacal": "TAURO",
+            "queBusca": "Una relación seria",
+            "ubicacion": "Norte",
+            "ciudad": "Quito",
+            "pais": "Ecuador",
+            "hobby": "Programar",
+            "dedicacion": "Estudiante de desarrollo de software",
+            "UsuarioFK": 1
+        },
+        "fotos": [
+            {
+                "IdFoto": 1,
+                "urlFoto": "https://ejemplo.com/fotos/darwin-actualizada.jpg",
+                "UsuarioFK": 1
+            }
+        ],
+        "ubicaciones": [
+            {
+                "IdUbicacion": 1,
+                "ubicacion": "La Carolina",
+                "ciudad": "Quito",
+                "pais": "Ecuador",
+                "UsuarioFK": 1
+            }
+        ],
+        "musicas": [
+            {
+                "IdMusica": 1,
+                "nombreCancion": "Somebody to Love",
+                "tipoMusica": "Rock clásico",
+                "UsuarioFK": 1
+            }
+        ],
+        "suscripcion": {
+            "IdSuscripcion": 1,
+            "UsuarioFK": 1,
+            "PlanSuscripcionFK": 1,
+            "planSuscripcion": {
+                "IdPlanSuscripcion": 1,
+                "tipoPlan": "BRONZE",
+                "valor": "4.99",
+                "contenido": "Plan básico con funciones limitadas",
+                "mensajesIlimitados": false
+            }
+        }
+    },
+    {
+        "IdUsuario": 2,
+        "nombre": "Ana",
+        "edad": 24,
+        "biografia": "Me gusta viajar y escuchar música",
+        "peso": 58,
+        "altura": 1.65,
+        "nacionalidad": "Ecuatoriana",
+        "genero": "FEMENINO",
+        "ciudad": "Quito",
+        "pais": "Ecuador",
+        "numeroTelefono": "0999999992",
+        "correo": "ana.usuario2@example.com",
+        "estadoActividad": "DESCONECTADO",
+        "interes": null,
+        "fotos": [],
+        "ubicaciones": [],
+        "musicas": [],
+        "suscripcion": null
+    }
+]
+
 
 POST http://localhost:3000/interacciones
 {
@@ -257,16 +934,6 @@ POST http://localhost:3000/interacciones
   "UsuarioEmisorFK": 1,
   "UsuarioReceptorFK": 2
 }
-
-POST http://localhost:3000/interacciones
-{
-  "tipoInteraccion": "LIKE",
-  "UsuarioEmisorFK": 1,
-  "UsuarioReceptorFK": 2
-}
-
-GET http://localhost:3000/interacciones/emisor/1
-
 
 POST http://localhost:3000/interacciones
 {
@@ -275,13 +942,341 @@ POST http://localhost:3000/interacciones
   "UsuarioReceptorFK": 1
 }
 
+GET http://localhost:3000/interacciones/1
+{
+    "IdInteraccion": 1,
+    "tipoInteraccion": "LIKE",
+    "fechaInteraccion": "2026-07-12T19:49:42.558Z",
+    "UsuarioEmisorFK": 1,
+    "UsuarioReceptorFK": 2,
+    "usuarioEmisor": {
+        "IdUsuario": 1,
+        "nombre": "Darwin",
+        "edad": 25,
+        "biografia": "Estudiante universitario de Desarrollo de Software",
+        "peso": 70.5,
+        "altura": 1.75,
+        "nacionalidad": "Ecuatoriana",
+        "genero": "MASCULINO",
+        "ciudad": "Quito",
+        "pais": "Ecuador",
+        "numeroTelefono": "0999999999",
+        "correo": "darwin@example.com",
+        "estadoActividad": "DESCONECTADO"
+    },
+    "usuarioReceptor": {
+        "IdUsuario": 2,
+        "nombre": "Ana",
+        "edad": 24,
+        "biografia": "Me gusta viajar y escuchar música",
+        "peso": 58,
+        "altura": 1.65,
+        "nacionalidad": "Ecuatoriana",
+        "genero": "FEMENINO",
+        "ciudad": "Quito",
+        "pais": "Ecuador",
+        "numeroTelefono": "0999999992",
+        "correo": "ana.usuario2@example.com",
+        "estadoActividad": "DESCONECTADO"
+    }
+}
+
+GET http://localhost:3000/interacciones/2
+{
+    "IdInteraccion": 2,
+    "tipoInteraccion": "LIKE",
+    "fechaInteraccion": "2026-07-12T19:49:51.799Z",
+    "UsuarioEmisorFK": 2,
+    "UsuarioReceptorFK": 1,
+    "usuarioEmisor": {
+        "IdUsuario": 2,
+        "nombre": "Ana",
+        "edad": 24,
+        "biografia": "Me gusta viajar y escuchar música",
+        "peso": 58,
+        "altura": 1.65,
+        "nacionalidad": "Ecuatoriana",
+        "genero": "FEMENINO",
+        "ciudad": "Quito",
+        "pais": "Ecuador",
+        "numeroTelefono": "0999999992",
+        "correo": "ana.usuario2@example.com",
+        "estadoActividad": "DESCONECTADO"
+    },
+    "usuarioReceptor": {
+        "IdUsuario": 1,
+        "nombre": "Darwin",
+        "edad": 25,
+        "biografia": "Estudiante universitario de Desarrollo de Software",
+        "peso": 70.5,
+        "altura": 1.75,
+        "nacionalidad": "Ecuatoriana",
+        "genero": "MASCULINO",
+        "ciudad": "Quito",
+        "pais": "Ecuador",
+        "numeroTelefono": "0999999999",
+        "correo": "darwin@example.com",
+        "estadoActividad": "DESCONECTADO"
+    }
+}
+
+GET http://localhost:3000/interacciones/
+[
+    {
+        "IdInteraccion": 1,
+        "tipoInteraccion": "LIKE",
+        "fechaInteraccion": "2026-07-12T19:49:42.558Z",
+        "UsuarioEmisorFK": 1,
+        "UsuarioReceptorFK": 2,
+        "usuarioEmisor": {
+            "IdUsuario": 1,
+            "nombre": "Darwin",
+            "edad": 25,
+            "biografia": "Estudiante universitario de Desarrollo de Software",
+            "peso": 70.5,
+            "altura": 1.75,
+            "nacionalidad": "Ecuatoriana",
+            "genero": "MASCULINO",
+            "ciudad": "Quito",
+            "pais": "Ecuador",
+            "numeroTelefono": "0999999999",
+            "correo": "darwin@example.com",
+            "estadoActividad": "DESCONECTADO"
+        },
+        "usuarioReceptor": {
+            "IdUsuario": 2,
+            "nombre": "Ana",
+            "edad": 24,
+            "biografia": "Me gusta viajar y escuchar música",
+            "peso": 58,
+            "altura": 1.65,
+            "nacionalidad": "Ecuatoriana",
+            "genero": "FEMENINO",
+            "ciudad": "Quito",
+            "pais": "Ecuador",
+            "numeroTelefono": "0999999992",
+            "correo": "ana.usuario2@example.com",
+            "estadoActividad": "DESCONECTADO"
+        }
+    },
+    {
+        "IdInteraccion": 2,
+        "tipoInteraccion": "LIKE",
+        "fechaInteraccion": "2026-07-12T19:49:51.799Z",
+        "UsuarioEmisorFK": 2,
+        "UsuarioReceptorFK": 1,
+        "usuarioEmisor": {
+            "IdUsuario": 2,
+            "nombre": "Ana",
+            "edad": 24,
+            "biografia": "Me gusta viajar y escuchar música",
+            "peso": 58,
+            "altura": 1.65,
+            "nacionalidad": "Ecuatoriana",
+            "genero": "FEMENINO",
+            "ciudad": "Quito",
+            "pais": "Ecuador",
+            "numeroTelefono": "0999999992",
+            "correo": "ana.usuario2@example.com",
+            "estadoActividad": "DESCONECTADO"
+        },
+        "usuarioReceptor": {
+            "IdUsuario": 1,
+            "nombre": "Darwin",
+            "edad": 25,
+            "biografia": "Estudiante universitario de Desarrollo de Software",
+            "peso": 70.5,
+            "altura": 1.75,
+            "nacionalidad": "Ecuatoriana",
+            "genero": "MASCULINO",
+            "ciudad": "Quito",
+            "pais": "Ecuador",
+            "numeroTelefono": "0999999999",
+            "correo": "darwin@example.com",
+            "estadoActividad": "DESCONECTADO"
+        }
+    }
+]
+
+GET http://localhost:3000/interacciones/emisor/1
+[
+    {
+        "IdInteraccion": 1,
+        "tipoInteraccion": "LIKE",
+        "fechaInteraccion": "2026-07-12T19:49:42.558Z",
+        "UsuarioEmisorFK": 1,
+        "UsuarioReceptorFK": 2,
+        "usuarioReceptor": {
+            "IdUsuario": 2,
+            "nombre": "Ana",
+            "edad": 24,
+            "biografia": "Me gusta viajar y escuchar música",
+            "peso": 58,
+            "altura": 1.65,
+            "nacionalidad": "Ecuatoriana",
+            "genero": "FEMENINO",
+            "ciudad": "Quito",
+            "pais": "Ecuador",
+            "numeroTelefono": "0999999992",
+            "correo": "ana.usuario2@example.com",
+            "estadoActividad": "DESCONECTADO"
+        }
+    }
+]
+
+GET http://localhost:3000/interacciones/emisor/2
+[
+    {
+        "IdInteraccion": 2,
+        "tipoInteraccion": "LIKE",
+        "fechaInteraccion": "2026-07-12T19:49:51.799Z",
+        "UsuarioEmisorFK": 2,
+        "UsuarioReceptorFK": 1,
+        "usuarioReceptor": {
+            "IdUsuario": 1,
+            "nombre": "Darwin",
+            "edad": 25,
+            "biografia": "Estudiante universitario de Desarrollo de Software",
+            "peso": 70.5,
+            "altura": 1.75,
+            "nacionalidad": "Ecuatoriana",
+            "genero": "MASCULINO",
+            "ciudad": "Quito",
+            "pais": "Ecuador",
+            "numeroTelefono": "0999999999",
+            "correo": "darwin@example.com",
+            "estadoActividad": "DESCONECTADO"
+        }
+    }
+]
+
+
 POST http://localhost:3000/matches
 {
   "UsuarioUnoFK": 1,
   "UsuarioDosFK": 2
 }
 
+GET http://localhost:3000/matches/1
+{
+    "IdMatch": 1,
+    "fechaMatch": "2026-07-12T19:52:06.336Z",
+    "UsuarioUnoFK": 1,
+    "UsuarioDosFK": 2,
+    "usuarioUno": {
+        "IdUsuario": 1,
+        "nombre": "Darwin",
+        "edad": 25,
+        "biografia": "Estudiante universitario de Desarrollo de Software",
+        "peso": 70.5,
+        "altura": 1.75,
+        "nacionalidad": "Ecuatoriana",
+        "genero": "MASCULINO",
+        "ciudad": "Quito",
+        "pais": "Ecuador",
+        "numeroTelefono": "0999999999",
+        "correo": "darwin@example.com",
+        "estadoActividad": "DESCONECTADO"
+    },
+    "usuarioDos": {
+        "IdUsuario": 2,
+        "nombre": "Ana",
+        "edad": 24,
+        "biografia": "Me gusta viajar y escuchar música",
+        "peso": 58,
+        "altura": 1.65,
+        "nacionalidad": "Ecuatoriana",
+        "genero": "FEMENINO",
+        "ciudad": "Quito",
+        "pais": "Ecuador",
+        "numeroTelefono": "0999999992",
+        "correo": "ana.usuario2@example.com",
+        "estadoActividad": "DESCONECTADO"
+    },
+    "chat": null
+}
+
+GET http://localhost:3000/matches/
+[
+    {
+        "IdMatch": 1,
+        "fechaMatch": "2026-07-12T19:52:06.336Z",
+        "UsuarioUnoFK": 1,
+        "UsuarioDosFK": 2,
+        "usuarioUno": {
+            "IdUsuario": 1,
+            "nombre": "Darwin",
+            "edad": 25,
+            "biografia": "Estudiante universitario de Desarrollo de Software",
+            "peso": 70.5,
+            "altura": 1.75,
+            "nacionalidad": "Ecuatoriana",
+            "genero": "MASCULINO",
+            "ciudad": "Quito",
+            "pais": "Ecuador",
+            "numeroTelefono": "0999999999",
+            "correo": "darwin@example.com",
+            "estadoActividad": "DESCONECTADO"
+        },
+        "usuarioDos": {
+            "IdUsuario": 2,
+            "nombre": "Ana",
+            "edad": 24,
+            "biografia": "Me gusta viajar y escuchar música",
+            "peso": 58,
+            "altura": 1.65,
+            "nacionalidad": "Ecuatoriana",
+            "genero": "FEMENINO",
+            "ciudad": "Quito",
+            "pais": "Ecuador",
+            "numeroTelefono": "0999999992",
+            "correo": "ana.usuario2@example.com",
+            "estadoActividad": "DESCONECTADO"
+        },
+        "chat": null
+    }
+]
+
 GET http://localhost:3000/matches/usuario/1
+[
+    {
+        "IdMatch": 1,
+        "fechaMatch": "2026-07-12T19:52:06.336Z",
+        "UsuarioUnoFK": 1,
+        "UsuarioDosFK": 2,
+        "usuarioUno": {
+            "IdUsuario": 1,
+            "nombre": "Darwin",
+            "edad": 25,
+            "biografia": "Estudiante universitario de Desarrollo de Software",
+            "peso": 70.5,
+            "altura": 1.75,
+            "nacionalidad": "Ecuatoriana",
+            "genero": "MASCULINO",
+            "ciudad": "Quito",
+            "pais": "Ecuador",
+            "numeroTelefono": "0999999999",
+            "correo": "darwin@example.com",
+            "estadoActividad": "DESCONECTADO"
+        },
+        "usuarioDos": {
+            "IdUsuario": 2,
+            "nombre": "Ana",
+            "edad": 24,
+            "biografia": "Me gusta viajar y escuchar música",
+            "peso": 58,
+            "altura": 1.65,
+            "nacionalidad": "Ecuatoriana",
+            "genero": "FEMENINO",
+            "ciudad": "Quito",
+            "pais": "Ecuador",
+            "numeroTelefono": "0999999992",
+            "correo": "ana.usuario2@example.com",
+            "estadoActividad": "DESCONECTADO"
+        },
+        "chat": null
+    }
+]
 
 
 POST http://localhost:3000/chats
@@ -289,7 +1284,49 @@ POST http://localhost:3000/chats
   "MatchFK": 1
 }
 
+GET http://localhost:3000/chats/1
+{
+    "IdChat": 1,
+    "fechaCreacion": "2026-07-12T19:54:31.522Z",
+    "MatchFK": 1,
+    "match": {
+        "IdMatch": 1,
+        "fechaMatch": "2026-07-12T19:52:06.336Z",
+        "UsuarioUnoFK": 1,
+        "UsuarioDosFK": 2
+    },
+    "mensajes": []
+}
+
+GET http://localhost:3000/chats/
+[
+    {
+        "IdChat": 1,
+        "fechaCreacion": "2026-07-12T19:54:31.522Z",
+        "MatchFK": 1,
+        "match": {
+            "IdMatch": 1,
+            "fechaMatch": "2026-07-12T19:52:06.336Z",
+            "UsuarioUnoFK": 1,
+            "UsuarioDosFK": 2
+        },
+        "mensajes": []
+    }
+]
+
 GET http://localhost:3000/chats/match/1
+{
+    "IdChat": 1,
+    "fechaCreacion": "2026-07-12T19:54:31.522Z",
+    "MatchFK": 1,
+    "match": {
+        "IdMatch": 1,
+        "fechaMatch": "2026-07-12T19:52:06.336Z",
+        "UsuarioUnoFK": 1,
+        "UsuarioDosFK": 2
+    },
+    "mensajes": []
+}
 
 
 POST http://localhost:3000/mensajes
@@ -299,7 +1336,103 @@ POST http://localhost:3000/mensajes
   "UsuarioEmisorFK": 1
 }
 
+GET http://localhost:3000/mensajes/1
+{
+    "IdMensaje": 1,
+    "contenido": "Hola Ana, ¿cómo estás?",
+    "fechaEnvio": "2026-07-12T19:56:48.774Z",
+    "ChatFK": 1,
+    "UsuarioEmisorFK": 1,
+    "chat": {
+        "IdChat": 1,
+        "fechaCreacion": "2026-07-12T19:54:31.522Z",
+        "MatchFK": 1,
+        "match": {
+            "IdMatch": 1,
+            "fechaMatch": "2026-07-12T19:52:06.336Z",
+            "UsuarioUnoFK": 1,
+            "UsuarioDosFK": 2
+        }
+    },
+    "usuarioEmisor": {
+        "IdUsuario": 1,
+        "nombre": "Darwin",
+        "edad": 25,
+        "biografia": "Estudiante universitario de Desarrollo de Software",
+        "peso": 70.5,
+        "altura": 1.75,
+        "nacionalidad": "Ecuatoriana",
+        "genero": "MASCULINO",
+        "ciudad": "Quito",
+        "pais": "Ecuador",
+        "numeroTelefono": "0999999999",
+        "correo": "darwin@example.com",
+        "estadoActividad": "DESCONECTADO"
+    }
+}
+
+GET http://localhost:3000/mensajes/
+[
+    {
+        "IdMensaje": 1,
+        "contenido": "Hola Ana, ¿cómo estás?",
+        "fechaEnvio": "2026-07-12T19:56:48.774Z",
+        "ChatFK": 1,
+        "UsuarioEmisorFK": 1,
+        "chat": {
+            "IdChat": 1,
+            "fechaCreacion": "2026-07-12T19:54:31.522Z",
+            "MatchFK": 1,
+            "match": {
+                "IdMatch": 1,
+                "fechaMatch": "2026-07-12T19:52:06.336Z",
+                "UsuarioUnoFK": 1,
+                "UsuarioDosFK": 2
+            }
+        },
+        "usuarioEmisor": {
+            "IdUsuario": 1,
+            "nombre": "Darwin",
+            "edad": 25,
+            "biografia": "Estudiante universitario de Desarrollo de Software",
+            "peso": 70.5,
+            "altura": 1.75,
+            "nacionalidad": "Ecuatoriana",
+            "genero": "MASCULINO",
+            "ciudad": "Quito",
+            "pais": "Ecuador",
+            "numeroTelefono": "0999999999",
+            "correo": "darwin@example.com",
+            "estadoActividad": "DESCONECTADO"
+        }
+    }
+]
+
 GET http://localhost:3000/mensajes/chat/1
+[
+    {
+        "IdMensaje": 1,
+        "contenido": "Hola Ana, ¿cómo estás?",
+        "fechaEnvio": "2026-07-12T19:56:48.774Z",
+        "ChatFK": 1,
+        "UsuarioEmisorFK": 1,
+        "usuarioEmisor": {
+            "IdUsuario": 1,
+            "nombre": "Darwin",
+            "edad": 25,
+            "biografia": "Estudiante universitario de Desarrollo de Software",
+            "peso": 70.5,
+            "altura": 1.75,
+            "nacionalidad": "Ecuatoriana",
+            "genero": "MASCULINO",
+            "ciudad": "Quito",
+            "pais": "Ecuador",
+            "numeroTelefono": "0999999999",
+            "correo": "darwin@example.com",
+            "estadoActividad": "DESCONECTADO"
+        }
+    }
+]
 
 
 POST http://localhost:3000/reportes
@@ -309,7 +1442,111 @@ POST http://localhost:3000/reportes
   "UsuarioReportadoFK": 2
 }
 
+GET http://localhost:3000/reportes/1
+{
+    "IdReporte": 1,
+    "motivo": "Comportamiento inapropiado durante la conversación",
+    "fechaReporte": "2026-07-12T19:58:58.281Z",
+    "UsuarioReportanteFK": 1,
+    "UsuarioReportadoFK": 2,
+    "usuarioReportante": {
+        "IdUsuario": 1,
+        "nombre": "Darwin",
+        "edad": 25,
+        "biografia": "Estudiante universitario de Desarrollo de Software",
+        "peso": 70.5,
+        "altura": 1.75,
+        "nacionalidad": "Ecuatoriana",
+        "genero": "MASCULINO",
+        "ciudad": "Quito",
+        "pais": "Ecuador",
+        "numeroTelefono": "0999999999",
+        "correo": "darwin@example.com",
+        "estadoActividad": "DESCONECTADO"
+    },
+    "usuarioReportado": {
+        "IdUsuario": 2,
+        "nombre": "Ana",
+        "edad": 24,
+        "biografia": "Me gusta viajar y escuchar música",
+        "peso": 58,
+        "altura": 1.65,
+        "nacionalidad": "Ecuatoriana",
+        "genero": "FEMENINO",
+        "ciudad": "Quito",
+        "pais": "Ecuador",
+        "numeroTelefono": "0999999992",
+        "correo": "ana.usuario2@example.com",
+        "estadoActividad": "DESCONECTADO"
+    }
+}
+
+GET http://localhost:3000/reportes/
+[
+    {
+        "IdReporte": 1,
+        "motivo": "Comportamiento inapropiado durante la conversación",
+        "fechaReporte": "2026-07-12T19:58:58.281Z",
+        "UsuarioReportanteFK": 1,
+        "UsuarioReportadoFK": 2,
+        "usuarioReportante": {
+            "IdUsuario": 1,
+            "nombre": "Darwin",
+            "edad": 25,
+            "biografia": "Estudiante universitario de Desarrollo de Software",
+            "peso": 70.5,
+            "altura": 1.75,
+            "nacionalidad": "Ecuatoriana",
+            "genero": "MASCULINO",
+            "ciudad": "Quito",
+            "pais": "Ecuador",
+            "numeroTelefono": "0999999999",
+            "correo": "darwin@example.com",
+            "estadoActividad": "DESCONECTADO"
+        },
+        "usuarioReportado": {
+            "IdUsuario": 2,
+            "nombre": "Ana",
+            "edad": 24,
+            "biografia": "Me gusta viajar y escuchar música",
+            "peso": 58,
+            "altura": 1.65,
+            "nacionalidad": "Ecuatoriana",
+            "genero": "FEMENINO",
+            "ciudad": "Quito",
+            "pais": "Ecuador",
+            "numeroTelefono": "0999999992",
+            "correo": "ana.usuario2@example.com",
+            "estadoActividad": "DESCONECTADO"
+        }
+    }
+]
+
 GET http://localhost:3000/reportes/reportado/2
+[
+    {
+        "IdReporte": 1,
+        "motivo": "Comportamiento inapropiado durante la conversación",
+        "fechaReporte": "2026-07-12T19:58:58.281Z",
+        "UsuarioReportanteFK": 1,
+        "UsuarioReportadoFK": 2,
+        "usuarioReportante": {
+            "IdUsuario": 1,
+            "nombre": "Darwin",
+            "edad": 25,
+            "biografia": "Estudiante universitario de Desarrollo de Software",
+            "peso": 70.5,
+            "altura": 1.75,
+            "nacionalidad": "Ecuatoriana",
+            "genero": "MASCULINO",
+            "ciudad": "Quito",
+            "pais": "Ecuador",
+            "numeroTelefono": "0999999999",
+            "correo": "darwin@example.com",
+            "estadoActividad": "DESCONECTADO"
+        }
+    }
+]
 
 
 POST http://localhost:3000/transmisiones
@@ -318,10 +1555,59 @@ POST http://localhost:3000/transmisiones
 }
 
 GET http://localhost:3000/transmisiones/1
+{
+    "IdTransmision": 1,
+    "estado": "LIVE",
+    "fechaInicio": "2026-07-12T20:12:34.704Z",
+    "fechaFin": null,
+    "UsuarioFK": 2,
+    "usuario": {
+        "IdUsuario": 2,
+        "nombre": "Ana",
+        "edad": 24,
+        "biografia": "Me gusta viajar y escuchar música",
+        "peso": 58,
+        "altura": 1.65,
+        "nacionalidad": "Ecuatoriana",
+        "genero": "FEMENINO",
+        "ciudad": "Quito",
+        "pais": "Ecuador",
+        "numeroTelefono": "0999999992",
+        "correo": "ana.usuario2@example.com",
+        "estadoActividad": "ONLINE"
+    },
+    "donaciones": []
+}
 
 GET http://localhost:3000/transmisiones/
+[
+    {
+        "IdTransmision": 1,
+        "estado": "LIVE",
+        "fechaInicio": "2026-07-12T20:12:34.704Z",
+        "fechaFin": null,
+        "UsuarioFK": 2,
+        "usuario": {
+            "IdUsuario": 2,
+            "nombre": "Ana",
+            "edad": 24,
+            "biografia": "Me gusta viajar y escuchar música",
+            "peso": 58,
+            "altura": 1.65,
+            "nacionalidad": "Ecuatoriana",
+            "genero": "FEMENINO",
+            "ciudad": "Quito",
+            "pais": "Ecuador",
+            "numeroTelefono": "0999999992",
+            "correo": "ana.usuario2@example.com",
+            "estadoActividad": "ONLINE"
+        },
+        "donaciones": []
+    }
+]
 
-GET http://localhost:3000/transmisiones/live
+GET http://localhost:3000/transmisiones/live/
+[]
 
 
 POST http://localhost:3000/donaciones
@@ -332,6 +1618,140 @@ POST http://localhost:3000/donaciones
   "TransmisionFK": 1
 }
 
-GET http://localhost:3000/donaciones
+GET http://localhost:3000/donaciones/1
+{
+    "IdDonacion": 1,
+    "monto": "5.5",
+    "fechaDonacion": "2026-07-12T20:14:29.903Z",
+    "UsuarioDonanteFK": 1,
+    "UsuarioReceptorFK": 2,
+    "TransmisionFK": 1,
+    "usuarioDonante": {
+        "IdUsuario": 1,
+        "nombre": "Darwin",
+        "edad": 25,
+        "biografia": "Estudiante universitario de Desarrollo de Software",
+        "peso": 70.5,
+        "altura": 1.75,
+        "nacionalidad": "Ecuatoriana",
+        "genero": "MASCULINO",
+        "ciudad": "Quito",
+        "pais": "Ecuador",
+        "numeroTelefono": "0999999999",
+        "correo": "darwin@example.com",
+        "estadoActividad": "DESCONECTADO"
+    },
+    "usuarioReceptor": {
+        "IdUsuario": 2,
+        "nombre": "Ana",
+        "edad": 24,
+        "biografia": "Me gusta viajar y escuchar música",
+        "peso": 58,
+        "altura": 1.65,
+        "nacionalidad": "Ecuatoriana",
+        "genero": "FEMENINO",
+        "ciudad": "Quito",
+        "pais": "Ecuador",
+        "numeroTelefono": "0999999992",
+        "correo": "ana.usuario2@example.com",
+        "estadoActividad": "ONLINE"
+    },
+    "transmision": {
+        "IdTransmision": 1,
+        "estado": "LIVE",
+        "fechaInicio": "2026-07-12T20:12:34.704Z",
+        "fechaFin": null,
+        "UsuarioFK": 2
+    }
+}
+
+GET http://localhost:3000/donaciones/
+[
+    {
+        "IdDonacion": 1,
+        "monto": "5.5",
+        "fechaDonacion": "2026-07-12T20:14:29.903Z",
+        "UsuarioDonanteFK": 1,
+        "UsuarioReceptorFK": 2,
+        "TransmisionFK": 1,
+        "usuarioDonante": {
+            "IdUsuario": 1,
+            "nombre": "Darwin",
+            "edad": 25,
+            "biografia": "Estudiante universitario de Desarrollo de Software",
+            "peso": 70.5,
+            "altura": 1.75,
+            "nacionalidad": "Ecuatoriana",
+            "genero": "MASCULINO",
+            "ciudad": "Quito",
+            "pais": "Ecuador",
+            "numeroTelefono": "0999999999",
+            "correo": "darwin@example.com",
+            "estadoActividad": "DESCONECTADO"
+        },
+        "usuarioReceptor": {
+            "IdUsuario": 2,
+            "nombre": "Ana",
+            "edad": 24,
+            "biografia": "Me gusta viajar y escuchar música",
+            "peso": 58,
+            "altura": 1.65,
+            "nacionalidad": "Ecuatoriana",
+            "genero": "FEMENINO",
+            "ciudad": "Quito",
+            "pais": "Ecuador",
+            "numeroTelefono": "0999999992",
+            "correo": "ana.usuario2@example.com",
+            "estadoActividad": "ONLINE"
+        },
+        "transmision": {
+            "IdTransmision": 1,
+            "estado": "LIVE",
+            "fechaInicio": "2026-07-12T20:12:34.704Z",
+            "fechaFin": null,
+            "UsuarioFK": 2
+        }
+    }
+]
 
 GET http://localhost:3000/donaciones/transmision/1
+[
+    {
+        "IdDonacion": 1,
+        "monto": "5.5",
+        "fechaDonacion": "2026-07-12T20:14:29.903Z",
+        "UsuarioDonanteFK": 1,
+        "UsuarioReceptorFK": 2,
+        "TransmisionFK": 1,
+        "usuarioDonante": {
+            "IdUsuario": 1,
+            "nombre": "Darwin",
+            "edad": 25,
+            "biografia": "Estudiante universitario de Desarrollo de Software",
+            "peso": 70.5,
+            "altura": 1.75,
+            "nacionalidad": "Ecuatoriana",
+            "genero": "MASCULINO",
+            "ciudad": "Quito",
+            "pais": "Ecuador",
+            "numeroTelefono": "0999999999",
+            "correo": "darwin@example.com",
+            "estadoActividad": "DESCONECTADO"
+        },
+        "usuarioReceptor": {
+            "IdUsuario": 2,
+            "nombre": "Ana",
+            "edad": 24,
+            "biografia": "Me gusta viajar y escuchar música",
+            "peso": 58,
+            "altura": 1.65,
+            "nacionalidad": "Ecuatoriana",
+            "genero": "FEMENINO",
+            "ciudad": "Quito",
+            "pais": "Ecuador",
+            "numeroTelefono": "0999999992",
+            "correo": "ana.usuario2@example.com",
+            "estadoActividad": "ONLINE"
+        }
+    }
+]
