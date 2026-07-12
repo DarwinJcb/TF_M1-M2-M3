@@ -130,18 +130,29 @@ export class TransmisionesService {
       throw new BadRequestException('La transmisión ya se encuentra LIVE.');
     }
 
-    return this.prisma.transmision.update({
-      where: {
-        IdTransmision: id,
-      },
-      data: {
-        estado: EstadoTransmision.FINALIZADA,
-        fechaFin: new Date(),
-      },
-      include: {
-        usuario: true,
-        donaciones: true,
-      },
+    return this.prisma.$transaction(async (transaccion) => {
+      await transaccion.usuario.update({
+        where: {
+          IdUsuario: transmisionActual.UsuarioFK,
+        },
+        data: {
+          estadoActividad: EstadoActividad.DESCONECTADO,
+        },
+      });
+
+      return transaccion.transmision.update({
+        where: {
+          IdTransmision: id,
+        },
+        data: {
+          estado: EstadoTransmision.FINALIZADA,
+          fechaFin: new Date(),
+        },
+        include: {
+          usuario: true,
+          donaciones: true,
+        },
+      });
     });
   }
 
@@ -152,6 +163,25 @@ export class TransmisionesService {
       throw new ConflictException(
         'No se puede eliminar la transmisión porque tiene donaciones asociadas.',
       );
+    }
+
+    if (transmision.estado === EstadoTransmision.LIVE) {
+      return this.prisma.$transaction(async (transaccion) => {
+        await transaccion.usuario.update({
+          where: {
+            IdUsuario: transmision.UsuarioFK,
+          },
+          data: {
+            estadoActividad: EstadoActividad.DESCONECTADO,
+          },
+        });
+
+        return transaccion.transmision.delete({
+          where: {
+            IdTransmision: id,
+          },
+        });
+      });
     }
 
     return this.prisma.transmision.delete({
