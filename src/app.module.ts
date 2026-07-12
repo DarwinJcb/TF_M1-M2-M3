@@ -4,6 +4,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ChatsModule } from './chats/chats.module';
 import { CondicionesComunicacionModule } from './condiciones-comunicacion/condiciones-comunicacion.module';
+import { DonacionesModule } from './donaciones/donaciones.module';
 import { FotosModule } from './fotos/fotos.module';
 import { InteraccionesModule } from './interacciones/interacciones.module';
 import { InteresesModule } from './intereses/intereses.module';
@@ -19,7 +20,6 @@ import { TransmisionesModule } from './transmisiones/transmisiones.module';
 import { UbicacionesModule } from './ubicaciones/ubicaciones.module';
 import { UsuariosModule } from './usuarios/usuarios.module';
 import { VentajasModule } from './ventajas/ventajas.module';
-import { DonacionesModule } from './donaciones/donaciones.module';
 
 @Module({
   imports: [

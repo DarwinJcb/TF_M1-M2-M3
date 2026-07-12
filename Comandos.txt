@@ -321,8 +321,17 @@ GET http://localhost:3000/transmisiones/1
 
 GET http://localhost:3000/transmisiones/
 
-
 GET http://localhost:3000/transmisiones/live
 
 
+POST http://localhost:3000/donaciones
+{
+  "monto": 5.5,
+  "UsuarioDonanteFK": 1,
+  "UsuarioReceptorFK": 2,
+  "TransmisionFK": 1
+}
 
+GET http://localhost:3000/donaciones
+
+GET http://localhost:3000/donaciones/transmision/1

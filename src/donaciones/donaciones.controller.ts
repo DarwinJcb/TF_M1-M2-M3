@@ -15,14 +15,10 @@ import { UpdateDonacionDto } from './dto/update-donacion.dto';
 
 @Controller('donaciones')
 export class DonacionesController {
-  constructor(
-    private readonly donacionesService: DonacionesService,
-  ) { }
+  constructor(private readonly donacionesService: DonacionesService) {}
 
   @Post()
-  create(
-    @Body() createDonacionDto: CreateDonacionDto,
-  ) {
+  create(@Body() createDonacionDto: CreateDonacionDto) {
     return this.donacionesService.create(createDonacionDto);
   }
 
@@ -32,16 +28,12 @@ export class DonacionesController {
   }
 
   @Get('donante/:idUsuario')
-  findByDonante(
-    @Param('idUsuario', ParseIntPipe) idUsuario: number,
-  ) {
+  findByDonante(@Param('idUsuario', ParseIntPipe) idUsuario: number) {
     return this.donacionesService.findByDonante(idUsuario);
   }
 
   @Get('receptor/:idUsuario')
-  findByReceptor(
-    @Param('idUsuario', ParseIntPipe) idUsuario: number,
-  ) {
+  findByReceptor(@Param('idUsuario', ParseIntPipe) idUsuario: number) {
     return this.donacionesService.findByReceptor(idUsuario);
   }
 
@@ -50,9 +42,7 @@ export class DonacionesController {
     @Param('idTransmision', ParseIntPipe)
     idTransmision: number,
   ) {
-    return this.donacionesService.findByTransmision(
-      idTransmision,
-    );
+    return this.donacionesService.findByTransmision(idTransmision);
   }
 
   @Get(':id')
@@ -65,10 +55,7 @@ export class DonacionesController {
     @Param('id', ParseIntPipe) id: number,
     @Body() updateDonacionDto: UpdateDonacionDto,
   ) {
-    return this.donacionesService.update(
-      id,
-      updateDonacionDto,
-    );
+    return this.donacionesService.update(id, updateDonacionDto);
   }
 
   @Delete(':id')
