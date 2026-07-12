@@ -2,13 +2,13 @@
 import { IsInt, IsNotEmpty, IsString } from 'class-validator';
 
 export class CreateMensajeDto {
-    @IsString()
-    @IsNotEmpty()
-    contenido: string;
+  @IsString()
+  @IsNotEmpty()
+  contenido: string;
 
-    @IsInt()
-    ChatFK: number;
+  @IsInt()
+  ChatFK: number;
 
-    @IsInt()
-    UsuarioEmisorFK: number;
+  @IsInt()
+  UsuarioEmisorFK: number;
 }

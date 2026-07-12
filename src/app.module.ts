@@ -8,6 +8,7 @@ import { FotosModule } from './fotos/fotos.module';
 import { InteraccionesModule } from './interacciones/interacciones.module';
 import { InteresesModule } from './intereses/intereses.module';
 import { MatchesModule } from './matches/matches.module';
+import { MensajesModule } from './mensajes/mensajes.module';
 import { MusicasModule } from './musicas/musicas.module';
 import { PagosModule } from './pagos/pagos.module';
 import { PlanesSuscripcionModule } from './planes-suscripcion/planes-suscripcion.module';
@@ -16,7 +17,6 @@ import { SuscripcionesUsuariosModule } from './suscripciones-usuarios/suscripcio
 import { UbicacionesModule } from './ubicaciones/ubicaciones.module';
 import { UsuariosModule } from './usuarios/usuarios.module';
 import { VentajasModule } from './ventajas/ventajas.module';
-import { MensajesModule } from './mensajes/mensajes.module';
 
 @Module({
   imports: [

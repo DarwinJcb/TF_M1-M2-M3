@@ -15,7 +15,7 @@ import { MensajesService } from './mensajes.service';
 
 @Controller('mensajes')
 export class MensajesController {
-  constructor(private readonly mensajesService: MensajesService) { }
+  constructor(private readonly mensajesService: MensajesService) {}
 
   @Post()
   create(@Body() createMensajeDto: CreateMensajeDto) {
@@ -33,9 +33,7 @@ export class MensajesController {
   }
 
   @Get('usuario/:idUsuario')
-  findByUsuario(
-    @Param('idUsuario', ParseIntPipe) idUsuario: number,
-  ) {
+  findByUsuario(@Param('idUsuario', ParseIntPipe) idUsuario: number) {
     return this.mensajesService.findByUsuario(idUsuario);
   }
 
