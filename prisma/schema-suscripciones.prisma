@@ -1,0 +1,72 @@
+/**
+ * prisma/schema-suscripciones.prisma:
+ */
+generator client {
+    provider     = "prisma-client"
+    output       = "../src/generated/prisma-suscripciones"
+    moduleFormat = "cjs"
+}
+
+datasource db {
+    provider = "postgresql"
+}
+
+// ENUMERACIONES
+
+enum TipoPlan {
+    BRONZE
+    GOLD
+    PREMIUM
+    PLATINUM
+}
+
+// PLANES DE SUSCRIPCION
+
+model PlanSuscripcion {
+    IdPlanSuscripcion  Int           @id @default(autoincrement())
+    tipoPlan           TipoPlan      @unique
+    valor              Decimal       @db.Decimal(10, 2)
+    contenido          String?
+    mensajesIlimitados Boolean       @default(false)
+    suscripciones      Suscripcion[]
+    ventajas           Ventaja[]
+    restricciones      Restriccion[]
+}
+
+// SUSCRIPCIONES
+
+model Suscripcion {
+    IdSuscripcion     Int             @id @default(autoincrement())
+    UsuarioFK         Int             @unique
+    PlanSuscripcionFK Int
+    planSuscripcion   PlanSuscripcion @relation(fields: [PlanSuscripcionFK], references: [IdPlanSuscripcion])
+    pagos             Pago[]
+}
+
+// PAGOS
+
+model Pago {
+    IdPago        Int         @id @default(autoincrement())
+    monto         Decimal     @db.Decimal(10, 2)
+    fechaPago     DateTime    @default(now())
+    SuscripcionFK Int
+    suscripcion   Suscripcion @relation(fields: [SuscripcionFK], references: [IdSuscripcion])
+}
+
+// VENTAJAS O BENEFICIOS
+
+model Ventaja {
+    IdVentaja         Int             @id @default(autoincrement())
+    descripcion       String
+    PlanSuscripcionFK Int
+    planSuscripcion   PlanSuscripcion @relation(fields: [PlanSuscripcionFK], references: [IdPlanSuscripcion])
+}
+
+// RESTRICCIONES GENERALES O POR PLAN
+
+model Restriccion {
+    IdRestriccion     Int              @id @default(autoincrement())
+    descripcion       String
+    PlanSuscripcionFK Int?
+    planSuscripcion   PlanSuscripcion? @relation(fields: [PlanSuscripcionFK], references: [IdPlanSuscripcion])
+}

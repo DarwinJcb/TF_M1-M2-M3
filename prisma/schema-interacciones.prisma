@@ -1,0 +1,83 @@
+/**
+ * prisma/schema-interacciones.prisma:
+ */
+generator client {
+    provider     = "prisma-client"
+    output       = "../src/generated/prisma-interacciones"
+    moduleFormat = "cjs"
+}
+
+datasource db {
+    provider = "postgresql"
+}
+
+// ENUMERACIONES
+
+enum TipoInteraccion {
+    LIKE
+    DISLIKE
+    EVITAR
+    SUPERLIKE
+}
+
+// CONDICIONES DE COMUNICACION
+
+model CondicionComunicacion {
+    IdCondicionComunicacion Int    @id @default(autoincrement())
+    descripcion             String
+}
+
+// INTERACCIONES ENTRE USUARIOS
+
+model Interaccion {
+    IdInteraccion     Int             @id @default(autoincrement())
+    tipoInteraccion   TipoInteraccion
+    fechaInteraccion  DateTime        @default(now())
+    UsuarioEmisorFK   Int
+    UsuarioReceptorFK Int
+
+    @@unique([UsuarioEmisorFK, UsuarioReceptorFK])
+}
+
+// REPORTES
+
+model Reporte {
+    IdReporte           Int      @id @default(autoincrement())
+    motivo              String
+    fechaReporte        DateTime @default(now())
+    UsuarioReportanteFK Int
+    UsuarioReportadoFK  Int
+}
+
+// MATCHES
+
+model Match {
+    IdMatch      Int      @id @default(autoincrement())
+    fechaMatch   DateTime @default(now())
+    UsuarioUnoFK Int
+    UsuarioDosFK Int
+    chat         Chat?
+
+    @@unique([UsuarioUnoFK, UsuarioDosFK])
+}
+
+// CHATS
+
+model Chat {
+    IdChat        Int       @id @default(autoincrement())
+    fechaCreacion DateTime  @default(now())
+    MatchFK       Int       @unique
+    match         Match     @relation(fields: [MatchFK], references: [IdMatch])
+    mensajes      Mensaje[]
+}
+
+// MENSAJES
+
+model Mensaje {
+    IdMensaje       Int      @id @default(autoincrement())
+    contenido       String
+    fechaEnvio      DateTime @default(now())
+    ChatFK          Int
+    UsuarioEmisorFK Int
+    chat            Chat     @relation(fields: [ChatFK], references: [IdChat])
+}
