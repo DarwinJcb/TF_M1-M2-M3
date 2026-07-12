@@ -1,2 +1,7 @@
 /* src/chats/dto/create-chat.dto.ts: */
-export class CreateChatDto { }
+import { IsInt } from 'class-validator';
+
+export class CreateChatDto {
+    @IsInt()
+    MatchFK: number;
+}

@@ -1,5 +1,14 @@
 /* src/chats/chats.controller.ts: */
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  ParseIntPipe,
+  Patch,
+  Post,
+} from '@nestjs/common';
 import { ChatsService } from './chats.service';
 import { CreateChatDto } from './dto/create-chat.dto';
 import { UpdateChatDto } from './dto/update-chat.dto';
@@ -18,18 +27,26 @@ export class ChatsController {
     return this.chatsService.findAll();
   }
 
+  @Get('match/:idMatch')
+  findByMatch(@Param('idMatch', ParseIntPipe) idMatch: number) {
+    return this.chatsService.findByMatch(idMatch);
+  }
+
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.chatsService.findOne(+id);
+  findOne(@Param('id', ParseIntPipe) id: number) {
+    return this.chatsService.findOne(id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateChatDto: UpdateChatDto) {
-    return this.chatsService.update(+id, updateChatDto);
+  update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() updateChatDto: UpdateChatDto,
+  ) {
+    return this.chatsService.update(id, updateChatDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.chatsService.remove(+id);
+  remove(@Param('id', ParseIntPipe) id: number) {
+    return this.chatsService.remove(id);
   }
 }
