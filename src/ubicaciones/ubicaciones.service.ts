@@ -1,29 +1,31 @@
 /* src/ubicaciones/ubicaciones.service.ts: */
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { PrismaService } from '../prisma/prisma.service';
+import { PrismaUsuariosService } from '../prisma-usuarios/prisma-usuarios.service';
 import { CreateUbicacionDto } from './dto/create-ubicacion.dto';
 import { UpdateUbicacionDto } from './dto/update-ubicacion.dto';
 
 @Injectable()
 export class UbicacionesService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prismaUsuarios: PrismaUsuariosService,
+  ) { }
 
   async create(createUbicacionDto: CreateUbicacionDto) {
     await this.verificarUsuario(createUbicacionDto.UsuarioFK);
 
-    return this.prisma.ubicacion.create({
+    return this.prismaUsuarios.ubicacion.create({
       data: createUbicacionDto,
     });
   }
 
   findAll() {
-    return this.prisma.ubicacion.findMany();
+    return this.prismaUsuarios.ubicacion.findMany();
   }
 
   async findByUsuario(idUsuario: number) {
     await this.verificarUsuario(idUsuario);
 
-    return this.prisma.ubicacion.findMany({
+    return this.prismaUsuarios.ubicacion.findMany({
       where: {
         UsuarioFK: idUsuario,
       },
@@ -31,7 +33,7 @@ export class UbicacionesService {
   }
 
   async findOne(id: number) {
-    const ubicacion = await this.prisma.ubicacion.findUnique({
+    const ubicacion = await this.prismaUsuarios.ubicacion.findUnique({
       where: {
         IdUbicacion: id,
       },
@@ -51,7 +53,7 @@ export class UbicacionesService {
       await this.verificarUsuario(updateUbicacionDto.UsuarioFK);
     }
 
-    return this.prisma.ubicacion.update({
+    return this.prismaUsuarios.ubicacion.update({
       where: {
         IdUbicacion: id,
       },
@@ -62,7 +64,7 @@ export class UbicacionesService {
   async remove(id: number) {
     await this.findOne(id);
 
-    return this.prisma.ubicacion.delete({
+    return this.prismaUsuarios.ubicacion.delete({
       where: {
         IdUbicacion: id,
       },
@@ -70,7 +72,7 @@ export class UbicacionesService {
   }
 
   private async verificarUsuario(idUsuario: number): Promise<void> {
-    const usuario = await this.prisma.usuario.findUnique({
+    const usuario = await this.prismaUsuarios.usuario.findUnique({
       where: {
         IdUsuario: idUsuario,
       },
