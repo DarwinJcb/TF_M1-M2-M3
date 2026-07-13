@@ -12,7 +12,7 @@ import { UpdatePlanSuscripcionDto } from './dto/update-plan-suscripcion.dto';
 export class PlanesSuscripcionService {
   constructor(
     private readonly prismaSuscripciones: PrismaSuscripcionesService,
-  ) { }
+  ) {}
 
   async create(createPlanSuscripcionDto: CreatePlanSuscripcionDto) {
     const planExistente =
@@ -63,10 +63,7 @@ export class PlanesSuscripcionService {
     return planSuscripcion;
   }
 
-  async update(
-    id: number,
-    updatePlanSuscripcionDto: UpdatePlanSuscripcionDto,
-  ) {
+  async update(id: number, updatePlanSuscripcionDto: UpdatePlanSuscripcionDto) {
     await this.findOne(id);
 
     if (updatePlanSuscripcionDto.tipoPlan !== undefined) {

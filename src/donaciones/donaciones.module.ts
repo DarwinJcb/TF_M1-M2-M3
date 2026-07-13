@@ -9,4 +9,4 @@ import { DonacionesService } from './donaciones.service';
   controllers: [DonacionesController],
   providers: [DonacionesService],
 })
-export class DonacionesModule { }
+export class DonacionesModule {}

@@ -1,5 +1,9 @@
 /* src/donaciones/donaciones.service.ts: */
-import { BadRequestException, Injectable, NotFoundException, } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { EstadoTransmision } from '../generated/prisma-usuarios/enums';
 import { PrismaUsuariosService } from '../prisma-usuarios/prisma-usuarios.service';
 import { CreateDonacionDto } from './dto/create-donacion.dto';
@@ -7,21 +11,13 @@ import { UpdateDonacionDto } from './dto/update-donacion.dto';
 
 @Injectable()
 export class DonacionesService {
-  constructor(
-    private readonly prismaUsuarios: PrismaUsuariosService,
-  ) { }
+  constructor(private readonly prismaUsuarios: PrismaUsuariosService) {}
 
   async create(createDonacionDto: CreateDonacionDto) {
-    const {
-      UsuarioDonanteFK,
-      UsuarioReceptorFK,
-      TransmisionFK,
-    } = createDonacionDto;
+    const { UsuarioDonanteFK, UsuarioReceptorFK, TransmisionFK } =
+      createDonacionDto;
 
-    this.verificarUsuariosDiferentes(
-      UsuarioDonanteFK,
-      UsuarioReceptorFK,
-    );
+    this.verificarUsuariosDiferentes(UsuarioDonanteFK, UsuarioReceptorFK);
 
     await Promise.all([
       this.verificarUsuario(UsuarioDonanteFK),
@@ -113,40 +109,32 @@ export class DonacionesService {
   }
 
   async findOne(id: number) {
-    const donacion =
-      await this.prismaUsuarios.donacion.findUnique({
-        where: {
-          IdDonacion: id,
-        },
-        include: {
-          usuarioDonante: true,
-          usuarioReceptor: true,
-          transmision: true,
-        },
-      });
+    const donacion = await this.prismaUsuarios.donacion.findUnique({
+      where: {
+        IdDonacion: id,
+      },
+      include: {
+        usuarioDonante: true,
+        usuarioReceptor: true,
+        transmision: true,
+      },
+    });
 
     if (!donacion) {
-      throw new NotFoundException(
-        `No existe una donación con el ID ${id}.`,
-      );
+      throw new NotFoundException(`No existe una donación con el ID ${id}.`);
     }
 
     return donacion;
   }
 
-  async update(
-    id: number,
-    updateDonacionDto: UpdateDonacionDto,
-  ) {
+  async update(id: number, updateDonacionDto: UpdateDonacionDto) {
     const donacionActual = await this.findOne(id);
 
     const idUsuarioDonante =
-      updateDonacionDto.UsuarioDonanteFK ??
-      donacionActual.UsuarioDonanteFK;
+      updateDonacionDto.UsuarioDonanteFK ?? donacionActual.UsuarioDonanteFK;
 
     const idUsuarioReceptor =
-      updateDonacionDto.UsuarioReceptorFK ??
-      donacionActual.UsuarioReceptorFK;
+      updateDonacionDto.UsuarioReceptorFK ?? donacionActual.UsuarioReceptorFK;
 
     const idTransmision =
       updateDonacionDto.TransmisionFK !== undefined
@@ -155,28 +143,20 @@ export class DonacionesService {
 
     const cambiaReceptor =
       updateDonacionDto.UsuarioReceptorFK !== undefined &&
-      updateDonacionDto.UsuarioReceptorFK !==
-      donacionActual.UsuarioReceptorFK;
+      updateDonacionDto.UsuarioReceptorFK !== donacionActual.UsuarioReceptorFK;
 
     const cambiaTransmision =
       updateDonacionDto.TransmisionFK !== undefined &&
-      updateDonacionDto.TransmisionFK !==
-      donacionActual.TransmisionFK;
+      updateDonacionDto.TransmisionFK !== donacionActual.TransmisionFK;
 
-    this.verificarUsuariosDiferentes(
-      idUsuarioDonante,
-      idUsuarioReceptor,
-    );
+    this.verificarUsuariosDiferentes(idUsuarioDonante, idUsuarioReceptor);
 
     await Promise.all([
       this.verificarUsuario(idUsuarioDonante),
       this.verificarUsuario(idUsuarioReceptor),
     ]);
 
-    if (
-      (cambiaReceptor || cambiaTransmision) &&
-      idTransmision !== null
-    ) {
+    if ((cambiaReceptor || cambiaTransmision) && idTransmision !== null) {
       await this.verificarTransmisionParaDonacion(
         idTransmision,
         idUsuarioReceptor,
@@ -206,18 +186,15 @@ export class DonacionesService {
     });
   }
 
-  private async verificarUsuario(
-    idUsuario: number,
-  ): Promise<void> {
-    const usuario =
-      await this.prismaUsuarios.usuario.findUnique({
-        where: {
-          IdUsuario: idUsuario,
-        },
-        select: {
-          IdUsuario: true,
-        },
-      });
+  private async verificarUsuario(idUsuario: number): Promise<void> {
+    const usuario = await this.prismaUsuarios.usuario.findUnique({
+      where: {
+        IdUsuario: idUsuario,
+      },
+      select: {
+        IdUsuario: true,
+      },
+    });
 
     if (!usuario) {
       throw new NotFoundException(
@@ -226,18 +203,15 @@ export class DonacionesService {
     }
   }
 
-  private async verificarTransmision(
-    idTransmision: number,
-  ): Promise<void> {
-    const transmision =
-      await this.prismaUsuarios.transmision.findUnique({
-        where: {
-          IdTransmision: idTransmision,
-        },
-        select: {
-          IdTransmision: true,
-        },
-      });
+  private async verificarTransmision(idTransmision: number): Promise<void> {
+    const transmision = await this.prismaUsuarios.transmision.findUnique({
+      where: {
+        IdTransmision: idTransmision,
+      },
+      select: {
+        IdTransmision: true,
+      },
+    });
 
     if (!transmision) {
       throw new NotFoundException(
@@ -250,16 +224,15 @@ export class DonacionesService {
     idTransmision: number,
     idUsuarioReceptor: number,
   ): Promise<void> {
-    const transmision =
-      await this.prismaUsuarios.transmision.findUnique({
-        where: {
-          IdTransmision: idTransmision,
-        },
-        select: {
-          estado: true,
-          UsuarioFK: true,
-        },
-      });
+    const transmision = await this.prismaUsuarios.transmision.findUnique({
+      where: {
+        IdTransmision: idTransmision,
+      },
+      select: {
+        estado: true,
+        UsuarioFK: true,
+      },
+    });
 
     if (!transmision) {
       throw new NotFoundException(
@@ -267,17 +240,13 @@ export class DonacionesService {
       );
     }
 
-    if (
-      transmision.estado !== EstadoTransmision.LIVE
-    ) {
+    if (transmision.estado !== EstadoTransmision.LIVE) {
       throw new BadRequestException(
         'Solo se pueden registrar donaciones en transmisiones LIVE.',
       );
     }
 
-    if (
-      transmision.UsuarioFK !== idUsuarioReceptor
-    ) {
+    if (transmision.UsuarioFK !== idUsuarioReceptor) {
       throw new BadRequestException(
         'El usuario receptor no es el propietario de la transmisión.',
       );

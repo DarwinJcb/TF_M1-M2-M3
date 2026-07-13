@@ -1,5 +1,9 @@
 /* src/reportes/reportes.service.ts: */
-import { BadRequestException, Injectable, NotFoundException, } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { PrismaInteraccionesService } from '../prisma-interacciones/prisma-interacciones.service';
 import { PrismaUsuariosService } from '../prisma-usuarios/prisma-usuarios.service';
 import { CreateReporteDto } from './dto/create-reporte.dto';
@@ -10,29 +14,21 @@ export class ReportesService {
   constructor(
     private readonly prismaInteracciones: PrismaInteraccionesService,
     private readonly prismaUsuarios: PrismaUsuariosService,
-  ) { }
+  ) {}
 
   async create(createReporteDto: CreateReporteDto) {
-    const {
-      UsuarioReportanteFK,
-      UsuarioReportadoFK,
-    } = createReporteDto;
+    const { UsuarioReportanteFK, UsuarioReportadoFK } = createReporteDto;
 
-    this.verificarUsuariosDiferentes(
-      UsuarioReportanteFK,
-      UsuarioReportadoFK,
-    );
+    this.verificarUsuariosDiferentes(UsuarioReportanteFK, UsuarioReportadoFK);
 
-    const [usuarioReportante, usuarioReportado] =
-      await Promise.all([
-        this.obtenerUsuario(UsuarioReportanteFK),
-        this.obtenerUsuario(UsuarioReportadoFK),
-      ]);
+    const [usuarioReportante, usuarioReportado] = await Promise.all([
+      this.obtenerUsuario(UsuarioReportanteFK),
+      this.obtenerUsuario(UsuarioReportadoFK),
+    ]);
 
-    const reporte =
-      await this.prismaInteracciones.reporte.create({
-        data: createReporteDto,
-      });
+    const reporte = await this.prismaInteracciones.reporte.create({
+      data: createReporteDto,
+    });
 
     return {
       ...reporte,
@@ -42,97 +38,72 @@ export class ReportesService {
   }
 
   async findAll() {
-    const reportes =
-      await this.prismaInteracciones.reporte.findMany({
-        orderBy: {
-          fechaReporte: 'desc',
-        },
-      });
+    const reportes = await this.prismaInteracciones.reporte.findMany({
+      orderBy: {
+        fechaReporte: 'desc',
+      },
+    });
 
     if (reportes.length === 0) {
       return [];
     }
 
-    const usuariosPorId =
-      await this.obtenerUsuariosPorIds(
-        reportes.flatMap((reporte) => [
-          reporte.UsuarioReportanteFK,
-          reporte.UsuarioReportadoFK,
-        ]),
-      );
+    const usuariosPorId = await this.obtenerUsuariosPorIds(
+      reportes.flatMap((reporte) => [
+        reporte.UsuarioReportanteFK,
+        reporte.UsuarioReportadoFK,
+      ]),
+    );
 
     return reportes.map((reporte) => ({
       ...reporte,
-      usuarioReportante:
-        usuariosPorId.get(
-          reporte.UsuarioReportanteFK,
-        ) ?? null,
-      usuarioReportado:
-        usuariosPorId.get(
-          reporte.UsuarioReportadoFK,
-        ) ?? null,
+      usuarioReportante: usuariosPorId.get(reporte.UsuarioReportanteFK) ?? null,
+      usuarioReportado: usuariosPorId.get(reporte.UsuarioReportadoFK) ?? null,
     }));
   }
 
   async findByReportante(idUsuario: number) {
-    const usuarioReportante =
-      await this.obtenerUsuario(idUsuario);
+    const usuarioReportante = await this.obtenerUsuario(idUsuario);
 
-    const reportes =
-      await this.prismaInteracciones.reporte.findMany({
-        where: {
-          UsuarioReportanteFK: idUsuario,
-        },
-        orderBy: {
-          fechaReporte: 'desc',
-        },
-      });
+    const reportes = await this.prismaInteracciones.reporte.findMany({
+      where: {
+        UsuarioReportanteFK: idUsuario,
+      },
+      orderBy: {
+        fechaReporte: 'desc',
+      },
+    });
 
-    const usuariosPorId =
-      await this.obtenerUsuariosPorIds(
-        reportes.map(
-          (reporte) => reporte.UsuarioReportadoFK,
-        ),
-      );
+    const usuariosPorId = await this.obtenerUsuariosPorIds(
+      reportes.map((reporte) => reporte.UsuarioReportadoFK),
+    );
 
     return reportes.map((reporte) => ({
       ...reporte,
       usuarioReportante,
-      usuarioReportado:
-        usuariosPorId.get(
-          reporte.UsuarioReportadoFK,
-        ) ?? null,
+      usuarioReportado: usuariosPorId.get(reporte.UsuarioReportadoFK) ?? null,
     }));
   }
 
   async findByReportado(idUsuario: number) {
-    const usuarioReportado =
-      await this.obtenerUsuario(idUsuario);
+    const usuarioReportado = await this.obtenerUsuario(idUsuario);
 
-    const reportes =
-      await this.prismaInteracciones.reporte.findMany({
-        where: {
-          UsuarioReportadoFK: idUsuario,
-        },
-        orderBy: {
-          fechaReporte: 'desc',
-        },
-      });
+    const reportes = await this.prismaInteracciones.reporte.findMany({
+      where: {
+        UsuarioReportadoFK: idUsuario,
+      },
+      orderBy: {
+        fechaReporte: 'desc',
+      },
+    });
 
-    const usuariosPorId =
-      await this.obtenerUsuariosPorIds(
-        reportes.map(
-          (reporte) =>
-            reporte.UsuarioReportanteFK,
-        ),
-      );
+    const usuariosPorId = await this.obtenerUsuariosPorIds(
+      reportes.map((reporte) => reporte.UsuarioReportanteFK),
+    );
 
     return reportes.map((reporte) => ({
       ...reporte,
-      usuarioReportante:
-        usuariosPorId.get(
-          reporte.UsuarioReportanteFK,
-        ) ?? null,
+      usuarioReportante: usuariosPorId.get(reporte.UsuarioReportanteFK) ?? null,
       usuarioReportado,
     }));
   }
@@ -140,15 +111,10 @@ export class ReportesService {
   async findOne(id: number) {
     const reporte = await this.obtenerReporte(id);
 
-    const [usuarioReportante, usuarioReportado] =
-      await Promise.all([
-        this.obtenerUsuario(
-          reporte.UsuarioReportanteFK,
-        ),
-        this.obtenerUsuario(
-          reporte.UsuarioReportadoFK,
-        ),
-      ]);
+    const [usuarioReportante, usuarioReportado] = await Promise.all([
+      this.obtenerUsuario(reporte.UsuarioReportanteFK),
+      this.obtenerUsuario(reporte.UsuarioReportadoFK),
+    ]);
 
     return {
       ...reporte,
@@ -157,39 +123,28 @@ export class ReportesService {
     };
   }
 
-  async update(
-    id: number,
-    updateReporteDto: UpdateReporteDto,
-  ) {
-    const reporteActual =
-      await this.obtenerReporte(id);
+  async update(id: number, updateReporteDto: UpdateReporteDto) {
+    const reporteActual = await this.obtenerReporte(id);
 
     const idUsuarioReportante =
-      updateReporteDto.UsuarioReportanteFK ??
-      reporteActual.UsuarioReportanteFK;
+      updateReporteDto.UsuarioReportanteFK ?? reporteActual.UsuarioReportanteFK;
 
     const idUsuarioReportado =
-      updateReporteDto.UsuarioReportadoFK ??
-      reporteActual.UsuarioReportadoFK;
+      updateReporteDto.UsuarioReportadoFK ?? reporteActual.UsuarioReportadoFK;
 
-    this.verificarUsuariosDiferentes(
-      idUsuarioReportante,
-      idUsuarioReportado,
-    );
+    this.verificarUsuariosDiferentes(idUsuarioReportante, idUsuarioReportado);
 
-    const [usuarioReportante, usuarioReportado] =
-      await Promise.all([
-        this.obtenerUsuario(idUsuarioReportante),
-        this.obtenerUsuario(idUsuarioReportado),
-      ]);
+    const [usuarioReportante, usuarioReportado] = await Promise.all([
+      this.obtenerUsuario(idUsuarioReportante),
+      this.obtenerUsuario(idUsuarioReportado),
+    ]);
 
-    const reporteActualizado =
-      await this.prismaInteracciones.reporte.update({
-        where: {
-          IdReporte: id,
-        },
-        data: updateReporteDto,
-      });
+    const reporteActualizado = await this.prismaInteracciones.reporte.update({
+      where: {
+        IdReporte: id,
+      },
+      data: updateReporteDto,
+    });
 
     return {
       ...reporteActualizado,
@@ -209,12 +164,11 @@ export class ReportesService {
   }
 
   private async obtenerReporte(idReporte: number) {
-    const reporte =
-      await this.prismaInteracciones.reporte.findUnique({
-        where: {
-          IdReporte: idReporte,
-        },
-      });
+    const reporte = await this.prismaInteracciones.reporte.findUnique({
+      where: {
+        IdReporte: idReporte,
+      },
+    });
 
     if (!reporte) {
       throw new NotFoundException(
@@ -226,12 +180,11 @@ export class ReportesService {
   }
 
   private async obtenerUsuario(idUsuario: number) {
-    const usuario =
-      await this.prismaUsuarios.usuario.findUnique({
-        where: {
-          IdUsuario: idUsuario,
-        },
-      });
+    const usuario = await this.prismaUsuarios.usuario.findUnique({
+      where: {
+        IdUsuario: idUsuario,
+      },
+    });
 
     if (!usuario) {
       throw new NotFoundException(
@@ -242,37 +195,25 @@ export class ReportesService {
     return usuario;
   }
 
-  private async obtenerUsuariosPorIds(
-    idsUsuarios: number[],
-  ) {
-    const identificadoresUnicos = [
-      ...new Set(idsUsuarios),
-    ];
+  private async obtenerUsuariosPorIds(idsUsuarios: number[]) {
+    const identificadoresUnicos = [...new Set(idsUsuarios)];
 
-    const usuarios =
-      await this.prismaUsuarios.usuario.findMany({
-        where: {
-          IdUsuario: {
-            in: identificadoresUnicos,
-          },
+    const usuarios = await this.prismaUsuarios.usuario.findMany({
+      where: {
+        IdUsuario: {
+          in: identificadoresUnicos,
         },
-      });
+      },
+    });
 
-    return new Map(
-      usuarios.map((usuario) => [
-        usuario.IdUsuario,
-        usuario,
-      ]),
-    );
+    return new Map(usuarios.map((usuario) => [usuario.IdUsuario, usuario]));
   }
 
   private verificarUsuariosDiferentes(
     idUsuarioReportante: number,
     idUsuarioReportado: number,
   ): void {
-    if (
-      idUsuarioReportante === idUsuarioReportado
-    ) {
+    if (idUsuarioReportante === idUsuarioReportado) {
       throw new BadRequestException(
         'Un usuario no puede reportarse a sí mismo.',
       );

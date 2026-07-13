@@ -1,5 +1,9 @@
 /* src/chats/chats.service.ts: */
-import { ConflictException, Injectable, NotFoundException, } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { PrismaInteraccionesService } from '../prisma-interacciones/prisma-interacciones.service';
 import { CreateChatDto } from './dto/create-chat.dto';
 import { UpdateChatDto } from './dto/update-chat.dto';
@@ -8,17 +12,16 @@ import { UpdateChatDto } from './dto/update-chat.dto';
 export class ChatsService {
   constructor(
     private readonly prismaInteracciones: PrismaInteraccionesService,
-  ) { }
+  ) {}
 
   async create(createChatDto: CreateChatDto) {
     await this.verificarMatch(createChatDto.MatchFK);
 
-    const chatExistente =
-      await this.prismaInteracciones.chat.findUnique({
-        where: {
-          MatchFK: createChatDto.MatchFK,
-        },
-      });
+    const chatExistente = await this.prismaInteracciones.chat.findUnique({
+      where: {
+        MatchFK: createChatDto.MatchFK,
+      },
+    });
 
     if (chatExistente) {
       throw new ConflictException(
@@ -47,16 +50,15 @@ export class ChatsService {
   async findByMatch(idMatch: number) {
     await this.verificarMatch(idMatch);
 
-    const chat =
-      await this.prismaInteracciones.chat.findUnique({
-        where: {
-          MatchFK: idMatch,
-        },
-        include: {
-          match: true,
-          mensajes: true,
-        },
-      });
+    const chat = await this.prismaInteracciones.chat.findUnique({
+      where: {
+        MatchFK: idMatch,
+      },
+      include: {
+        match: true,
+        mensajes: true,
+      },
+    });
 
     if (!chat) {
       throw new NotFoundException(
@@ -68,37 +70,28 @@ export class ChatsService {
   }
 
   async findOne(id: number) {
-    const chat =
-      await this.prismaInteracciones.chat.findUnique({
-        where: {
-          IdChat: id,
-        },
-        include: {
-          match: true,
-          mensajes: true,
-        },
-      });
+    const chat = await this.prismaInteracciones.chat.findUnique({
+      where: {
+        IdChat: id,
+      },
+      include: {
+        match: true,
+        mensajes: true,
+      },
+    });
 
     if (!chat) {
-      throw new NotFoundException(
-        `No existe un chat con el ID ${id}.`,
-      );
+      throw new NotFoundException(`No existe un chat con el ID ${id}.`);
     }
 
     return chat;
   }
 
-  async update(
-    id: number,
-    updateChatDto: UpdateChatDto,
-  ) {
+  async update(id: number, updateChatDto: UpdateChatDto) {
     const chatActual = await this.findOne(id);
     const idNuevoMatch = updateChatDto.MatchFK;
 
-    if (
-      idNuevoMatch !== undefined &&
-      idNuevoMatch !== chatActual.MatchFK
-    ) {
+    if (idNuevoMatch !== undefined && idNuevoMatch !== chatActual.MatchFK) {
       if (chatActual.mensajes.length > 0) {
         throw new ConflictException(
           'No se puede cambiar el match del chat porque contiene mensajes.',
@@ -107,12 +100,11 @@ export class ChatsService {
 
       await this.verificarMatch(idNuevoMatch);
 
-      const chatDelMatch =
-        await this.prismaInteracciones.chat.findUnique({
-          where: {
-            MatchFK: idNuevoMatch,
-          },
-        });
+      const chatDelMatch = await this.prismaInteracciones.chat.findUnique({
+        where: {
+          MatchFK: idNuevoMatch,
+        },
+      });
 
       if (chatDelMatch && chatDelMatch.IdChat !== id) {
         throw new ConflictException(
@@ -149,23 +141,18 @@ export class ChatsService {
     });
   }
 
-  private async verificarMatch(
-    idMatch: number,
-  ): Promise<void> {
-    const match =
-      await this.prismaInteracciones.match.findUnique({
-        where: {
-          IdMatch: idMatch,
-        },
-        select: {
-          IdMatch: true,
-        },
-      });
+  private async verificarMatch(idMatch: number): Promise<void> {
+    const match = await this.prismaInteracciones.match.findUnique({
+      where: {
+        IdMatch: idMatch,
+      },
+      select: {
+        IdMatch: true,
+      },
+    });
 
     if (!match) {
-      throw new NotFoundException(
-        `No existe un match con el ID ${idMatch}.`,
-      );
+      throw new NotFoundException(`No existe un match con el ID ${idMatch}.`);
     }
   }
 }

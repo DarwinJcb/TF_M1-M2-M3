@@ -9,4 +9,4 @@ import { TransmisionesService } from './transmisiones.service';
   controllers: [TransmisionesController],
   providers: [TransmisionesService],
 })
-export class TransmisionesModule { }
+export class TransmisionesModule {}

@@ -10,16 +10,14 @@ export class PagosService {
   constructor(
     private readonly prismaSuscripciones: PrismaSuscripcionesService,
     private readonly prismaUsuarios: PrismaUsuariosService,
-  ) { }
+  ) {}
 
   async create(createPagoDto: CreatePagoDto) {
     const suscripcion = await this.obtenerSuscripcion(
       createPagoDto.SuscripcionFK,
     );
 
-    const usuario = await this.obtenerUsuario(
-      suscripcion.UsuarioFK,
-    );
+    const usuario = await this.obtenerUsuario(suscripcion.UsuarioFK);
 
     const pago = await this.prismaSuscripciones.pago.create({
       data: createPagoDto,
@@ -57,11 +55,7 @@ export class PagosService {
     }
 
     const identificadoresUsuarios = [
-      ...new Set(
-        pagos.map(
-          (pago) => pago.suscripcion.UsuarioFK,
-        ),
-      ),
+      ...new Set(pagos.map((pago) => pago.suscripcion.UsuarioFK)),
     ];
 
     const usuarios = await this.prismaUsuarios.usuario.findMany({
@@ -73,32 +67,22 @@ export class PagosService {
     });
 
     const usuariosPorId = new Map(
-      usuarios.map((usuario) => [
-        usuario.IdUsuario,
-        usuario,
-      ]),
+      usuarios.map((usuario) => [usuario.IdUsuario, usuario]),
     );
 
     return pagos.map((pago) => ({
       ...pago,
       suscripcion: {
         ...pago.suscripcion,
-        usuario:
-          usuariosPorId.get(
-            pago.suscripcion.UsuarioFK,
-          ) ?? null,
+        usuario: usuariosPorId.get(pago.suscripcion.UsuarioFK) ?? null,
       },
     }));
   }
 
   async findBySuscripcion(idSuscripcion: number) {
-    const suscripcion = await this.obtenerSuscripcion(
-      idSuscripcion,
-    );
+    const suscripcion = await this.obtenerSuscripcion(idSuscripcion);
 
-    const usuario = await this.obtenerUsuario(
-      suscripcion.UsuarioFK,
-    );
+    const usuario = await this.obtenerUsuario(suscripcion.UsuarioFK);
 
     const pagos = await this.prismaSuscripciones.pago.findMany({
       where: {
@@ -137,14 +121,10 @@ export class PagosService {
     });
 
     if (!pago) {
-      throw new NotFoundException(
-        `No existe un pago con el ID ${id}.`,
-      );
+      throw new NotFoundException(`No existe un pago con el ID ${id}.`);
     }
 
-    const usuario = await this.obtenerUsuario(
-      pago.suscripcion.UsuarioFK,
-    );
+    const usuario = await this.obtenerUsuario(pago.suscripcion.UsuarioFK);
 
     return {
       ...pago,
@@ -155,38 +135,29 @@ export class PagosService {
     };
   }
 
-  async update(
-    id: number,
-    updatePagoDto: UpdatePagoDto,
-  ) {
+  async update(id: number, updatePagoDto: UpdatePagoDto) {
     const pagoActual = await this.obtenerPago(id);
 
     const idSuscripcion =
-      updatePagoDto.SuscripcionFK ??
-      pagoActual.SuscripcionFK;
+      updatePagoDto.SuscripcionFK ?? pagoActual.SuscripcionFK;
 
-    const suscripcion = await this.obtenerSuscripcion(
-      idSuscripcion,
-    );
+    const suscripcion = await this.obtenerSuscripcion(idSuscripcion);
 
-    const usuario = await this.obtenerUsuario(
-      suscripcion.UsuarioFK,
-    );
+    const usuario = await this.obtenerUsuario(suscripcion.UsuarioFK);
 
-    const pagoActualizado =
-      await this.prismaSuscripciones.pago.update({
-        where: {
-          IdPago: id,
-        },
-        data: updatePagoDto,
-        include: {
-          suscripcion: {
-            include: {
-              planSuscripcion: true,
-            },
+    const pagoActualizado = await this.prismaSuscripciones.pago.update({
+      where: {
+        IdPago: id,
+      },
+      data: updatePagoDto,
+      include: {
+        suscripcion: {
+          include: {
+            planSuscripcion: true,
           },
         },
-      });
+      },
+    });
 
     return {
       ...pagoActualizado,
@@ -215,26 +186,21 @@ export class PagosService {
     });
 
     if (!pago) {
-      throw new NotFoundException(
-        `No existe un pago con el ID ${idPago}.`,
-      );
+      throw new NotFoundException(`No existe un pago con el ID ${idPago}.`);
     }
 
     return pago;
   }
 
-  private async obtenerSuscripcion(
-    idSuscripcion: number,
-  ) {
-    const suscripcion =
-      await this.prismaSuscripciones.suscripcion.findUnique({
-        where: {
-          IdSuscripcion: idSuscripcion,
-        },
-        include: {
-          planSuscripcion: true,
-        },
-      });
+  private async obtenerSuscripcion(idSuscripcion: number) {
+    const suscripcion = await this.prismaSuscripciones.suscripcion.findUnique({
+      where: {
+        IdSuscripcion: idSuscripcion,
+      },
+      include: {
+        planSuscripcion: true,
+      },
+    });
 
     if (!suscripcion) {
       throw new NotFoundException(

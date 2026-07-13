@@ -9,4 +9,4 @@ import { RestriccionesService } from './restricciones.service';
   controllers: [RestriccionesController],
   providers: [RestriccionesService],
 })
-export class RestriccionesModule { }
+export class RestriccionesModule {}

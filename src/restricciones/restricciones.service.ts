@@ -1,4 +1,4 @@
-/* src/restricciones/restricciones.service.ts: */
+/* src/restricciones/restricciones.service.ts */
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaSuscripcionesService } from '../prisma-suscripciones/prisma-suscripciones.service';
 import { CreateRestriccionDto } from './dto/create-restriccion.dto';
@@ -8,11 +8,10 @@ import { UpdateRestriccionDto } from './dto/update-restriccion.dto';
 export class RestriccionesService {
   constructor(
     private readonly prismaSuscripciones: PrismaSuscripcionesService,
-  ) { }
+  ) {}
 
   async create(createRestriccionDto: CreateRestriccionDto) {
-    const idPlanSuscripcion =
-      createRestriccionDto.PlanSuscripcionFK;
+    const idPlanSuscripcion = createRestriccionDto.PlanSuscripcionFK;
 
     if (typeof idPlanSuscripcion === 'number') {
       await this.verificarPlanSuscripcion(idPlanSuscripcion);
@@ -46,30 +45,23 @@ export class RestriccionesService {
   }
 
   async findOne(id: number) {
-    const restriccion =
-      await this.prismaSuscripciones.restriccion.findUnique({
-        where: {
-          IdRestriccion: id,
-        },
-      });
+    const restriccion = await this.prismaSuscripciones.restriccion.findUnique({
+      where: {
+        IdRestriccion: id,
+      },
+    });
 
     if (!restriccion) {
-      throw new NotFoundException(
-        `No existe una restricción con el ID ${id}.`,
-      );
+      throw new NotFoundException(`No existe una restricción con el ID ${id}.`);
     }
 
     return restriccion;
   }
 
-  async update(
-    id: number,
-    updateRestriccionDto: UpdateRestriccionDto,
-  ) {
+  async update(id: number, updateRestriccionDto: UpdateRestriccionDto) {
     await this.findOne(id);
 
-    const idPlanSuscripcion =
-      updateRestriccionDto.PlanSuscripcionFK;
+    const idPlanSuscripcion = updateRestriccionDto.PlanSuscripcionFK;
 
     if (typeof idPlanSuscripcion === 'number') {
       await this.verificarPlanSuscripcion(idPlanSuscripcion);

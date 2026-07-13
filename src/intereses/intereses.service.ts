@@ -10,19 +10,16 @@ import { UpdateInteresDto } from './dto/update-interes.dto';
 
 @Injectable()
 export class InteresesService {
-  constructor(
-    private readonly prismaUsuarios: PrismaUsuariosService,
-  ) { }
+  constructor(private readonly prismaUsuarios: PrismaUsuariosService) {}
 
   async create(createInteresDto: CreateInteresDto) {
     await this.verificarUsuario(createInteresDto.UsuarioFK);
 
-    const interesExistente =
-      await this.prismaUsuarios.interes.findUnique({
-        where: {
-          UsuarioFK: createInteresDto.UsuarioFK,
-        },
-      });
+    const interesExistente = await this.prismaUsuarios.interes.findUnique({
+      where: {
+        UsuarioFK: createInteresDto.UsuarioFK,
+      },
+    });
 
     if (interesExistente) {
       throw new ConflictException(
@@ -77,12 +74,11 @@ export class InteresesService {
     if (updateInteresDto.UsuarioFK !== undefined) {
       await this.verificarUsuario(updateInteresDto.UsuarioFK);
 
-      const interesDelUsuario =
-        await this.prismaUsuarios.interes.findUnique({
-          where: {
-            UsuarioFK: updateInteresDto.UsuarioFK,
-          },
-        });
+      const interesDelUsuario = await this.prismaUsuarios.interes.findUnique({
+        where: {
+          UsuarioFK: updateInteresDto.UsuarioFK,
+        },
+      });
 
       if (interesDelUsuario && interesDelUsuario.IdInteres !== id) {
         throw new ConflictException(

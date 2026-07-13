@@ -8,12 +8,10 @@ import { UpdateVentajaDto } from './dto/update-ventaja.dto';
 export class VentajasService {
   constructor(
     private readonly prismaSuscripciones: PrismaSuscripcionesService,
-  ) { }
+  ) {}
 
   async create(createVentajaDto: CreateVentajaDto) {
-    await this.verificarPlanSuscripcion(
-      createVentajaDto.PlanSuscripcionFK,
-    );
+    await this.verificarPlanSuscripcion(createVentajaDto.PlanSuscripcionFK);
 
     return this.prismaSuscripciones.ventaja.create({
       data: createVentajaDto,
@@ -35,17 +33,14 @@ export class VentajasService {
   }
 
   async findOne(id: number) {
-    const ventaja =
-      await this.prismaSuscripciones.ventaja.findUnique({
-        where: {
-          IdVentaja: id,
-        },
-      });
+    const ventaja = await this.prismaSuscripciones.ventaja.findUnique({
+      where: {
+        IdVentaja: id,
+      },
+    });
 
     if (!ventaja) {
-      throw new NotFoundException(
-        `No existe una ventaja con el ID ${id}.`,
-      );
+      throw new NotFoundException(`No existe una ventaja con el ID ${id}.`);
     }
 
     return ventaja;
@@ -55,9 +50,7 @@ export class VentajasService {
     await this.findOne(id);
 
     if (updateVentajaDto.PlanSuscripcionFK !== undefined) {
-      await this.verificarPlanSuscripcion(
-        updateVentajaDto.PlanSuscripcionFK,
-      );
+      await this.verificarPlanSuscripcion(updateVentajaDto.PlanSuscripcionFK);
     }
 
     return this.prismaSuscripciones.ventaja.update({

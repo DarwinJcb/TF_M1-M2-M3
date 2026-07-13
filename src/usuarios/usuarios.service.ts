@@ -1,5 +1,9 @@
 /* src/usuarios/usuarios.service.ts: */
-import { ConflictException, Injectable, NotFoundException, } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { PrismaInteraccionesService } from '../prisma-interacciones/prisma-interacciones.service';
 import { PrismaSuscripcionesService } from '../prisma-suscripciones/prisma-suscripciones.service';
 import { PrismaUsuariosService } from '../prisma-usuarios/prisma-usuarios.service';
@@ -12,22 +16,21 @@ export class UsuariosService {
     private readonly prismaUsuarios: PrismaUsuariosService,
     private readonly prismaSuscripciones: PrismaSuscripcionesService,
     private readonly prismaInteracciones: PrismaInteraccionesService,
-  ) { }
+  ) {}
 
   async create(createUsuarioDto: CreateUsuarioDto) {
-    const usuarioExistente =
-      await this.prismaUsuarios.usuario.findFirst({
-        where: {
-          OR: [
-            {
-              correo: createUsuarioDto.correo,
-            },
-            {
-              numeroTelefono: createUsuarioDto.numeroTelefono,
-            },
-          ],
-        },
-      });
+    const usuarioExistente = await this.prismaUsuarios.usuario.findFirst({
+      where: {
+        OR: [
+          {
+            correo: createUsuarioDto.correo,
+          },
+          {
+            numeroTelefono: createUsuarioDto.numeroTelefono,
+          },
+        ],
+      },
+    });
 
     if (usuarioExistente) {
       throw new ConflictException(
@@ -58,29 +61,24 @@ export class UsuariosService {
       (usuario) => usuario.IdUsuario,
     );
 
-    const suscripciones =
-      await this.prismaSuscripciones.suscripcion.findMany({
-        where: {
-          UsuarioFK: {
-            in: identificadoresUsuarios,
-          },
+    const suscripciones = await this.prismaSuscripciones.suscripcion.findMany({
+      where: {
+        UsuarioFK: {
+          in: identificadoresUsuarios,
         },
-        include: {
-          planSuscripcion: true,
-        },
-      });
+      },
+      include: {
+        planSuscripcion: true,
+      },
+    });
 
     const suscripcionesPorUsuario = new Map(
-      suscripciones.map((suscripcion) => [
-        suscripcion.UsuarioFK,
-        suscripcion,
-      ]),
+      suscripciones.map((suscripcion) => [suscripcion.UsuarioFK, suscripcion]),
     );
 
     return usuarios.map((usuario) => ({
       ...usuario,
-      suscripcion:
-        suscripcionesPorUsuario.get(usuario.IdUsuario) ?? null,
+      suscripcion: suscripcionesPorUsuario.get(usuario.IdUsuario) ?? null,
     }));
   }
 
@@ -98,20 +96,17 @@ export class UsuariosService {
     });
 
     if (!usuario) {
-      throw new NotFoundException(
-        `No existe un usuario con el ID ${id}.`,
-      );
+      throw new NotFoundException(`No existe un usuario con el ID ${id}.`);
     }
 
-    const suscripcion =
-      await this.prismaSuscripciones.suscripcion.findUnique({
-        where: {
-          UsuarioFK: id,
-        },
-        include: {
-          planSuscripcion: true,
-        },
-      });
+    const suscripcion = await this.prismaSuscripciones.suscripcion.findUnique({
+      where: {
+        UsuarioFK: id,
+      },
+      include: {
+        planSuscripcion: true,
+      },
+    });
 
     return {
       ...usuario,
@@ -119,40 +114,33 @@ export class UsuariosService {
     };
   }
 
-  async update(
-    id: number,
-    updateUsuarioDto: UpdateUsuarioDto,
-  ) {
+  async update(id: number, updateUsuarioDto: UpdateUsuarioDto) {
     await this.verificarUsuarioExiste(id);
 
     if (updateUsuarioDto.correo !== undefined) {
-      const usuarioConCorreo =
-        await this.prismaUsuarios.usuario.findFirst({
-          where: {
-            correo: updateUsuarioDto.correo,
-            NOT: {
-              IdUsuario: id,
-            },
+      const usuarioConCorreo = await this.prismaUsuarios.usuario.findFirst({
+        where: {
+          correo: updateUsuarioDto.correo,
+          NOT: {
+            IdUsuario: id,
           },
-        });
+        },
+      });
 
       if (usuarioConCorreo) {
-        throw new ConflictException(
-          'El correo ya está registrado.',
-        );
+        throw new ConflictException('El correo ya está registrado.');
       }
     }
 
     if (updateUsuarioDto.numeroTelefono !== undefined) {
-      const usuarioConTelefono =
-        await this.prismaUsuarios.usuario.findFirst({
-          where: {
-            numeroTelefono: updateUsuarioDto.numeroTelefono,
-            NOT: {
-              IdUsuario: id,
-            },
+      const usuarioConTelefono = await this.prismaUsuarios.usuario.findFirst({
+        where: {
+          numeroTelefono: updateUsuarioDto.numeroTelefono,
+          NOT: {
+            IdUsuario: id,
           },
-        });
+        },
+      });
 
       if (usuarioConTelefono) {
         throw new ConflictException(
@@ -330,9 +318,7 @@ export class UsuariosService {
     });
   }
 
-  private async verificarUsuarioExiste(
-    id: number,
-  ): Promise<void> {
+  private async verificarUsuarioExiste(id: number): Promise<void> {
     const usuario = await this.prismaUsuarios.usuario.findUnique({
       where: {
         IdUsuario: id,
@@ -343,9 +329,7 @@ export class UsuariosService {
     });
 
     if (!usuario) {
-      throw new NotFoundException(
-        `No existe un usuario con el ID ${id}.`,
-      );
+      throw new NotFoundException(`No existe un usuario con el ID ${id}.`);
     }
   }
 }

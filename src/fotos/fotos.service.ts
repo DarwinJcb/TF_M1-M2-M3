@@ -6,9 +6,7 @@ import { UpdateFotoDto } from './dto/update-foto.dto';
 
 @Injectable()
 export class FotosService {
-  constructor(
-    private readonly prismaUsuarios: PrismaUsuariosService,
-  ) { }
+  constructor(private readonly prismaUsuarios: PrismaUsuariosService) {}
 
   async create(createFotoDto: CreateFotoDto) {
     await this.verificarUsuario(createFotoDto.UsuarioFK);

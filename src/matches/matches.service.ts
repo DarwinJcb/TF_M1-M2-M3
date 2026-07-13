@@ -1,5 +1,10 @@
 /* src/matches/matches.service.ts: */
-import { BadRequestException, ConflictException, Injectable, NotFoundException, } from '@nestjs/common';
+import {
+  BadRequestException,
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { TipoInteraccion } from '../generated/prisma-interacciones/enums';
 import { PrismaInteraccionesService } from '../prisma-interacciones/prisma-interacciones.service';
 import { PrismaUsuariosService } from '../prisma-usuarios/prisma-usuarios.service';
@@ -11,35 +16,25 @@ export class MatchesService {
   constructor(
     private readonly prismaInteracciones: PrismaInteraccionesService,
     private readonly prismaUsuarios: PrismaUsuariosService,
-  ) { }
+  ) {}
 
   async create(createMatchDto: CreateMatchDto) {
     const { UsuarioUnoFK, UsuarioDosFK } = createMatchDto;
 
-    this.verificarUsuariosDiferentes(
-      UsuarioUnoFK,
-      UsuarioDosFK,
-    );
+    this.verificarUsuariosDiferentes(UsuarioUnoFK, UsuarioDosFK);
 
     const [usuarioUno, usuarioDos] = await Promise.all([
       this.obtenerUsuario(UsuarioUnoFK),
       this.obtenerUsuario(UsuarioDosFK),
     ]);
 
-    await this.verificarInteraccionesMutuas(
-      UsuarioUnoFK,
-      UsuarioDosFK,
-    );
+    await this.verificarInteraccionesMutuas(UsuarioUnoFK, UsuarioDosFK);
 
-    await this.verificarMatchDuplicado(
-      UsuarioUnoFK,
-      UsuarioDosFK,
-    );
+    await this.verificarMatchDuplicado(UsuarioUnoFK, UsuarioDosFK);
 
-    const match =
-      await this.prismaInteracciones.match.create({
-        data: createMatchDto,
-      });
+    const match = await this.prismaInteracciones.match.create({
+      data: createMatchDto,
+    });
 
     return {
       ...match,
@@ -49,68 +44,54 @@ export class MatchesService {
   }
 
   async findAll() {
-    const matches =
-      await this.prismaInteracciones.match.findMany({
-        include: {
-          chat: true,
-        },
-      });
+    const matches = await this.prismaInteracciones.match.findMany({
+      include: {
+        chat: true,
+      },
+    });
 
     if (matches.length === 0) {
       return [];
     }
 
-    const usuariosPorId =
-      await this.obtenerUsuariosPorIds(
-        matches.flatMap((match) => [
-          match.UsuarioUnoFK,
-          match.UsuarioDosFK,
-        ]),
-      );
+    const usuariosPorId = await this.obtenerUsuariosPorIds(
+      matches.flatMap((match) => [match.UsuarioUnoFK, match.UsuarioDosFK]),
+    );
 
     return matches.map((match) => ({
       ...match,
-      usuarioUno:
-        usuariosPorId.get(match.UsuarioUnoFK) ?? null,
-      usuarioDos:
-        usuariosPorId.get(match.UsuarioDosFK) ?? null,
+      usuarioUno: usuariosPorId.get(match.UsuarioUnoFK) ?? null,
+      usuarioDos: usuariosPorId.get(match.UsuarioDosFK) ?? null,
     }));
   }
 
   async findByUsuario(idUsuario: number) {
     await this.verificarUsuario(idUsuario);
 
-    const matches =
-      await this.prismaInteracciones.match.findMany({
-        where: {
-          OR: [
-            {
-              UsuarioUnoFK: idUsuario,
-            },
-            {
-              UsuarioDosFK: idUsuario,
-            },
-          ],
-        },
-        include: {
-          chat: true,
-        },
-      });
+    const matches = await this.prismaInteracciones.match.findMany({
+      where: {
+        OR: [
+          {
+            UsuarioUnoFK: idUsuario,
+          },
+          {
+            UsuarioDosFK: idUsuario,
+          },
+        ],
+      },
+      include: {
+        chat: true,
+      },
+    });
 
-    const usuariosPorId =
-      await this.obtenerUsuariosPorIds(
-        matches.flatMap((match) => [
-          match.UsuarioUnoFK,
-          match.UsuarioDosFK,
-        ]),
-      );
+    const usuariosPorId = await this.obtenerUsuariosPorIds(
+      matches.flatMap((match) => [match.UsuarioUnoFK, match.UsuarioDosFK]),
+    );
 
     return matches.map((match) => ({
       ...match,
-      usuarioUno:
-        usuariosPorId.get(match.UsuarioUnoFK) ?? null,
-      usuarioDos:
-        usuariosPorId.get(match.UsuarioDosFK) ?? null,
+      usuarioUno: usuariosPorId.get(match.UsuarioUnoFK) ?? null,
+      usuarioDos: usuariosPorId.get(match.UsuarioDosFK) ?? null,
     }));
   }
 
@@ -129,70 +110,49 @@ export class MatchesService {
     };
   }
 
-  async update(
-    id: number,
-    updateMatchDto: UpdateMatchDto,
-  ) {
+  async update(id: number, updateMatchDto: UpdateMatchDto) {
     const matchActual = await this.obtenerMatch(id);
 
     const cambiaUsuarioUno =
       updateMatchDto.UsuarioUnoFK !== undefined &&
-      updateMatchDto.UsuarioUnoFK !==
-      matchActual.UsuarioUnoFK;
+      updateMatchDto.UsuarioUnoFK !== matchActual.UsuarioUnoFK;
 
     const cambiaUsuarioDos =
       updateMatchDto.UsuarioDosFK !== undefined &&
-      updateMatchDto.UsuarioDosFK !==
-      matchActual.UsuarioDosFK;
+      updateMatchDto.UsuarioDosFK !== matchActual.UsuarioDosFK;
 
-    if (
-      matchActual.chat &&
-      (cambiaUsuarioUno || cambiaUsuarioDos)
-    ) {
+    if (matchActual.chat && (cambiaUsuarioUno || cambiaUsuarioDos)) {
       throw new ConflictException(
         'No se pueden modificar los usuarios del match porque ya tiene un chat asociado.',
       );
     }
 
     const idUsuarioUno =
-      updateMatchDto.UsuarioUnoFK ??
-      matchActual.UsuarioUnoFK;
+      updateMatchDto.UsuarioUnoFK ?? matchActual.UsuarioUnoFK;
 
     const idUsuarioDos =
-      updateMatchDto.UsuarioDosFK ??
-      matchActual.UsuarioDosFK;
+      updateMatchDto.UsuarioDosFK ?? matchActual.UsuarioDosFK;
 
-    this.verificarUsuariosDiferentes(
-      idUsuarioUno,
-      idUsuarioDos,
-    );
+    this.verificarUsuariosDiferentes(idUsuarioUno, idUsuarioDos);
 
     const [usuarioUno, usuarioDos] = await Promise.all([
       this.obtenerUsuario(idUsuarioUno),
       this.obtenerUsuario(idUsuarioDos),
     ]);
 
-    await this.verificarInteraccionesMutuas(
-      idUsuarioUno,
-      idUsuarioDos,
-    );
+    await this.verificarInteraccionesMutuas(idUsuarioUno, idUsuarioDos);
 
-    await this.verificarMatchDuplicado(
-      idUsuarioUno,
-      idUsuarioDos,
-      id,
-    );
+    await this.verificarMatchDuplicado(idUsuarioUno, idUsuarioDos, id);
 
-    const matchActualizado =
-      await this.prismaInteracciones.match.update({
-        where: {
-          IdMatch: id,
-        },
-        data: updateMatchDto,
-        include: {
-          chat: true,
-        },
-      });
+    const matchActualizado = await this.prismaInteracciones.match.update({
+      where: {
+        IdMatch: id,
+      },
+      data: updateMatchDto,
+      include: {
+        chat: true,
+      },
+    });
 
     return {
       ...matchActualizado,
@@ -218,20 +178,17 @@ export class MatchesService {
   }
 
   private async obtenerMatch(id: number) {
-    const match =
-      await this.prismaInteracciones.match.findUnique({
-        where: {
-          IdMatch: id,
-        },
-        include: {
-          chat: true,
-        },
-      });
+    const match = await this.prismaInteracciones.match.findUnique({
+      where: {
+        IdMatch: id,
+      },
+      include: {
+        chat: true,
+      },
+    });
 
     if (!match) {
-      throw new NotFoundException(
-        `No existe un match con el ID ${id}.`,
-      );
+      throw new NotFoundException(`No existe un match con el ID ${id}.`);
     }
 
     return match;
@@ -253,9 +210,7 @@ export class MatchesService {
     return usuario;
   }
 
-  private async verificarUsuario(
-    idUsuario: number,
-  ): Promise<void> {
+  private async verificarUsuario(idUsuario: number): Promise<void> {
     const usuario = await this.prismaUsuarios.usuario.findUnique({
       where: {
         IdUsuario: idUsuario,
@@ -272,31 +227,19 @@ export class MatchesService {
     }
   }
 
-  private async obtenerUsuariosPorIds(
-    idsUsuarios: number[],
-  ) {
-    const identificadoresUnicos = [
-      ...new Set(idsUsuarios),
-    ];
+  private async obtenerUsuariosPorIds(idsUsuarios: number[]) {
+    const identificadoresUnicos = [...new Set(idsUsuarios)];
 
-    if (identificadoresUnicos.length === 0) {
-      return new Map();
-    }
-
-    const usuarios =
-      await this.prismaUsuarios.usuario.findMany({
-        where: {
-          IdUsuario: {
-            in: identificadoresUnicos,
-          },
+    const usuarios = await this.prismaUsuarios.usuario.findMany({
+      where: {
+        IdUsuario: {
+          in: identificadoresUnicos,
         },
-      });
+      },
+    });
 
     return new Map(
-      usuarios.map((usuario) => [
-        usuario.IdUsuario,
-        usuario,
-      ]),
+      usuarios.map((usuario) => [usuario.IdUsuario, usuario] as const),
     );
   }
 
@@ -320,10 +263,7 @@ export class MatchesService {
       TipoInteraccion.SUPERLIKE,
     ];
 
-    const [
-      interaccionUsuarioUno,
-      interaccionUsuarioDos,
-    ] = await Promise.all([
+    const [interaccionUsuarioUno, interaccionUsuarioDos] = await Promise.all([
       this.prismaInteracciones.interaccion.findFirst({
         where: {
           UsuarioEmisorFK: idUsuarioUno,
@@ -344,10 +284,7 @@ export class MatchesService {
       }),
     ]);
 
-    if (
-      !interaccionUsuarioUno ||
-      !interaccionUsuarioDos
-    ) {
+    if (!interaccionUsuarioUno || !interaccionUsuarioDos) {
       throw new BadRequestException(
         'Para crear el match, ambos usuarios deben darse LIKE o SUPERLIKE.',
       );
@@ -359,28 +296,27 @@ export class MatchesService {
     idUsuarioDos: number,
     idMatchExcluir?: number,
   ): Promise<void> {
-    const matchExistente =
-      await this.prismaInteracciones.match.findFirst({
-        where: {
-          OR: [
-            {
-              UsuarioUnoFK: idUsuarioUno,
-              UsuarioDosFK: idUsuarioDos,
-            },
-            {
-              UsuarioUnoFK: idUsuarioDos,
-              UsuarioDosFK: idUsuarioUno,
-            },
-          ],
-          ...(idMatchExcluir !== undefined
-            ? {
+    const matchExistente = await this.prismaInteracciones.match.findFirst({
+      where: {
+        OR: [
+          {
+            UsuarioUnoFK: idUsuarioUno,
+            UsuarioDosFK: idUsuarioDos,
+          },
+          {
+            UsuarioUnoFK: idUsuarioDos,
+            UsuarioDosFK: idUsuarioUno,
+          },
+        ],
+        ...(idMatchExcluir !== undefined
+          ? {
               NOT: {
                 IdMatch: idMatchExcluir,
               },
             }
-            : {}),
-        },
-      });
+          : {}),
+      },
+    });
 
     if (matchExistente) {
       throw new ConflictException(

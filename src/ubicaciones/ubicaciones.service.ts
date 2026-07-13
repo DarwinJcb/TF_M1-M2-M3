@@ -6,9 +6,7 @@ import { UpdateUbicacionDto } from './dto/update-ubicacion.dto';
 
 @Injectable()
 export class UbicacionesService {
-  constructor(
-    private readonly prismaUsuarios: PrismaUsuariosService,
-  ) { }
+  constructor(private readonly prismaUsuarios: PrismaUsuariosService) {}
 
   async create(createUbicacionDto: CreateUbicacionDto) {
     await this.verificarUsuario(createUbicacionDto.UsuarioFK);

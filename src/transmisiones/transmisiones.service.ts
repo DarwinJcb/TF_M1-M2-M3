@@ -1,26 +1,31 @@
 /* src/transmisiones/transmisiones.service.ts: */
-import { BadRequestException, ConflictException, Injectable, NotFoundException, } from '@nestjs/common';
-import { EstadoActividad, EstadoTransmision, } from '../generated/prisma-usuarios/enums';
+import {
+  BadRequestException,
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
+import {
+  EstadoActividad,
+  EstadoTransmision,
+} from '../generated/prisma-usuarios/enums';
 import { PrismaUsuariosService } from '../prisma-usuarios/prisma-usuarios.service';
 import { CreateTransmisionDto } from './dto/create-transmision.dto';
 import { UpdateTransmisionDto } from './dto/update-transmision.dto';
 
 @Injectable()
 export class TransmisionesService {
-  constructor(
-    private readonly prismaUsuarios: PrismaUsuariosService,
-  ) { }
+  constructor(private readonly prismaUsuarios: PrismaUsuariosService) {}
 
   async create(createTransmisionDto: CreateTransmisionDto) {
     await this.verificarUsuario(createTransmisionDto.UsuarioFK);
 
-    const transmisionActiva =
-      await this.prismaUsuarios.transmision.findFirst({
-        where: {
-          UsuarioFK: createTransmisionDto.UsuarioFK,
-          estado: EstadoTransmision.LIVE,
-        },
-      });
+    const transmisionActiva = await this.prismaUsuarios.transmision.findFirst({
+      where: {
+        UsuarioFK: createTransmisionDto.UsuarioFK,
+        estado: EstadoTransmision.LIVE,
+      },
+    });
 
     if (transmisionActiva) {
       throw new ConflictException(
@@ -28,26 +33,24 @@ export class TransmisionesService {
       );
     }
 
-    return this.prismaUsuarios.$transaction(
-      async (transaccion) => {
-        await transaccion.usuario.update({
-          where: {
-            IdUsuario: createTransmisionDto.UsuarioFK,
-          },
-          data: {
-            estadoActividad: EstadoActividad.ONLINE,
-          },
-        });
+    return this.prismaUsuarios.$transaction(async (transaccion) => {
+      await transaccion.usuario.update({
+        where: {
+          IdUsuario: createTransmisionDto.UsuarioFK,
+        },
+        data: {
+          estadoActividad: EstadoActividad.ONLINE,
+        },
+      });
 
-        return transaccion.transmision.create({
-          data: createTransmisionDto,
-          include: {
-            usuario: true,
-            donaciones: true,
-          },
-        });
-      },
-    );
+      return transaccion.transmision.create({
+        data: createTransmisionDto,
+        include: {
+          usuario: true,
+          donaciones: true,
+        },
+      });
+    });
   }
 
   findAll() {
@@ -95,40 +98,28 @@ export class TransmisionesService {
   }
 
   async findOne(id: number) {
-    const transmision =
-      await this.prismaUsuarios.transmision.findUnique({
-        where: {
-          IdTransmision: id,
-        },
-        include: {
-          usuario: true,
-          donaciones: true,
-        },
-      });
+    const transmision = await this.prismaUsuarios.transmision.findUnique({
+      where: {
+        IdTransmision: id,
+      },
+      include: {
+        usuario: true,
+        donaciones: true,
+      },
+    });
 
     if (!transmision) {
-      throw new NotFoundException(
-        `No existe una transmisión con el ID ${id}.`,
-      );
+      throw new NotFoundException(`No existe una transmisión con el ID ${id}.`);
     }
 
     return transmision;
   }
 
-  async update(
-    id: number,
-    updateTransmisionDto: UpdateTransmisionDto,
-  ) {
+  async update(id: number, updateTransmisionDto: UpdateTransmisionDto) {
     const transmisionActual = await this.findOne(id);
 
-    if (
-      transmisionActual.estado ===
-      EstadoTransmision.FINALIZADA
-    ) {
-      if (
-        updateTransmisionDto.estado ===
-        EstadoTransmision.LIVE
-      ) {
+    if (transmisionActual.estado === EstadoTransmision.FINALIZADA) {
+      if (updateTransmisionDto.estado === EstadoTransmision.LIVE) {
         throw new BadRequestException(
           'Una transmisión finalizada no puede volver a estar LIVE.',
         );
@@ -139,41 +130,34 @@ export class TransmisionesService {
       );
     }
 
-    if (
-      updateTransmisionDto.estado === EstadoTransmision.LIVE
-    ) {
-      throw new BadRequestException(
-        'La transmisión ya se encuentra LIVE.',
-      );
+    if (updateTransmisionDto.estado === EstadoTransmision.LIVE) {
+      throw new BadRequestException('La transmisión ya se encuentra LIVE.');
     }
 
-    return this.prismaUsuarios.$transaction(
-      async (transaccion) => {
-        await transaccion.usuario.update({
-          where: {
-            IdUsuario: transmisionActual.UsuarioFK,
-          },
-          data: {
-            estadoActividad:
-              EstadoActividad.DESCONECTADO,
-          },
-        });
+    return this.prismaUsuarios.$transaction(async (transaccion) => {
+      await transaccion.usuario.update({
+        where: {
+          IdUsuario: transmisionActual.UsuarioFK,
+        },
+        data: {
+          estadoActividad: EstadoActividad.DESCONECTADO,
+        },
+      });
 
-        return transaccion.transmision.update({
-          where: {
-            IdTransmision: id,
-          },
-          data: {
-            estado: EstadoTransmision.FINALIZADA,
-            fechaFin: new Date(),
-          },
-          include: {
-            usuario: true,
-            donaciones: true,
-          },
-        });
-      },
-    );
+      return transaccion.transmision.update({
+        where: {
+          IdTransmision: id,
+        },
+        data: {
+          estado: EstadoTransmision.FINALIZADA,
+          fechaFin: new Date(),
+        },
+        include: {
+          usuario: true,
+          donaciones: true,
+        },
+      });
+    });
   }
 
   async remove(id: number) {
@@ -185,28 +169,23 @@ export class TransmisionesService {
       );
     }
 
-    if (
-      transmision.estado === EstadoTransmision.LIVE
-    ) {
-      return this.prismaUsuarios.$transaction(
-        async (transaccion) => {
-          await transaccion.usuario.update({
-            where: {
-              IdUsuario: transmision.UsuarioFK,
-            },
-            data: {
-              estadoActividad:
-                EstadoActividad.DESCONECTADO,
-            },
-          });
+    if (transmision.estado === EstadoTransmision.LIVE) {
+      return this.prismaUsuarios.$transaction(async (transaccion) => {
+        await transaccion.usuario.update({
+          where: {
+            IdUsuario: transmision.UsuarioFK,
+          },
+          data: {
+            estadoActividad: EstadoActividad.DESCONECTADO,
+          },
+        });
 
-          return transaccion.transmision.delete({
-            where: {
-              IdTransmision: id,
-            },
-          });
-        },
-      );
+        return transaccion.transmision.delete({
+          where: {
+            IdTransmision: id,
+          },
+        });
+      });
     }
 
     return this.prismaUsuarios.transmision.delete({
@@ -216,18 +195,15 @@ export class TransmisionesService {
     });
   }
 
-  private async verificarUsuario(
-    idUsuario: number,
-  ): Promise<void> {
-    const usuario =
-      await this.prismaUsuarios.usuario.findUnique({
-        where: {
-          IdUsuario: idUsuario,
-        },
-        select: {
-          IdUsuario: true,
-        },
-      });
+  private async verificarUsuario(idUsuario: number): Promise<void> {
+    const usuario = await this.prismaUsuarios.usuario.findUnique({
+      where: {
+        IdUsuario: idUsuario,
+      },
+      select: {
+        IdUsuario: true,
+      },
+    });
 
     if (!usuario) {
       throw new NotFoundException(

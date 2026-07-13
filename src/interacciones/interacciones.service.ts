@@ -1,5 +1,10 @@
 /* src/interacciones/interacciones.service.ts: */
-import { BadRequestException, ConflictException, Injectable, NotFoundException, } from '@nestjs/common';
+import {
+  BadRequestException,
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { PrismaInteraccionesService } from '../prisma-interacciones/prisma-interacciones.service';
 import { PrismaUsuariosService } from '../prisma-usuarios/prisma-usuarios.service';
 import { CreateInteraccionDto } from './dto/create-interaccion.dto';
@@ -10,22 +15,17 @@ export class InteraccionesService {
   constructor(
     private readonly prismaInteracciones: PrismaInteraccionesService,
     private readonly prismaUsuarios: PrismaUsuariosService,
-  ) { }
+  ) {}
 
   async create(createInteraccionDto: CreateInteraccionDto) {
-    const { UsuarioEmisorFK, UsuarioReceptorFK } =
-      createInteraccionDto;
+    const { UsuarioEmisorFK, UsuarioReceptorFK } = createInteraccionDto;
 
-    this.verificarUsuariosDiferentes(
-      UsuarioEmisorFK,
-      UsuarioReceptorFK,
-    );
+    this.verificarUsuariosDiferentes(UsuarioEmisorFK, UsuarioReceptorFK);
 
-    const [usuarioEmisor, usuarioReceptor] =
-      await Promise.all([
-        this.obtenerUsuario(UsuarioEmisorFK),
-        this.obtenerUsuario(UsuarioReceptorFK),
-      ]);
+    const [usuarioEmisor, usuarioReceptor] = await Promise.all([
+      this.obtenerUsuario(UsuarioEmisorFK),
+      this.obtenerUsuario(UsuarioReceptorFK),
+    ]);
 
     const interaccionExistente =
       await this.prismaInteracciones.interaccion.findFirst({
@@ -41,10 +41,9 @@ export class InteraccionesService {
       );
     }
 
-    const interaccion =
-      await this.prismaInteracciones.interaccion.create({
-        data: createInteraccionDto,
-      });
+    const interaccion = await this.prismaInteracciones.interaccion.create({
+      data: createInteraccionDto,
+    });
 
     return {
       ...interaccion,
@@ -54,86 +53,62 @@ export class InteraccionesService {
   }
 
   async findAll() {
-    const interacciones =
-      await this.prismaInteracciones.interaccion.findMany();
+    const interacciones = await this.prismaInteracciones.interaccion.findMany();
 
     if (interacciones.length === 0) {
       return [];
     }
 
-    const usuariosPorId =
-      await this.obtenerUsuariosPorIds(
-        interacciones.flatMap((interaccion) => [
-          interaccion.UsuarioEmisorFK,
-          interaccion.UsuarioReceptorFK,
-        ]),
-      );
+    const usuariosPorId = await this.obtenerUsuariosPorIds(
+      interacciones.flatMap((interaccion) => [
+        interaccion.UsuarioEmisorFK,
+        interaccion.UsuarioReceptorFK,
+      ]),
+    );
 
     return interacciones.map((interaccion) => ({
       ...interaccion,
-      usuarioEmisor:
-        usuariosPorId.get(
-          interaccion.UsuarioEmisorFK,
-        ) ?? null,
-      usuarioReceptor:
-        usuariosPorId.get(
-          interaccion.UsuarioReceptorFK,
-        ) ?? null,
+      usuarioEmisor: usuariosPorId.get(interaccion.UsuarioEmisorFK) ?? null,
+      usuarioReceptor: usuariosPorId.get(interaccion.UsuarioReceptorFK) ?? null,
     }));
   }
 
   async findByEmisor(idUsuario: number) {
     const usuarioEmisor = await this.obtenerUsuario(idUsuario);
 
-    const interacciones =
-      await this.prismaInteracciones.interaccion.findMany({
-        where: {
-          UsuarioEmisorFK: idUsuario,
-        },
-      });
+    const interacciones = await this.prismaInteracciones.interaccion.findMany({
+      where: {
+        UsuarioEmisorFK: idUsuario,
+      },
+    });
 
-    const usuariosPorId =
-      await this.obtenerUsuariosPorIds(
-        interacciones.map(
-          (interaccion) =>
-            interaccion.UsuarioReceptorFK,
-        ),
-      );
+    const usuariosPorId = await this.obtenerUsuariosPorIds(
+      interacciones.map((interaccion) => interaccion.UsuarioReceptorFK),
+    );
 
     return interacciones.map((interaccion) => ({
       ...interaccion,
       usuarioEmisor,
-      usuarioReceptor:
-        usuariosPorId.get(
-          interaccion.UsuarioReceptorFK,
-        ) ?? null,
+      usuarioReceptor: usuariosPorId.get(interaccion.UsuarioReceptorFK) ?? null,
     }));
   }
 
   async findByReceptor(idUsuario: number) {
-    const usuarioReceptor =
-      await this.obtenerUsuario(idUsuario);
+    const usuarioReceptor = await this.obtenerUsuario(idUsuario);
 
-    const interacciones =
-      await this.prismaInteracciones.interaccion.findMany({
-        where: {
-          UsuarioReceptorFK: idUsuario,
-        },
-      });
+    const interacciones = await this.prismaInteracciones.interaccion.findMany({
+      where: {
+        UsuarioReceptorFK: idUsuario,
+      },
+    });
 
-    const usuariosPorId =
-      await this.obtenerUsuariosPorIds(
-        interacciones.map(
-          (interaccion) => interaccion.UsuarioEmisorFK,
-        ),
-      );
+    const usuariosPorId = await this.obtenerUsuariosPorIds(
+      interacciones.map((interaccion) => interaccion.UsuarioEmisorFK),
+    );
 
     return interacciones.map((interaccion) => ({
       ...interaccion,
-      usuarioEmisor:
-        usuariosPorId.get(
-          interaccion.UsuarioEmisorFK,
-        ) ?? null,
+      usuarioEmisor: usuariosPorId.get(interaccion.UsuarioEmisorFK) ?? null,
       usuarioReceptor,
     }));
   }
@@ -141,13 +116,10 @@ export class InteraccionesService {
   async findOne(id: number) {
     const interaccion = await this.obtenerInteraccion(id);
 
-    const [usuarioEmisor, usuarioReceptor] =
-      await Promise.all([
-        this.obtenerUsuario(interaccion.UsuarioEmisorFK),
-        this.obtenerUsuario(
-          interaccion.UsuarioReceptorFK,
-        ),
-      ]);
+    const [usuarioEmisor, usuarioReceptor] = await Promise.all([
+      this.obtenerUsuario(interaccion.UsuarioEmisorFK),
+      this.obtenerUsuario(interaccion.UsuarioReceptorFK),
+    ]);
 
     return {
       ...interaccion,
@@ -156,31 +128,22 @@ export class InteraccionesService {
     };
   }
 
-  async update(
-    id: number,
-    updateInteraccionDto: UpdateInteraccionDto,
-  ) {
-    const interaccionActual =
-      await this.obtenerInteraccion(id);
+  async update(id: number, updateInteraccionDto: UpdateInteraccionDto) {
+    const interaccionActual = await this.obtenerInteraccion(id);
 
     const idUsuarioEmisor =
-      updateInteraccionDto.UsuarioEmisorFK ??
-      interaccionActual.UsuarioEmisorFK;
+      updateInteraccionDto.UsuarioEmisorFK ?? interaccionActual.UsuarioEmisorFK;
 
     const idUsuarioReceptor =
       updateInteraccionDto.UsuarioReceptorFK ??
       interaccionActual.UsuarioReceptorFK;
 
-    this.verificarUsuariosDiferentes(
-      idUsuarioEmisor,
-      idUsuarioReceptor,
-    );
+    this.verificarUsuariosDiferentes(idUsuarioEmisor, idUsuarioReceptor);
 
-    const [usuarioEmisor, usuarioReceptor] =
-      await Promise.all([
-        this.obtenerUsuario(idUsuarioEmisor),
-        this.obtenerUsuario(idUsuarioReceptor),
-      ]);
+    const [usuarioEmisor, usuarioReceptor] = await Promise.all([
+      this.obtenerUsuario(idUsuarioEmisor),
+      this.obtenerUsuario(idUsuarioReceptor),
+    ]);
 
     const interaccionDuplicada =
       await this.prismaInteracciones.interaccion.findFirst({
@@ -225,17 +188,14 @@ export class InteraccionesService {
   }
 
   private async obtenerInteraccion(id: number) {
-    const interaccion =
-      await this.prismaInteracciones.interaccion.findUnique({
-        where: {
-          IdInteraccion: id,
-        },
-      });
+    const interaccion = await this.prismaInteracciones.interaccion.findUnique({
+      where: {
+        IdInteraccion: id,
+      },
+    });
 
     if (!interaccion) {
-      throw new NotFoundException(
-        `No existe una interacción con el ID ${id}.`,
-      );
+      throw new NotFoundException(`No existe una interacción con el ID ${id}.`);
     }
 
     return interaccion;
@@ -257,31 +217,19 @@ export class InteraccionesService {
     return usuario;
   }
 
-  private async obtenerUsuariosPorIds(
-    idsUsuarios: number[],
-  ) {
-    const identificadoresUnicos = [
-      ...new Set(idsUsuarios),
-    ];
+  private async obtenerUsuariosPorIds(idsUsuarios: number[]) {
+    const identificadoresUnicos = [...new Set(idsUsuarios)];
 
-    if (identificadoresUnicos.length === 0) {
-      return new Map();
-    }
-
-    const usuarios =
-      await this.prismaUsuarios.usuario.findMany({
-        where: {
-          IdUsuario: {
-            in: identificadoresUnicos,
-          },
+    const usuarios = await this.prismaUsuarios.usuario.findMany({
+      where: {
+        IdUsuario: {
+          in: identificadoresUnicos,
         },
-      });
+      },
+    });
 
     return new Map(
-      usuarios.map((usuario) => [
-        usuario.IdUsuario,
-        usuario,
-      ]),
+      usuarios.map((usuario) => [usuario.IdUsuario, usuario] as const),
     );
   }
 

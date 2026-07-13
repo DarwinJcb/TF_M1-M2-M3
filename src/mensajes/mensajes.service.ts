@@ -1,5 +1,9 @@
 /* src/mensajes/mensajes.service.ts: */
-import { ForbiddenException, Injectable, NotFoundException, } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { PrismaInteraccionesService } from '../prisma-interacciones/prisma-interacciones.service';
 import { PrismaUsuariosService } from '../prisma-usuarios/prisma-usuarios.service';
 import { CreateMensajeDto } from './dto/create-mensaje.dto';
@@ -10,12 +14,10 @@ export class MensajesService {
   constructor(
     private readonly prismaInteracciones: PrismaInteraccionesService,
     private readonly prismaUsuarios: PrismaUsuariosService,
-  ) { }
+  ) {}
 
   async create(createMensajeDto: CreateMensajeDto) {
-    const chat = await this.obtenerChatConMatch(
-      createMensajeDto.ChatFK,
-    );
+    const chat = await this.obtenerChatConMatch(createMensajeDto.ChatFK);
 
     const usuarioEmisor = await this.obtenerUsuario(
       createMensajeDto.UsuarioEmisorFK,
@@ -27,17 +29,16 @@ export class MensajesService {
       chat.match.UsuarioDosFK,
     );
 
-    const mensaje =
-      await this.prismaInteracciones.mensaje.create({
-        data: createMensajeDto,
-        include: {
-          chat: {
-            include: {
-              match: true,
-            },
+    const mensaje = await this.prismaInteracciones.mensaje.create({
+      data: createMensajeDto,
+      include: {
+        chat: {
+          include: {
+            match: true,
           },
         },
-      });
+      },
+    });
 
     return {
       ...mensaje,
@@ -46,100 +47,84 @@ export class MensajesService {
   }
 
   async findAll() {
-    const mensajes =
-      await this.prismaInteracciones.mensaje.findMany({
-        include: {
-          chat: {
-            include: {
-              match: true,
-            },
+    const mensajes = await this.prismaInteracciones.mensaje.findMany({
+      include: {
+        chat: {
+          include: {
+            match: true,
           },
         },
-        orderBy: {
-          fechaEnvio: 'asc',
-        },
-      });
+      },
+      orderBy: {
+        fechaEnvio: 'asc',
+      },
+    });
 
     if (mensajes.length === 0) {
       return [];
     }
 
-    const usuariosPorId =
-      await this.obtenerUsuariosPorIds(
-        mensajes.map(
-          (mensaje) => mensaje.UsuarioEmisorFK,
-        ),
-      );
+    const usuariosPorId = await this.obtenerUsuariosPorIds(
+      mensajes.map((mensaje) => mensaje.UsuarioEmisorFK),
+    );
 
     return mensajes.map((mensaje) => ({
       ...mensaje,
-      usuarioEmisor:
-        usuariosPorId.get(
-          mensaje.UsuarioEmisorFK,
-        ) ?? null,
+      usuarioEmisor: usuariosPorId.get(mensaje.UsuarioEmisorFK) ?? null,
     }));
   }
 
   async findByChat(idChat: number) {
     await this.obtenerChatConMatch(idChat);
 
-    const mensajes =
-      await this.prismaInteracciones.mensaje.findMany({
-        where: {
-          ChatFK: idChat,
-        },
-        include: {
-          chat: {
-            include: {
-              match: true,
-            },
+    const mensajes = await this.prismaInteracciones.mensaje.findMany({
+      where: {
+        ChatFK: idChat,
+      },
+      include: {
+        chat: {
+          include: {
+            match: true,
           },
         },
-        orderBy: {
-          fechaEnvio: 'asc',
-        },
-      });
+      },
+      orderBy: {
+        fechaEnvio: 'asc',
+      },
+    });
 
     if (mensajes.length === 0) {
       return [];
     }
 
-    const usuariosPorId =
-      await this.obtenerUsuariosPorIds(
-        mensajes.map(
-          (mensaje) => mensaje.UsuarioEmisorFK,
-        ),
-      );
+    const usuariosPorId = await this.obtenerUsuariosPorIds(
+      mensajes.map((mensaje) => mensaje.UsuarioEmisorFK),
+    );
 
     return mensajes.map((mensaje) => ({
       ...mensaje,
-      usuarioEmisor:
-        usuariosPorId.get(
-          mensaje.UsuarioEmisorFK,
-        ) ?? null,
+      usuarioEmisor: usuariosPorId.get(mensaje.UsuarioEmisorFK) ?? null,
     }));
   }
 
   async findByUsuario(idUsuario: number) {
-    const usuarioEmisor =
-      await this.obtenerUsuario(idUsuario);
+    const usuarioEmisor = await this.obtenerUsuario(idUsuario);
 
-    const mensajes =
-      await this.prismaInteracciones.mensaje.findMany({
-        where: {
-          UsuarioEmisorFK: idUsuario,
-        },
-        include: {
-          chat: {
-            include: {
-              match: true,
-            },
+    const mensajes = await this.prismaInteracciones.mensaje.findMany({
+      where: {
+        UsuarioEmisorFK: idUsuario,
+      },
+      include: {
+        chat: {
+          include: {
+            match: true,
           },
         },
-        orderBy: {
-          fechaEnvio: 'asc',
-        },
-      });
+      },
+      orderBy: {
+        fechaEnvio: 'asc',
+      },
+    });
 
     return mensajes.map((mensaje) => ({
       ...mensaje,
@@ -150,9 +135,7 @@ export class MensajesService {
   async findOne(id: number) {
     const mensaje = await this.obtenerMensaje(id);
 
-    const usuarioEmisor = await this.obtenerUsuario(
-      mensaje.UsuarioEmisorFK,
-    );
+    const usuarioEmisor = await this.obtenerUsuario(mensaje.UsuarioEmisorFK);
 
     return {
       ...mensaje,
@@ -160,24 +143,17 @@ export class MensajesService {
     };
   }
 
-  async update(
-    id: number,
-    updateMensajeDto: UpdateMensajeDto,
-  ) {
+  async update(id: number, updateMensajeDto: UpdateMensajeDto) {
     const mensajeActual = await this.obtenerMensaje(id);
 
-    const idChat =
-      updateMensajeDto.ChatFK ?? mensajeActual.ChatFK;
+    const idChat = updateMensajeDto.ChatFK ?? mensajeActual.ChatFK;
 
     const idUsuarioEmisor =
-      updateMensajeDto.UsuarioEmisorFK ??
-      mensajeActual.UsuarioEmisorFK;
+      updateMensajeDto.UsuarioEmisorFK ?? mensajeActual.UsuarioEmisorFK;
 
     const chat = await this.obtenerChatConMatch(idChat);
 
-    const usuarioEmisor = await this.obtenerUsuario(
-      idUsuarioEmisor,
-    );
+    const usuarioEmisor = await this.obtenerUsuario(idUsuarioEmisor);
 
     this.verificarUsuarioPerteneceAlMatch(
       idUsuarioEmisor,
@@ -185,20 +161,19 @@ export class MensajesService {
       chat.match.UsuarioDosFK,
     );
 
-    const mensajeActualizado =
-      await this.prismaInteracciones.mensaje.update({
-        where: {
-          IdMensaje: id,
-        },
-        data: updateMensajeDto,
-        include: {
-          chat: {
-            include: {
-              match: true,
-            },
+    const mensajeActualizado = await this.prismaInteracciones.mensaje.update({
+      where: {
+        IdMensaje: id,
+      },
+      data: updateMensajeDto,
+      include: {
+        chat: {
+          include: {
+            match: true,
           },
         },
-      });
+      },
+    });
 
     return {
       ...mensajeActualizado,
@@ -217,19 +192,18 @@ export class MensajesService {
   }
 
   private async obtenerMensaje(idMensaje: number) {
-    const mensaje =
-      await this.prismaInteracciones.mensaje.findUnique({
-        where: {
-          IdMensaje: idMensaje,
-        },
-        include: {
-          chat: {
-            include: {
-              match: true,
-            },
+    const mensaje = await this.prismaInteracciones.mensaje.findUnique({
+      where: {
+        IdMensaje: idMensaje,
+      },
+      include: {
+        chat: {
+          include: {
+            match: true,
           },
         },
-      });
+      },
+    });
 
     if (!mensaje) {
       throw new NotFoundException(
@@ -241,20 +215,17 @@ export class MensajesService {
   }
 
   private async obtenerChatConMatch(idChat: number) {
-    const chat =
-      await this.prismaInteracciones.chat.findUnique({
-        where: {
-          IdChat: idChat,
-        },
-        include: {
-          match: true,
-        },
-      });
+    const chat = await this.prismaInteracciones.chat.findUnique({
+      where: {
+        IdChat: idChat,
+      },
+      include: {
+        match: true,
+      },
+    });
 
     if (!chat) {
-      throw new NotFoundException(
-        `No existe un chat con el ID ${idChat}.`,
-      );
+      throw new NotFoundException(`No existe un chat con el ID ${idChat}.`);
     }
 
     return chat;
@@ -276,31 +247,19 @@ export class MensajesService {
     return usuario;
   }
 
-  private async obtenerUsuariosPorIds(
-    idsUsuarios: number[],
-  ) {
-    const identificadoresUnicos = [
-      ...new Set(idsUsuarios),
-    ];
+  private async obtenerUsuariosPorIds(idsUsuarios: number[]) {
+    const identificadoresUnicos = [...new Set(idsUsuarios)];
 
-    if (identificadoresUnicos.length === 0) {
-      return new Map();
-    }
-
-    const usuarios =
-      await this.prismaUsuarios.usuario.findMany({
-        where: {
-          IdUsuario: {
-            in: identificadoresUnicos,
-          },
+    const usuarios = await this.prismaUsuarios.usuario.findMany({
+      where: {
+        IdUsuario: {
+          in: identificadoresUnicos,
         },
-      });
+      },
+    });
 
     return new Map(
-      usuarios.map((usuario) => [
-        usuario.IdUsuario,
-        usuario,
-      ]),
+      usuarios.map((usuario) => [usuario.IdUsuario, usuario] as const),
     );
   }
 
@@ -310,8 +269,7 @@ export class MensajesService {
     idUsuarioDos: number,
   ): void {
     const perteneceAlMatch =
-      idUsuario === idUsuarioUno ||
-      idUsuario === idUsuarioDos;
+      idUsuario === idUsuarioUno || idUsuario === idUsuarioDos;
 
     if (!perteneceAlMatch) {
       throw new ForbiddenException(

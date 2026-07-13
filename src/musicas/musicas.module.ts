@@ -9,4 +9,4 @@ import { MusicasService } from './musicas.service';
   controllers: [MusicasController],
   providers: [MusicasService],
 })
-export class MusicasModule { }
+export class MusicasModule {}

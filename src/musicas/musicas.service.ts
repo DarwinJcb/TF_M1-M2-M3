@@ -10,9 +10,7 @@ import { UpdateMusicaDto } from './dto/update-musica.dto';
 
 @Injectable()
 export class MusicasService {
-  constructor(
-    private readonly prismaUsuarios: PrismaUsuariosService,
-  ) { }
+  constructor(private readonly prismaUsuarios: PrismaUsuariosService) {}
 
   async create(createMusicaDto: CreateMusicaDto) {
     await this.verificarUsuario(createMusicaDto.UsuarioFK);

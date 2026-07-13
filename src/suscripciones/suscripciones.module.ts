@@ -10,4 +10,4 @@ import { SuscripcionesService } from './suscripciones.service';
   controllers: [SuscripcionesController],
   providers: [SuscripcionesService],
 })
-export class SuscripcionesModule { }
+export class SuscripcionesModule {}

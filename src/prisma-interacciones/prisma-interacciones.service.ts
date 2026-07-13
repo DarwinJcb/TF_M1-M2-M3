@@ -5,24 +5,24 @@ import { PrismaPg } from '@prisma/adapter-pg';
 import { PrismaClient } from '../generated/prisma-interacciones/client';
 
 function obtenerUrlBaseDatosInteracciones(): string {
-    const urlBaseDatos = process.env['DATABASE_URL_INTERACCIONES'];
+  const urlBaseDatos = process.env['DATABASE_URL_INTERACCIONES'];
 
-    if (!urlBaseDatos) {
-        throw new Error(
-            'La variable de entorno DATABASE_URL_INTERACCIONES no está definida en el archivo .env.',
-        );
-    }
+  if (!urlBaseDatos) {
+    throw new Error(
+      'La variable de entorno DATABASE_URL_INTERACCIONES no está definida en el archivo .env.',
+    );
+  }
 
-    return urlBaseDatos;
+  return urlBaseDatos;
 }
 
 @Injectable()
 export class PrismaInteraccionesService extends PrismaClient {
-    constructor() {
-        const adapter = new PrismaPg({
-            connectionString: obtenerUrlBaseDatosInteracciones(),
-        });
+  constructor() {
+    const adapter = new PrismaPg({
+      connectionString: obtenerUrlBaseDatosInteracciones(),
+    });
 
-        super({ adapter });
-    }
+    super({ adapter });
+  }
 }

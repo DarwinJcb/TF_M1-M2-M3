@@ -9,4 +9,4 @@ import { PlanesSuscripcionService } from './planes-suscripcion.service';
   controllers: [PlanesSuscripcionController],
   providers: [PlanesSuscripcionService],
 })
-export class PlanesSuscripcionModule { }
+export class PlanesSuscripcionModule {}

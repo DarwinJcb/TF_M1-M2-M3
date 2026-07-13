@@ -8,11 +8,9 @@ import { UpdateCondicionComunicacionDto } from './dto/update-condicion-comunicac
 export class CondicionesComunicacionService {
   constructor(
     private readonly prismaInteracciones: PrismaInteraccionesService,
-  ) { }
+  ) {}
 
-  create(
-    createCondicionComunicacionDto: CreateCondicionComunicacionDto,
-  ) {
+  create(createCondicionComunicacionDto: CreateCondicionComunicacionDto) {
     return this.prismaInteracciones.condicionComunicacion.create({
       data: createCondicionComunicacionDto,
     });

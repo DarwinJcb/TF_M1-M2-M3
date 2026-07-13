@@ -10,4 +10,4 @@ import { MensajesService } from './mensajes.service';
   controllers: [MensajesController],
   providers: [MensajesService],
 })
-export class MensajesModule { }
+export class MensajesModule {}
