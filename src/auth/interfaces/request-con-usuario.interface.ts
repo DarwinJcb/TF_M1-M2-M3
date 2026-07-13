@@ -1,2 +1,7 @@
 /* src/auth/interfaces/request-con-usuario.interface.ts: */
-export interface RequestConUsuario { }
+import { Request } from 'express';
+import { UsuarioAutenticado } from './usuario-autenticado.interface';
+
+export interface RequestConUsuario extends Request {
+    user: UsuarioAutenticado;
+}
