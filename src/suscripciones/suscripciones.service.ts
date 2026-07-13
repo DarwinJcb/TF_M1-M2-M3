@@ -17,7 +17,9 @@ export class SuscripcionesService {
   ) { }
 
   async create(createSuscripcionDto: CreateSuscripcionDto) {
-    await this.verificarUsuario(createSuscripcionDto.UsuarioFK);
+    const usuario = await this.obtenerUsuario(
+      createSuscripcionDto.UsuarioFK,
+    );
 
     await this.verificarPlanSuscripcion(
       createSuscripcionDto.PlanSuscripcionFK,
@@ -36,12 +38,19 @@ export class SuscripcionesService {
       );
     }
 
-    return this.prismaSuscripciones.suscripcion.create({
-      data: createSuscripcionDto,
-      include: {
-        planSuscripcion: true,
-      },
-    });
+    const suscripcion =
+      await this.prismaSuscripciones.suscripcion.create({
+        data: createSuscripcionDto,
+        include: {
+          planSuscripcion: true,
+          pagos: true,
+        },
+      });
+
+    return {
+      ...suscripcion,
+      usuario,
+    };
   }
 
   async findAll() {
@@ -70,17 +79,21 @@ export class SuscripcionesService {
     });
 
     const usuariosPorId = new Map(
-      usuarios.map((usuario) => [usuario.IdUsuario, usuario]),
+      usuarios.map((usuario) => [
+        usuario.IdUsuario,
+        usuario,
+      ]),
     );
 
     return suscripciones.map((suscripcion) => ({
       ...suscripcion,
-      usuario: usuariosPorId.get(suscripcion.UsuarioFK) ?? null,
+      usuario:
+        usuariosPorId.get(suscripcion.UsuarioFK) ?? null,
     }));
   }
 
   async findByUsuario(idUsuario: number) {
-    await this.verificarUsuario(idUsuario);
+    const usuario = await this.obtenerUsuario(idUsuario);
 
     const suscripcion =
       await this.prismaSuscripciones.suscripcion.findUnique({
@@ -99,7 +112,10 @@ export class SuscripcionesService {
       );
     }
 
-    return suscripcion;
+    return {
+      ...suscripcion,
+      usuario,
+    };
   }
 
   async findOne(id: number) {
@@ -120,11 +136,9 @@ export class SuscripcionesService {
       );
     }
 
-    const usuario = await this.prismaUsuarios.usuario.findUnique({
-      where: {
-        IdUsuario: suscripcion.UsuarioFK,
-      },
-    });
+    const usuario = await this.obtenerUsuario(
+      suscripcion.UsuarioFK,
+    );
 
     return {
       ...suscripcion,
@@ -153,7 +167,9 @@ export class SuscripcionesService {
     }
 
     if (updateSuscripcionDto.UsuarioFK !== undefined) {
-      await this.verificarUsuario(updateSuscripcionDto.UsuarioFK);
+      await this.obtenerUsuario(
+        updateSuscripcionDto.UsuarioFK,
+      );
 
       const suscripcionDelUsuario =
         await this.prismaSuscripciones.suscripcion.findUnique({
@@ -172,7 +188,9 @@ export class SuscripcionesService {
       }
     }
 
-    if (updateSuscripcionDto.PlanSuscripcionFK !== undefined) {
+    if (
+      updateSuscripcionDto.PlanSuscripcionFK !== undefined
+    ) {
       await this.verificarPlanSuscripcion(
         updateSuscripcionDto.PlanSuscripcionFK,
       );
@@ -190,11 +208,9 @@ export class SuscripcionesService {
         },
       });
 
-    const usuario = await this.prismaUsuarios.usuario.findUnique({
-      where: {
-        IdUsuario: suscripcionActualizada.UsuarioFK,
-      },
-    });
+    const usuario = await this.obtenerUsuario(
+      suscripcionActualizada.UsuarioFK,
+    );
 
     return {
       ...suscripcionActualizada,
@@ -232,13 +248,10 @@ export class SuscripcionesService {
     });
   }
 
-  private async verificarUsuario(idUsuario: number): Promise<void> {
+  private async obtenerUsuario(idUsuario: number) {
     const usuario = await this.prismaUsuarios.usuario.findUnique({
       where: {
         IdUsuario: idUsuario,
-      },
-      select: {
-        IdUsuario: true,
       },
     });
 
@@ -247,6 +260,8 @@ export class SuscripcionesService {
         `No existe un usuario con el ID ${idUsuario}.`,
       );
     }
+
+    return usuario;
   }
 
   private async verificarPlanSuscripcion(

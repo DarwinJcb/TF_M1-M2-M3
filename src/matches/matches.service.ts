@@ -21,7 +21,10 @@ export class MatchesService {
   async create(createMatchDto: CreateMatchDto) {
     const { UsuarioUnoFK, UsuarioDosFK } = createMatchDto;
 
-    this.verificarUsuariosDiferentes(UsuarioUnoFK, UsuarioDosFK);
+    this.verificarUsuariosDiferentes(
+      UsuarioUnoFK,
+      UsuarioDosFK,
+    );
 
     const [usuarioUno, usuarioDos] = await Promise.all([
       this.obtenerUsuario(UsuarioUnoFK),
@@ -38,9 +41,10 @@ export class MatchesService {
       UsuarioDosFK,
     );
 
-    const match = await this.prismaInteracciones.match.create({
-      data: createMatchDto,
-    });
+    const match =
+      await this.prismaInteracciones.match.create({
+        data: createMatchDto,
+      });
 
     return {
       ...match,
@@ -50,22 +54,24 @@ export class MatchesService {
   }
 
   async findAll() {
-    const matches = await this.prismaInteracciones.match.findMany({
-      include: {
-        chat: true,
-      },
-    });
+    const matches =
+      await this.prismaInteracciones.match.findMany({
+        include: {
+          chat: true,
+        },
+      });
 
     if (matches.length === 0) {
       return [];
     }
 
-    const usuariosPorId = await this.obtenerUsuariosPorIds(
-      matches.flatMap((match) => [
-        match.UsuarioUnoFK,
-        match.UsuarioDosFK,
-      ]),
-    );
+    const usuariosPorId =
+      await this.obtenerUsuariosPorIds(
+        matches.flatMap((match) => [
+          match.UsuarioUnoFK,
+          match.UsuarioDosFK,
+        ]),
+      );
 
     return matches.map((match) => ({
       ...match,
@@ -79,28 +85,30 @@ export class MatchesService {
   async findByUsuario(idUsuario: number) {
     await this.verificarUsuario(idUsuario);
 
-    const matches = await this.prismaInteracciones.match.findMany({
-      where: {
-        OR: [
-          {
-            UsuarioUnoFK: idUsuario,
-          },
-          {
-            UsuarioDosFK: idUsuario,
-          },
-        ],
-      },
-      include: {
-        chat: true,
-      },
-    });
+    const matches =
+      await this.prismaInteracciones.match.findMany({
+        where: {
+          OR: [
+            {
+              UsuarioUnoFK: idUsuario,
+            },
+            {
+              UsuarioDosFK: idUsuario,
+            },
+          ],
+        },
+        include: {
+          chat: true,
+        },
+      });
 
-    const usuariosPorId = await this.obtenerUsuariosPorIds(
-      matches.flatMap((match) => [
-        match.UsuarioUnoFK,
-        match.UsuarioDosFK,
-      ]),
-    );
+    const usuariosPorId =
+      await this.obtenerUsuariosPorIds(
+        matches.flatMap((match) => [
+          match.UsuarioUnoFK,
+          match.UsuarioDosFK,
+        ]),
+      );
 
     return matches.map((match) => ({
       ...match,
@@ -126,14 +134,38 @@ export class MatchesService {
     };
   }
 
-  async update(id: number, updateMatchDto: UpdateMatchDto) {
+  async update(
+    id: number,
+    updateMatchDto: UpdateMatchDto,
+  ) {
     const matchActual = await this.obtenerMatch(id);
 
+    const cambiaUsuarioUno =
+      updateMatchDto.UsuarioUnoFK !== undefined &&
+      updateMatchDto.UsuarioUnoFK !==
+      matchActual.UsuarioUnoFK;
+
+    const cambiaUsuarioDos =
+      updateMatchDto.UsuarioDosFK !== undefined &&
+      updateMatchDto.UsuarioDosFK !==
+      matchActual.UsuarioDosFK;
+
+    if (
+      matchActual.chat &&
+      (cambiaUsuarioUno || cambiaUsuarioDos)
+    ) {
+      throw new ConflictException(
+        'No se pueden modificar los usuarios del match porque ya tiene un chat asociado.',
+      );
+    }
+
     const idUsuarioUno =
-      updateMatchDto.UsuarioUnoFK ?? matchActual.UsuarioUnoFK;
+      updateMatchDto.UsuarioUnoFK ??
+      matchActual.UsuarioUnoFK;
 
     const idUsuarioDos =
-      updateMatchDto.UsuarioDosFK ?? matchActual.UsuarioDosFK;
+      updateMatchDto.UsuarioDosFK ??
+      matchActual.UsuarioDosFK;
 
     this.verificarUsuariosDiferentes(
       idUsuarioUno,
@@ -191,14 +223,15 @@ export class MatchesService {
   }
 
   private async obtenerMatch(id: number) {
-    const match = await this.prismaInteracciones.match.findUnique({
-      where: {
-        IdMatch: id,
-      },
-      include: {
-        chat: true,
-      },
-    });
+    const match =
+      await this.prismaInteracciones.match.findUnique({
+        where: {
+          IdMatch: id,
+        },
+        include: {
+          chat: true,
+        },
+      });
 
     if (!match) {
       throw new NotFoundException(
@@ -244,19 +277,31 @@ export class MatchesService {
     }
   }
 
-  private async obtenerUsuariosPorIds(idsUsuarios: number[]) {
-    const identificadoresUnicos = [...new Set(idsUsuarios)];
+  private async obtenerUsuariosPorIds(
+    idsUsuarios: number[],
+  ) {
+    const identificadoresUnicos = [
+      ...new Set(idsUsuarios),
+    ];
 
-    const usuarios = await this.prismaUsuarios.usuario.findMany({
-      where: {
-        IdUsuario: {
-          in: identificadoresUnicos,
+    if (identificadoresUnicos.length === 0) {
+      return new Map();
+    }
+
+    const usuarios =
+      await this.prismaUsuarios.usuario.findMany({
+        where: {
+          IdUsuario: {
+            in: identificadoresUnicos,
+          },
         },
-      },
-    });
+      });
 
     return new Map(
-      usuarios.map((usuario) => [usuario.IdUsuario, usuario]),
+      usuarios.map((usuario) => [
+        usuario.IdUsuario,
+        usuario,
+      ]),
     );
   }
 
@@ -280,29 +325,34 @@ export class MatchesService {
       TipoInteraccion.SUPERLIKE,
     ];
 
-    const [interaccionUsuarioUno, interaccionUsuarioDos] =
-      await Promise.all([
-        this.prismaInteracciones.interaccion.findFirst({
-          where: {
-            UsuarioEmisorFK: idUsuarioUno,
-            UsuarioReceptorFK: idUsuarioDos,
-            tipoInteraccion: {
-              in: tiposPositivos,
-            },
+    const [
+      interaccionUsuarioUno,
+      interaccionUsuarioDos,
+    ] = await Promise.all([
+      this.prismaInteracciones.interaccion.findFirst({
+        where: {
+          UsuarioEmisorFK: idUsuarioUno,
+          UsuarioReceptorFK: idUsuarioDos,
+          tipoInteraccion: {
+            in: tiposPositivos,
           },
-        }),
-        this.prismaInteracciones.interaccion.findFirst({
-          where: {
-            UsuarioEmisorFK: idUsuarioDos,
-            UsuarioReceptorFK: idUsuarioUno,
-            tipoInteraccion: {
-              in: tiposPositivos,
-            },
+        },
+      }),
+      this.prismaInteracciones.interaccion.findFirst({
+        where: {
+          UsuarioEmisorFK: idUsuarioDos,
+          UsuarioReceptorFK: idUsuarioUno,
+          tipoInteraccion: {
+            in: tiposPositivos,
           },
-        }),
-      ]);
+        },
+      }),
+    ]);
 
-    if (!interaccionUsuarioUno || !interaccionUsuarioDos) {
+    if (
+      !interaccionUsuarioUno ||
+      !interaccionUsuarioDos
+    ) {
       throw new BadRequestException(
         'Para crear el match, ambos usuarios deben darse LIKE o SUPERLIKE.',
       );

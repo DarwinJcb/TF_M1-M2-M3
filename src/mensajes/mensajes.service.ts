@@ -68,14 +68,19 @@ export class MensajesService {
       return [];
     }
 
-    const usuariosPorId = await this.obtenerUsuariosPorIds(
-      mensajes.map((mensaje) => mensaje.UsuarioEmisorFK),
-    );
+    const usuariosPorId =
+      await this.obtenerUsuariosPorIds(
+        mensajes.map(
+          (mensaje) => mensaje.UsuarioEmisorFK,
+        ),
+      );
 
     return mensajes.map((mensaje) => ({
       ...mensaje,
       usuarioEmisor:
-        usuariosPorId.get(mensaje.UsuarioEmisorFK) ?? null,
+        usuariosPorId.get(
+          mensaje.UsuarioEmisorFK,
+        ) ?? null,
     }));
   }
 
@@ -87,6 +92,13 @@ export class MensajesService {
         where: {
           ChatFK: idChat,
         },
+        include: {
+          chat: {
+            include: {
+              match: true,
+            },
+          },
+        },
         orderBy: {
           fechaEnvio: 'asc',
         },
@@ -96,35 +108,47 @@ export class MensajesService {
       return [];
     }
 
-    const usuariosPorId = await this.obtenerUsuariosPorIds(
-      mensajes.map((mensaje) => mensaje.UsuarioEmisorFK),
-    );
+    const usuariosPorId =
+      await this.obtenerUsuariosPorIds(
+        mensajes.map(
+          (mensaje) => mensaje.UsuarioEmisorFK,
+        ),
+      );
 
     return mensajes.map((mensaje) => ({
       ...mensaje,
       usuarioEmisor:
-        usuariosPorId.get(mensaje.UsuarioEmisorFK) ?? null,
+        usuariosPorId.get(
+          mensaje.UsuarioEmisorFK,
+        ) ?? null,
     }));
   }
 
   async findByUsuario(idUsuario: number) {
-    await this.verificarUsuario(idUsuario);
+    const usuarioEmisor =
+      await this.obtenerUsuario(idUsuario);
 
-    return this.prismaInteracciones.mensaje.findMany({
-      where: {
-        UsuarioEmisorFK: idUsuario,
-      },
-      include: {
-        chat: {
-          include: {
-            match: true,
+    const mensajes =
+      await this.prismaInteracciones.mensaje.findMany({
+        where: {
+          UsuarioEmisorFK: idUsuario,
+        },
+        include: {
+          chat: {
+            include: {
+              match: true,
+            },
           },
         },
-      },
-      orderBy: {
-        fechaEnvio: 'asc',
-      },
-    });
+        orderBy: {
+          fechaEnvio: 'asc',
+        },
+      });
+
+    return mensajes.map((mensaje) => ({
+      ...mensaje,
+      usuarioEmisor,
+    }));
   }
 
   async findOne(id: number) {
@@ -256,38 +280,31 @@ export class MensajesService {
     return usuario;
   }
 
-  private async verificarUsuario(
-    idUsuario: number,
-  ): Promise<void> {
-    const usuario = await this.prismaUsuarios.usuario.findUnique({
-      where: {
-        IdUsuario: idUsuario,
-      },
-      select: {
-        IdUsuario: true,
-      },
-    });
+  private async obtenerUsuariosPorIds(
+    idsUsuarios: number[],
+  ) {
+    const identificadoresUnicos = [
+      ...new Set(idsUsuarios),
+    ];
 
-    if (!usuario) {
-      throw new NotFoundException(
-        `No existe un usuario con el ID ${idUsuario}.`,
-      );
+    if (identificadoresUnicos.length === 0) {
+      return new Map();
     }
-  }
 
-  private async obtenerUsuariosPorIds(idsUsuarios: number[]) {
-    const identificadoresUnicos = [...new Set(idsUsuarios)];
-
-    const usuarios = await this.prismaUsuarios.usuario.findMany({
-      where: {
-        IdUsuario: {
-          in: identificadoresUnicos,
+    const usuarios =
+      await this.prismaUsuarios.usuario.findMany({
+        where: {
+          IdUsuario: {
+            in: identificadoresUnicos,
+          },
         },
-      },
-    });
+      });
 
     return new Map(
-      usuarios.map((usuario) => [usuario.IdUsuario, usuario]),
+      usuarios.map((usuario) => [
+        usuario.IdUsuario,
+        usuario,
+      ]),
     );
   }
 

@@ -4,6 +4,7 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
+import { PrismaInteraccionesService } from '../prisma-interacciones/prisma-interacciones.service';
 import { PrismaSuscripcionesService } from '../prisma-suscripciones/prisma-suscripciones.service';
 import { PrismaUsuariosService } from '../prisma-usuarios/prisma-usuarios.service';
 import { CreateUsuarioDto } from './dto/create-usuario.dto';
@@ -14,36 +15,23 @@ export class UsuariosService {
   constructor(
     private readonly prismaUsuarios: PrismaUsuariosService,
     private readonly prismaSuscripciones: PrismaSuscripcionesService,
+    private readonly prismaInteracciones: PrismaInteraccionesService,
   ) { }
 
-  private async verificarUsuarioExiste(id: number): Promise<void> {
-    const usuario = await this.prismaUsuarios.usuario.findUnique({
-      where: {
-        IdUsuario: id,
-      },
-      select: {
-        IdUsuario: true,
-      },
-    });
-
-    if (!usuario) {
-      throw new NotFoundException(`No existe un usuario con el ID ${id}.`);
-    }
-  }
-
   async create(createUsuarioDto: CreateUsuarioDto) {
-    const usuarioExistente = await this.prismaUsuarios.usuario.findFirst({
-      where: {
-        OR: [
-          {
-            correo: createUsuarioDto.correo,
-          },
-          {
-            numeroTelefono: createUsuarioDto.numeroTelefono,
-          },
-        ],
-      },
-    });
+    const usuarioExistente =
+      await this.prismaUsuarios.usuario.findFirst({
+        where: {
+          OR: [
+            {
+              correo: createUsuarioDto.correo,
+            },
+            {
+              numeroTelefono: createUsuarioDto.numeroTelefono,
+            },
+          ],
+        },
+      });
 
     if (usuarioExistente) {
       throw new ConflictException(
@@ -114,7 +102,9 @@ export class UsuariosService {
     });
 
     if (!usuario) {
-      throw new NotFoundException(`No existe un usuario con el ID ${id}.`);
+      throw new NotFoundException(
+        `No existe un usuario con el ID ${id}.`,
+      );
     }
 
     const suscripcion =
@@ -133,7 +123,10 @@ export class UsuariosService {
     };
   }
 
-  async update(id: number, updateUsuarioDto: UpdateUsuarioDto) {
+  async update(
+    id: number,
+    updateUsuarioDto: UpdateUsuarioDto,
+  ) {
     await this.verificarUsuarioExiste(id);
 
     if (updateUsuarioDto.correo !== undefined) {
@@ -148,7 +141,9 @@ export class UsuariosService {
         });
 
       if (usuarioConCorreo) {
-        throw new ConflictException('El correo ya está registrado.');
+        throw new ConflictException(
+          'El correo ya está registrado.',
+        );
       }
     }
 
@@ -181,10 +176,180 @@ export class UsuariosService {
   async remove(id: number) {
     await this.verificarUsuarioExiste(id);
 
+    const [
+      interes,
+      foto,
+      ubicacion,
+      musica,
+      transmision,
+      donacion,
+      suscripcion,
+      interaccion,
+      match,
+      mensaje,
+      reporte,
+    ] = await Promise.all([
+      this.prismaUsuarios.interes.findUnique({
+        where: {
+          UsuarioFK: id,
+        },
+        select: {
+          IdInteres: true,
+        },
+      }),
+      this.prismaUsuarios.foto.findFirst({
+        where: {
+          UsuarioFK: id,
+        },
+        select: {
+          IdFoto: true,
+        },
+      }),
+      this.prismaUsuarios.ubicacion.findFirst({
+        where: {
+          UsuarioFK: id,
+        },
+        select: {
+          IdUbicacion: true,
+        },
+      }),
+      this.prismaUsuarios.musica.findFirst({
+        where: {
+          UsuarioFK: id,
+        },
+        select: {
+          IdMusica: true,
+        },
+      }),
+      this.prismaUsuarios.transmision.findFirst({
+        where: {
+          UsuarioFK: id,
+        },
+        select: {
+          IdTransmision: true,
+        },
+      }),
+      this.prismaUsuarios.donacion.findFirst({
+        where: {
+          OR: [
+            {
+              UsuarioDonanteFK: id,
+            },
+            {
+              UsuarioReceptorFK: id,
+            },
+          ],
+        },
+        select: {
+          IdDonacion: true,
+        },
+      }),
+      this.prismaSuscripciones.suscripcion.findUnique({
+        where: {
+          UsuarioFK: id,
+        },
+        select: {
+          IdSuscripcion: true,
+        },
+      }),
+      this.prismaInteracciones.interaccion.findFirst({
+        where: {
+          OR: [
+            {
+              UsuarioEmisorFK: id,
+            },
+            {
+              UsuarioReceptorFK: id,
+            },
+          ],
+        },
+        select: {
+          IdInteraccion: true,
+        },
+      }),
+      this.prismaInteracciones.match.findFirst({
+        where: {
+          OR: [
+            {
+              UsuarioUnoFK: id,
+            },
+            {
+              UsuarioDosFK: id,
+            },
+          ],
+        },
+        select: {
+          IdMatch: true,
+        },
+      }),
+      this.prismaInteracciones.mensaje.findFirst({
+        where: {
+          UsuarioEmisorFK: id,
+        },
+        select: {
+          IdMensaje: true,
+        },
+      }),
+      this.prismaInteracciones.reporte.findFirst({
+        where: {
+          OR: [
+            {
+              UsuarioReportanteFK: id,
+            },
+            {
+              UsuarioReportadoFK: id,
+            },
+          ],
+        },
+        select: {
+          IdReporte: true,
+        },
+      }),
+    ]);
+
+    const tieneDependencias = [
+      interes,
+      foto,
+      ubicacion,
+      musica,
+      transmision,
+      donacion,
+      suscripcion,
+      interaccion,
+      match,
+      mensaje,
+      reporte,
+    ].some((dependencia) => dependencia !== null);
+
+    if (tieneDependencias) {
+      throw new ConflictException(
+        'No se puede eliminar el usuario porque tiene información asociada en el sistema.',
+      );
+    }
+
     return this.prismaUsuarios.usuario.delete({
       where: {
         IdUsuario: id,
       },
     });
+  }
+
+  private async verificarUsuarioExiste(
+    id: number,
+  ): Promise<void> {
+    const usuario = await this.prismaUsuarios.usuario.findUnique({
+      where: {
+        IdUsuario: id,
+      },
+      select: {
+        IdUsuario: true,
+      },
+    });
+
+    if (!usuario) {
+      throw new NotFoundException(
+        `No existe un usuario con el ID ${id}.`,
+      );
+    }
   }
 }
