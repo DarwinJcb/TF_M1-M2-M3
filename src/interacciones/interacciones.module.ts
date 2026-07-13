@@ -1,12 +1,13 @@
 /* src/interacciones/interacciones.module.ts: */
 import { Module } from '@nestjs/common';
-import { PrismaModule } from '../prisma/prisma.module';
+import { PrismaInteraccionesModule } from '../prisma-interacciones/prisma-interacciones.module';
+import { PrismaUsuariosModule } from '../prisma-usuarios/prisma-usuarios.module';
 import { InteraccionesController } from './interacciones.controller';
 import { InteraccionesService } from './interacciones.service';
 
 @Module({
-  imports: [PrismaModule],
+  imports: [PrismaInteraccionesModule, PrismaUsuariosModule],
   controllers: [InteraccionesController],
   providers: [InteraccionesService],
 })
-export class InteraccionesModule {}
+export class InteraccionesModule { }
