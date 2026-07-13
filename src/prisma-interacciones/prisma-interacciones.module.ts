@@ -3,6 +3,7 @@ import { Module } from '@nestjs/common';
 import { PrismaInteraccionesService } from './prisma-interacciones.service';
 
 @Module({
-    providers: [PrismaInteraccionesService]
+    providers: [PrismaInteraccionesService],
+    exports: [PrismaInteraccionesService],
 })
 export class PrismaInteraccionesModule { }

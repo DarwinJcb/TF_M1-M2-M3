@@ -3,6 +3,7 @@ import { Module } from '@nestjs/common';
 import { PrismaUsuariosService } from './prisma-usuarios.service';
 
 @Module({
-  providers: [PrismaUsuariosService]
+    providers: [PrismaUsuariosService],
+    exports: [PrismaUsuariosService],
 })
 export class PrismaUsuariosModule { }
