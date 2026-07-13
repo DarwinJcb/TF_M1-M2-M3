@@ -1,12 +1,12 @@
 /* src/transmisiones/transmisiones.module.ts: */
 import { Module } from '@nestjs/common';
-import { PrismaModule } from '../prisma/prisma.module';
+import { PrismaUsuariosModule } from '../prisma-usuarios/prisma-usuarios.module';
 import { TransmisionesController } from './transmisiones.controller';
 import { TransmisionesService } from './transmisiones.service';
 
 @Module({
-  imports: [PrismaModule],
+  imports: [PrismaUsuariosModule],
   controllers: [TransmisionesController],
   providers: [TransmisionesService],
 })
-export class TransmisionesModule {}
+export class TransmisionesModule { }
