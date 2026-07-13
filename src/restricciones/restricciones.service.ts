@@ -1,31 +1,34 @@
 /* src/restricciones/restricciones.service.ts: */
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { PrismaService } from '../prisma/prisma.service';
+import { PrismaSuscripcionesService } from '../prisma-suscripciones/prisma-suscripciones.service';
 import { CreateRestriccionDto } from './dto/create-restriccion.dto';
 import { UpdateRestriccionDto } from './dto/update-restriccion.dto';
 
 @Injectable()
 export class RestriccionesService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prismaSuscripciones: PrismaSuscripcionesService,
+  ) { }
 
   async create(createRestriccionDto: CreateRestriccionDto) {
-    const idPlanSuscripcion = createRestriccionDto.PlanSuscripcionFK;
+    const idPlanSuscripcion =
+      createRestriccionDto.PlanSuscripcionFK;
 
     if (typeof idPlanSuscripcion === 'number') {
       await this.verificarPlanSuscripcion(idPlanSuscripcion);
     }
 
-    return this.prisma.restriccion.create({
+    return this.prismaSuscripciones.restriccion.create({
       data: createRestriccionDto,
     });
   }
 
   findAll() {
-    return this.prisma.restriccion.findMany();
+    return this.prismaSuscripciones.restriccion.findMany();
   }
 
   findGenerales() {
-    return this.prisma.restriccion.findMany({
+    return this.prismaSuscripciones.restriccion.findMany({
       where: {
         PlanSuscripcionFK: null,
       },
@@ -35,7 +38,7 @@ export class RestriccionesService {
   async findByPlan(idPlanSuscripcion: number) {
     await this.verificarPlanSuscripcion(idPlanSuscripcion);
 
-    return this.prisma.restriccion.findMany({
+    return this.prismaSuscripciones.restriccion.findMany({
       where: {
         PlanSuscripcionFK: idPlanSuscripcion,
       },
@@ -43,29 +46,36 @@ export class RestriccionesService {
   }
 
   async findOne(id: number) {
-    const restriccion = await this.prisma.restriccion.findUnique({
-      where: {
-        IdRestriccion: id,
-      },
-    });
+    const restriccion =
+      await this.prismaSuscripciones.restriccion.findUnique({
+        where: {
+          IdRestriccion: id,
+        },
+      });
 
     if (!restriccion) {
-      throw new NotFoundException(`No existe una restricción con el ID ${id}.`);
+      throw new NotFoundException(
+        `No existe una restricción con el ID ${id}.`,
+      );
     }
 
     return restriccion;
   }
 
-  async update(id: number, updateRestriccionDto: UpdateRestriccionDto) {
+  async update(
+    id: number,
+    updateRestriccionDto: UpdateRestriccionDto,
+  ) {
     await this.findOne(id);
 
-    const idPlanSuscripcion = updateRestriccionDto.PlanSuscripcionFK;
+    const idPlanSuscripcion =
+      updateRestriccionDto.PlanSuscripcionFK;
 
     if (typeof idPlanSuscripcion === 'number') {
       await this.verificarPlanSuscripcion(idPlanSuscripcion);
     }
 
-    return this.prisma.restriccion.update({
+    return this.prismaSuscripciones.restriccion.update({
       where: {
         IdRestriccion: id,
       },
@@ -76,7 +86,7 @@ export class RestriccionesService {
   async remove(id: number) {
     await this.findOne(id);
 
-    return this.prisma.restriccion.delete({
+    return this.prismaSuscripciones.restriccion.delete({
       where: {
         IdRestriccion: id,
       },
@@ -86,14 +96,15 @@ export class RestriccionesService {
   private async verificarPlanSuscripcion(
     idPlanSuscripcion: number,
   ): Promise<void> {
-    const planSuscripcion = await this.prisma.planSuscripcion.findUnique({
-      where: {
-        IdPlanSuscripcion: idPlanSuscripcion,
-      },
-      select: {
-        IdPlanSuscripcion: true,
-      },
-    });
+    const planSuscripcion =
+      await this.prismaSuscripciones.planSuscripcion.findUnique({
+        where: {
+          IdPlanSuscripcion: idPlanSuscripcion,
+        },
+        select: {
+          IdPlanSuscripcion: true,
+        },
+      });
 
     if (!planSuscripcion) {
       throw new NotFoundException(
