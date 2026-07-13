@@ -1,29 +1,33 @@
 /* src/ventajas/ventajas.service.ts: */
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { PrismaService } from '../prisma/prisma.service';
+import { PrismaSuscripcionesService } from '../prisma-suscripciones/prisma-suscripciones.service';
 import { CreateVentajaDto } from './dto/create-ventaja.dto';
 import { UpdateVentajaDto } from './dto/update-ventaja.dto';
 
 @Injectable()
 export class VentajasService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prismaSuscripciones: PrismaSuscripcionesService,
+  ) { }
 
   async create(createVentajaDto: CreateVentajaDto) {
-    await this.verificarPlanSuscripcion(createVentajaDto.PlanSuscripcionFK);
+    await this.verificarPlanSuscripcion(
+      createVentajaDto.PlanSuscripcionFK,
+    );
 
-    return this.prisma.ventaja.create({
+    return this.prismaSuscripciones.ventaja.create({
       data: createVentajaDto,
     });
   }
 
   findAll() {
-    return this.prisma.ventaja.findMany();
+    return this.prismaSuscripciones.ventaja.findMany();
   }
 
   async findByPlan(idPlanSuscripcion: number) {
     await this.verificarPlanSuscripcion(idPlanSuscripcion);
 
-    return this.prisma.ventaja.findMany({
+    return this.prismaSuscripciones.ventaja.findMany({
       where: {
         PlanSuscripcionFK: idPlanSuscripcion,
       },
@@ -31,14 +35,17 @@ export class VentajasService {
   }
 
   async findOne(id: number) {
-    const ventaja = await this.prisma.ventaja.findUnique({
-      where: {
-        IdVentaja: id,
-      },
-    });
+    const ventaja =
+      await this.prismaSuscripciones.ventaja.findUnique({
+        where: {
+          IdVentaja: id,
+        },
+      });
 
     if (!ventaja) {
-      throw new NotFoundException(`No existe una ventaja con el ID ${id}.`);
+      throw new NotFoundException(
+        `No existe una ventaja con el ID ${id}.`,
+      );
     }
 
     return ventaja;
@@ -48,10 +55,12 @@ export class VentajasService {
     await this.findOne(id);
 
     if (updateVentajaDto.PlanSuscripcionFK !== undefined) {
-      await this.verificarPlanSuscripcion(updateVentajaDto.PlanSuscripcionFK);
+      await this.verificarPlanSuscripcion(
+        updateVentajaDto.PlanSuscripcionFK,
+      );
     }
 
-    return this.prisma.ventaja.update({
+    return this.prismaSuscripciones.ventaja.update({
       where: {
         IdVentaja: id,
       },
@@ -62,7 +71,7 @@ export class VentajasService {
   async remove(id: number) {
     await this.findOne(id);
 
-    return this.prisma.ventaja.delete({
+    return this.prismaSuscripciones.ventaja.delete({
       where: {
         IdVentaja: id,
       },
@@ -72,14 +81,15 @@ export class VentajasService {
   private async verificarPlanSuscripcion(
     idPlanSuscripcion: number,
   ): Promise<void> {
-    const planSuscripcion = await this.prisma.planSuscripcion.findUnique({
-      where: {
-        IdPlanSuscripcion: idPlanSuscripcion,
-      },
-      select: {
-        IdPlanSuscripcion: true,
-      },
-    });
+    const planSuscripcion =
+      await this.prismaSuscripciones.planSuscripcion.findUnique({
+        where: {
+          IdPlanSuscripcion: idPlanSuscripcion,
+        },
+        select: {
+          IdPlanSuscripcion: true,
+        },
+      });
 
     if (!planSuscripcion) {
       throw new NotFoundException(
