@@ -4,24 +4,31 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { PrismaService } from '../prisma/prisma.service';
+import { PrismaSuscripcionesService } from '../prisma-suscripciones/prisma-suscripciones.service';
+import { PrismaUsuariosService } from '../prisma-usuarios/prisma-usuarios.service';
 import { CreateSuscripcionDto } from './dto/create-suscripcion.dto';
 import { UpdateSuscripcionDto } from './dto/update-suscripcion.dto';
 
 @Injectable()
 export class SuscripcionesService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prismaSuscripciones: PrismaSuscripcionesService,
+    private readonly prismaUsuarios: PrismaUsuariosService,
+  ) { }
 
   async create(createSuscripcionDto: CreateSuscripcionDto) {
     await this.verificarUsuario(createSuscripcionDto.UsuarioFK);
 
-    await this.verificarPlanSuscripcion(createSuscripcionDto.PlanSuscripcionFK);
+    await this.verificarPlanSuscripcion(
+      createSuscripcionDto.PlanSuscripcionFK,
+    );
 
-    const suscripcionExistente = await this.prisma.suscripcion.findUnique({
-      where: {
-        UsuarioFK: createSuscripcionDto.UsuarioFK,
-      },
-    });
+    const suscripcionExistente =
+      await this.prismaSuscripciones.suscripcion.findUnique({
+        where: {
+          UsuarioFK: createSuscripcionDto.UsuarioFK,
+        },
+      });
 
     if (suscripcionExistente) {
       throw new ConflictException(
@@ -29,7 +36,7 @@ export class SuscripcionesService {
       );
     }
 
-    return this.prisma.suscripcion.create({
+    return this.prismaSuscripciones.suscripcion.create({
       data: createSuscripcionDto,
       include: {
         planSuscripcion: true,
@@ -37,28 +44,54 @@ export class SuscripcionesService {
     });
   }
 
-  findAll() {
-    return this.prisma.suscripcion.findMany({
-      include: {
-        usuario: true,
-        planSuscripcion: true,
-        pagos: true,
+  async findAll() {
+    const suscripciones =
+      await this.prismaSuscripciones.suscripcion.findMany({
+        include: {
+          planSuscripcion: true,
+          pagos: true,
+        },
+      });
+
+    if (suscripciones.length === 0) {
+      return [];
+    }
+
+    const identificadoresUsuarios = suscripciones.map(
+      (suscripcion) => suscripcion.UsuarioFK,
+    );
+
+    const usuarios = await this.prismaUsuarios.usuario.findMany({
+      where: {
+        IdUsuario: {
+          in: identificadoresUsuarios,
+        },
       },
     });
+
+    const usuariosPorId = new Map(
+      usuarios.map((usuario) => [usuario.IdUsuario, usuario]),
+    );
+
+    return suscripciones.map((suscripcion) => ({
+      ...suscripcion,
+      usuario: usuariosPorId.get(suscripcion.UsuarioFK) ?? null,
+    }));
   }
 
   async findByUsuario(idUsuario: number) {
     await this.verificarUsuario(idUsuario);
 
-    const suscripcion = await this.prisma.suscripcion.findUnique({
-      where: {
-        UsuarioFK: idUsuario,
-      },
-      include: {
-        planSuscripcion: true,
-        pagos: true,
-      },
-    });
+    const suscripcion =
+      await this.prismaSuscripciones.suscripcion.findUnique({
+        where: {
+          UsuarioFK: idUsuario,
+        },
+        include: {
+          planSuscripcion: true,
+          pagos: true,
+        },
+      });
 
     if (!suscripcion) {
       throw new NotFoundException(
@@ -70,37 +103,69 @@ export class SuscripcionesService {
   }
 
   async findOne(id: number) {
-    const suscripcion = await this.prisma.suscripcion.findUnique({
+    const suscripcion =
+      await this.prismaSuscripciones.suscripcion.findUnique({
+        where: {
+          IdSuscripcion: id,
+        },
+        include: {
+          planSuscripcion: true,
+          pagos: true,
+        },
+      });
+
+    if (!suscripcion) {
+      throw new NotFoundException(
+        `No existe una suscripción con el ID ${id}.`,
+      );
+    }
+
+    const usuario = await this.prismaUsuarios.usuario.findUnique({
       where: {
-        IdSuscripcion: id,
-      },
-      include: {
-        usuario: true,
-        planSuscripcion: true,
-        pagos: true,
+        IdUsuario: suscripcion.UsuarioFK,
       },
     });
 
-    if (!suscripcion) {
-      throw new NotFoundException(`No existe una suscripción con el ID ${id}.`);
-    }
-
-    return suscripcion;
+    return {
+      ...suscripcion,
+      usuario,
+    };
   }
 
-  async update(id: number, updateSuscripcionDto: UpdateSuscripcionDto) {
-    await this.findOne(id);
+  async update(
+    id: number,
+    updateSuscripcionDto: UpdateSuscripcionDto,
+  ) {
+    const suscripcionActual =
+      await this.prismaSuscripciones.suscripcion.findUnique({
+        where: {
+          IdSuscripcion: id,
+        },
+        select: {
+          IdSuscripcion: true,
+        },
+      });
+
+    if (!suscripcionActual) {
+      throw new NotFoundException(
+        `No existe una suscripción con el ID ${id}.`,
+      );
+    }
 
     if (updateSuscripcionDto.UsuarioFK !== undefined) {
       await this.verificarUsuario(updateSuscripcionDto.UsuarioFK);
 
-      const suscripcionDelUsuario = await this.prisma.suscripcion.findUnique({
-        where: {
-          UsuarioFK: updateSuscripcionDto.UsuarioFK,
-        },
-      });
+      const suscripcionDelUsuario =
+        await this.prismaSuscripciones.suscripcion.findUnique({
+          where: {
+            UsuarioFK: updateSuscripcionDto.UsuarioFK,
+          },
+        });
 
-      if (suscripcionDelUsuario && suscripcionDelUsuario.IdSuscripcion !== id) {
+      if (
+        suscripcionDelUsuario &&
+        suscripcionDelUsuario.IdSuscripcion !== id
+      ) {
         throw new ConflictException(
           `El usuario con el ID ${updateSuscripcionDto.UsuarioFK} ya tiene una suscripción.`,
         );
@@ -113,21 +178,46 @@ export class SuscripcionesService {
       );
     }
 
-    return this.prisma.suscripcion.update({
+    const suscripcionActualizada =
+      await this.prismaSuscripciones.suscripcion.update({
+        where: {
+          IdSuscripcion: id,
+        },
+        data: updateSuscripcionDto,
+        include: {
+          planSuscripcion: true,
+          pagos: true,
+        },
+      });
+
+    const usuario = await this.prismaUsuarios.usuario.findUnique({
       where: {
-        IdSuscripcion: id,
-      },
-      data: updateSuscripcionDto,
-      include: {
-        usuario: true,
-        planSuscripcion: true,
-        pagos: true,
+        IdUsuario: suscripcionActualizada.UsuarioFK,
       },
     });
+
+    return {
+      ...suscripcionActualizada,
+      usuario,
+    };
   }
 
   async remove(id: number) {
-    const suscripcion = await this.findOne(id);
+    const suscripcion =
+      await this.prismaSuscripciones.suscripcion.findUnique({
+        where: {
+          IdSuscripcion: id,
+        },
+        include: {
+          pagos: true,
+        },
+      });
+
+    if (!suscripcion) {
+      throw new NotFoundException(
+        `No existe una suscripción con el ID ${id}.`,
+      );
+    }
 
     if (suscripcion.pagos.length > 0) {
       throw new ConflictException(
@@ -135,7 +225,7 @@ export class SuscripcionesService {
       );
     }
 
-    return this.prisma.suscripcion.delete({
+    return this.prismaSuscripciones.suscripcion.delete({
       where: {
         IdSuscripcion: id,
       },
@@ -143,7 +233,7 @@ export class SuscripcionesService {
   }
 
   private async verificarUsuario(idUsuario: number): Promise<void> {
-    const usuario = await this.prisma.usuario.findUnique({
+    const usuario = await this.prismaUsuarios.usuario.findUnique({
       where: {
         IdUsuario: idUsuario,
       },
@@ -162,14 +252,15 @@ export class SuscripcionesService {
   private async verificarPlanSuscripcion(
     idPlanSuscripcion: number,
   ): Promise<void> {
-    const planSuscripcion = await this.prisma.planSuscripcion.findUnique({
-      where: {
-        IdPlanSuscripcion: idPlanSuscripcion,
-      },
-      select: {
-        IdPlanSuscripcion: true,
-      },
-    });
+    const planSuscripcion =
+      await this.prismaSuscripciones.planSuscripcion.findUnique({
+        where: {
+          IdPlanSuscripcion: idPlanSuscripcion,
+        },
+        select: {
+          IdPlanSuscripcion: true,
+        },
+      });
 
     if (!planSuscripcion) {
       throw new NotFoundException(
