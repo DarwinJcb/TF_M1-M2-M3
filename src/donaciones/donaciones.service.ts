@@ -4,20 +4,25 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { EstadoTransmision } from '../generated/prisma/enums';
-import { PrismaService } from '../prisma/prisma.service';
+import { EstadoTransmision } from '../generated/prisma-usuarios/enums';
+import { PrismaUsuariosService } from '../prisma-usuarios/prisma-usuarios.service';
 import { CreateDonacionDto } from './dto/create-donacion.dto';
 import { UpdateDonacionDto } from './dto/update-donacion.dto';
 
 @Injectable()
 export class DonacionesService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prismaUsuarios: PrismaUsuariosService,
+  ) {}
 
   async create(createDonacionDto: CreateDonacionDto) {
     const { UsuarioDonanteFK, UsuarioReceptorFK, TransmisionFK } =
       createDonacionDto;
 
-    this.verificarUsuariosDiferentes(UsuarioDonanteFK, UsuarioReceptorFK);
+    this.verificarUsuariosDiferentes(
+      UsuarioDonanteFK,
+      UsuarioReceptorFK,
+    );
 
     await this.verificarUsuario(UsuarioDonanteFK);
     await this.verificarUsuario(UsuarioReceptorFK);
@@ -29,7 +34,7 @@ export class DonacionesService {
       );
     }
 
-    return this.prisma.donacion.create({
+    return this.prismaUsuarios.donacion.create({
       data: createDonacionDto,
       include: {
         usuarioDonante: true,
@@ -40,7 +45,7 @@ export class DonacionesService {
   }
 
   findAll() {
-    return this.prisma.donacion.findMany({
+    return this.prismaUsuarios.donacion.findMany({
       include: {
         usuarioDonante: true,
         usuarioReceptor: true,
@@ -55,7 +60,7 @@ export class DonacionesService {
   async findByDonante(idUsuario: number) {
     await this.verificarUsuario(idUsuario);
 
-    return this.prisma.donacion.findMany({
+    return this.prismaUsuarios.donacion.findMany({
       where: {
         UsuarioDonanteFK: idUsuario,
       },
@@ -72,7 +77,7 @@ export class DonacionesService {
   async findByReceptor(idUsuario: number) {
     await this.verificarUsuario(idUsuario);
 
-    return this.prisma.donacion.findMany({
+    return this.prismaUsuarios.donacion.findMany({
       where: {
         UsuarioReceptorFK: idUsuario,
       },
@@ -89,7 +94,7 @@ export class DonacionesService {
   async findByTransmision(idTransmision: number) {
     await this.verificarTransmision(idTransmision);
 
-    return this.prisma.donacion.findMany({
+    return this.prismaUsuarios.donacion.findMany({
       where: {
         TransmisionFK: idTransmision,
       },
@@ -104,37 +109,49 @@ export class DonacionesService {
   }
 
   async findOne(id: number) {
-    const donacion = await this.prisma.donacion.findUnique({
-      where: {
-        IdDonacion: id,
-      },
-      include: {
-        usuarioDonante: true,
-        usuarioReceptor: true,
-        transmision: true,
-      },
-    });
+    const donacion =
+      await this.prismaUsuarios.donacion.findUnique({
+        where: {
+          IdDonacion: id,
+        },
+        include: {
+          usuarioDonante: true,
+          usuarioReceptor: true,
+          transmision: true,
+        },
+      });
 
     if (!donacion) {
-      throw new NotFoundException(`No existe una donación con el ID ${id}.`);
+      throw new NotFoundException(
+        `No existe una donación con el ID ${id}.`,
+      );
     }
 
     return donacion;
   }
 
-  async update(id: number, updateDonacionDto: UpdateDonacionDto) {
+  async update(
+    id: number,
+    updateDonacionDto: UpdateDonacionDto,
+  ) {
     const donacionActual = await this.findOne(id);
 
     const idUsuarioDonante =
-      updateDonacionDto.UsuarioDonanteFK ?? donacionActual.UsuarioDonanteFK;
+      updateDonacionDto.UsuarioDonanteFK ??
+      donacionActual.UsuarioDonanteFK;
 
     const idUsuarioReceptor =
-      updateDonacionDto.UsuarioReceptorFK ?? donacionActual.UsuarioReceptorFK;
+      updateDonacionDto.UsuarioReceptorFK ??
+      donacionActual.UsuarioReceptorFK;
 
     const idTransmision =
-      updateDonacionDto.TransmisionFK ?? donacionActual.TransmisionFK;
+      updateDonacionDto.TransmisionFK ??
+      donacionActual.TransmisionFK;
 
-    this.verificarUsuariosDiferentes(idUsuarioDonante, idUsuarioReceptor);
+    this.verificarUsuariosDiferentes(
+      idUsuarioDonante,
+      idUsuarioReceptor,
+    );
 
     await this.verificarUsuario(idUsuarioDonante);
     await this.verificarUsuario(idUsuarioReceptor);
@@ -146,7 +163,7 @@ export class DonacionesService {
       );
     }
 
-    return this.prisma.donacion.update({
+    return this.prismaUsuarios.donacion.update({
       where: {
         IdDonacion: id,
       },
@@ -162,22 +179,25 @@ export class DonacionesService {
   async remove(id: number) {
     await this.findOne(id);
 
-    return this.prisma.donacion.delete({
+    return this.prismaUsuarios.donacion.delete({
       where: {
         IdDonacion: id,
       },
     });
   }
 
-  private async verificarUsuario(idUsuario: number): Promise<void> {
-    const usuario = await this.prisma.usuario.findUnique({
-      where: {
-        IdUsuario: idUsuario,
-      },
-      select: {
-        IdUsuario: true,
-      },
-    });
+  private async verificarUsuario(
+    idUsuario: number,
+  ): Promise<void> {
+    const usuario =
+      await this.prismaUsuarios.usuario.findUnique({
+        where: {
+          IdUsuario: idUsuario,
+        },
+        select: {
+          IdUsuario: true,
+        },
+      });
 
     if (!usuario) {
       throw new NotFoundException(
@@ -186,15 +206,18 @@ export class DonacionesService {
     }
   }
 
-  private async verificarTransmision(idTransmision: number): Promise<void> {
-    const transmision = await this.prisma.transmision.findUnique({
-      where: {
-        IdTransmision: idTransmision,
-      },
-      select: {
-        IdTransmision: true,
-      },
-    });
+  private async verificarTransmision(
+    idTransmision: number,
+  ): Promise<void> {
+    const transmision =
+      await this.prismaUsuarios.transmision.findUnique({
+        where: {
+          IdTransmision: idTransmision,
+        },
+        select: {
+          IdTransmision: true,
+        },
+      });
 
     if (!transmision) {
       throw new NotFoundException(
@@ -207,15 +230,16 @@ export class DonacionesService {
     idTransmision: number,
     idUsuarioReceptor: number,
   ): Promise<void> {
-    const transmision = await this.prisma.transmision.findUnique({
-      where: {
-        IdTransmision: idTransmision,
-      },
-      select: {
-        estado: true,
-        UsuarioFK: true,
-      },
-    });
+    const transmision =
+      await this.prismaUsuarios.transmision.findUnique({
+        where: {
+          IdTransmision: idTransmision,
+        },
+        select: {
+          estado: true,
+          UsuarioFK: true,
+        },
+      });
 
     if (!transmision) {
       throw new NotFoundException(

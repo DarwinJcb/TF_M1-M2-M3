@@ -1,12 +1,12 @@
 /* src/donaciones/donaciones.module.ts: */
 import { Module } from '@nestjs/common';
-import { PrismaModule } from '../prisma/prisma.module';
+import { PrismaUsuariosModule } from '../prisma-usuarios/prisma-usuarios.module';
 import { DonacionesController } from './donaciones.controller';
 import { DonacionesService } from './donaciones.service';
 
 @Module({
-  imports: [PrismaModule],
+  imports: [PrismaUsuariosModule],
   controllers: [DonacionesController],
   providers: [DonacionesService],
 })
-export class DonacionesModule {}
+export class DonacionesModule { }
