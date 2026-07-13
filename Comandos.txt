@@ -2913,6 +2913,20 @@ GET http://localhost:3000/auth/perfil/ (Bearer Token)
     "correo": "carlos.jwt@example.com"
 }
 
+GET http://localhost:3000/usuarios/ (No Auth)- Sin Token
+{
+    "message": "Unauthorized",
+    "statusCode": 401
+}
+
+POST http://localhost:3000/auth/login (Access_Token)
+{
+  "correo": "carlos.jwt@example.com",
+  "contrasena": "clave123"
+}
+
+GET http://localhost:3000/usuario/ (Bearer Token)
+
 
 
 
