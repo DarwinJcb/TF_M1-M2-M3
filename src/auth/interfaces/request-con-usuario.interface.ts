@@ -3,5 +3,5 @@ import { Request } from 'express';
 import { UsuarioAutenticado } from './usuario-autenticado.interface';
 
 export interface RequestConUsuario extends Request {
-    user: UsuarioAutenticado;
+  user: UsuarioAutenticado;
 }

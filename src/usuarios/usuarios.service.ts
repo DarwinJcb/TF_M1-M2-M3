@@ -19,7 +19,7 @@ export class UsuariosService {
     private readonly prismaUsuarios: PrismaUsuariosService,
     private readonly prismaSuscripciones: PrismaSuscripcionesService,
     private readonly prismaInteracciones: PrismaInteraccionesService,
-  ) { }
+  ) {}
 
   async create(createUsuarioDto: CreateUsuarioDto) {
     const usuarioExistente = await this.prismaUsuarios.usuario.findFirst({
@@ -86,10 +86,7 @@ export class UsuariosService {
     });
 
     const suscripcionesPorUsuario = new Map(
-      suscripciones.map((suscripcion) => [
-        suscripcion.UsuarioFK,
-        suscripcion,
-      ]),
+      suscripciones.map((suscripcion) => [suscripcion.UsuarioFK, suscripcion]),
     );
 
     return usuarios.map((usuario) => ({
@@ -149,15 +146,14 @@ export class UsuariosService {
     }
 
     if (updateUsuarioDto.numeroTelefono !== undefined) {
-      const usuarioConTelefono =
-        await this.prismaUsuarios.usuario.findFirst({
-          where: {
-            numeroTelefono: updateUsuarioDto.numeroTelefono,
-            NOT: {
-              IdUsuario: id,
-            },
+      const usuarioConTelefono = await this.prismaUsuarios.usuario.findFirst({
+        where: {
+          numeroTelefono: updateUsuarioDto.numeroTelefono,
+          NOT: {
+            IdUsuario: id,
           },
-        });
+        },
+      });
 
       if (usuarioConTelefono) {
         throw new ConflictException(

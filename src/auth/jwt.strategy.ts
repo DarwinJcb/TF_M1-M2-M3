@@ -8,18 +8,18 @@ import { UsuarioAutenticado } from './interfaces/usuario-autenticado.interface';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
-    constructor() {
-        super({
-            jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-            ignoreExpiration: false,
-            secretOrKey: obtenerSecretoJwt(),
-        });
-    }
+  constructor() {
+    super({
+      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+      ignoreExpiration: false,
+      secretOrKey: obtenerSecretoJwt(),
+    });
+  }
 
-    validate(payload: JwtPayload): UsuarioAutenticado {
-        return {
-            IdUsuario: payload.sub,
-            correo: payload.correo,
-        };
-    }
+  validate(payload: JwtPayload): UsuarioAutenticado {
+    return {
+      IdUsuario: payload.sub,
+      correo: payload.correo,
+    };
+  }
 }

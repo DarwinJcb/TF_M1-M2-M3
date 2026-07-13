@@ -27,9 +27,7 @@ export class AuthService {
     });
 
     if (!usuario?.contrasenaHash) {
-      throw new UnauthorizedException(
-        'Usuario o contraseña incorrectos.',
-      );
+      throw new UnauthorizedException('Usuario o contraseña incorrectos.');
     }
 
     const contrasenaValida = await bcrypt.compare(
@@ -38,9 +36,7 @@ export class AuthService {
     );
 
     if (!contrasenaValida) {
-      throw new UnauthorizedException(
-        'Usuario o contraseña incorrectos.',
-      );
+      throw new UnauthorizedException('Usuario o contraseña incorrectos.');
     }
 
     const payload: JwtPayload = {
