@@ -1,29 +1,31 @@
-/* src/fotos/fotos.service.ts */
+/* src/fotos/fotos.service.ts: */
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { PrismaService } from '../prisma/prisma.service';
+import { PrismaUsuariosService } from '../prisma-usuarios/prisma-usuarios.service';
 import { CreateFotoDto } from './dto/create-foto.dto';
 import { UpdateFotoDto } from './dto/update-foto.dto';
 
 @Injectable()
 export class FotosService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prismaUsuarios: PrismaUsuariosService,
+  ) { }
 
   async create(createFotoDto: CreateFotoDto) {
     await this.verificarUsuario(createFotoDto.UsuarioFK);
 
-    return this.prisma.foto.create({
+    return this.prismaUsuarios.foto.create({
       data: createFotoDto,
     });
   }
 
   findAll() {
-    return this.prisma.foto.findMany();
+    return this.prismaUsuarios.foto.findMany();
   }
 
   async findByUsuario(idUsuario: number) {
     await this.verificarUsuario(idUsuario);
 
-    return this.prisma.foto.findMany({
+    return this.prismaUsuarios.foto.findMany({
       where: {
         UsuarioFK: idUsuario,
       },
@@ -31,7 +33,7 @@ export class FotosService {
   }
 
   async findOne(id: number) {
-    const foto = await this.prisma.foto.findUnique({
+    const foto = await this.prismaUsuarios.foto.findUnique({
       where: {
         IdFoto: id,
       },
@@ -51,7 +53,7 @@ export class FotosService {
       await this.verificarUsuario(updateFotoDto.UsuarioFK);
     }
 
-    return this.prisma.foto.update({
+    return this.prismaUsuarios.foto.update({
       where: {
         IdFoto: id,
       },
@@ -62,7 +64,7 @@ export class FotosService {
   async remove(id: number) {
     await this.findOne(id);
 
-    return this.prisma.foto.delete({
+    return this.prismaUsuarios.foto.delete({
       where: {
         IdFoto: id,
       },
@@ -70,7 +72,7 @@ export class FotosService {
   }
 
   private async verificarUsuario(idUsuario: number): Promise<void> {
-    const usuario = await this.prisma.usuario.findUnique({
+    const usuario = await this.prismaUsuarios.usuario.findUnique({
       where: {
         IdUsuario: idUsuario,
       },
