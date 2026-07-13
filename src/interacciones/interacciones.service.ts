@@ -1,10 +1,5 @@
 /* src/interacciones/interacciones.service.ts: */
-import {
-  BadRequestException,
-  ConflictException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { BadRequestException, ConflictException, Injectable, NotFoundException, } from '@nestjs/common';
 import { PrismaInteraccionesService } from '../prisma-interacciones/prisma-interacciones.service';
 import { PrismaUsuariosService } from '../prisma-usuarios/prisma-usuarios.service';
 import { CreateInteraccionDto } from './dto/create-interaccion.dto';

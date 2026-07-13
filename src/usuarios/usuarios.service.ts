@@ -1,9 +1,5 @@
 /* src/usuarios/usuarios.service.ts: */
-import {
-  ConflictException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { ConflictException, Injectable, NotFoundException, } from '@nestjs/common';
 import { PrismaInteraccionesService } from '../prisma-interacciones/prisma-interacciones.service';
 import { PrismaSuscripcionesService } from '../prisma-suscripciones/prisma-suscripciones.service';
 import { PrismaUsuariosService } from '../prisma-usuarios/prisma-usuarios.service';

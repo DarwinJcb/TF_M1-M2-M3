@@ -1,9 +1,5 @@
 /* src/chats/chats.service.ts: */
-import {
-  ConflictException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { ConflictException, Injectable, NotFoundException, } from '@nestjs/common';
 import { PrismaInteraccionesService } from '../prisma-interacciones/prisma-interacciones.service';
 import { CreateChatDto } from './dto/create-chat.dto';
 import { UpdateChatDto } from './dto/update-chat.dto';
@@ -34,6 +30,7 @@ export class ChatsService {
       data: createChatDto,
       include: {
         match: true,
+        mensajes: true,
       },
     });
   }
@@ -50,15 +47,16 @@ export class ChatsService {
   async findByMatch(idMatch: number) {
     await this.verificarMatch(idMatch);
 
-    const chat = await this.prismaInteracciones.chat.findUnique({
-      where: {
-        MatchFK: idMatch,
-      },
-      include: {
-        match: true,
-        mensajes: true,
-      },
-    });
+    const chat =
+      await this.prismaInteracciones.chat.findUnique({
+        where: {
+          MatchFK: idMatch,
+        },
+        include: {
+          match: true,
+          mensajes: true,
+        },
+      });
 
     if (!chat) {
       throw new NotFoundException(
@@ -70,15 +68,16 @@ export class ChatsService {
   }
 
   async findOne(id: number) {
-    const chat = await this.prismaInteracciones.chat.findUnique({
-      where: {
-        IdChat: id,
-      },
-      include: {
-        match: true,
-        mensajes: true,
-      },
-    });
+    const chat =
+      await this.prismaInteracciones.chat.findUnique({
+        where: {
+          IdChat: id,
+        },
+        include: {
+          match: true,
+          mensajes: true,
+        },
+      });
 
     if (!chat) {
       throw new NotFoundException(
@@ -89,22 +88,35 @@ export class ChatsService {
     return chat;
   }
 
-  async update(id: number, updateChatDto: UpdateChatDto) {
-    await this.findOne(id);
+  async update(
+    id: number,
+    updateChatDto: UpdateChatDto,
+  ) {
+    const chatActual = await this.findOne(id);
+    const idNuevoMatch = updateChatDto.MatchFK;
 
-    if (updateChatDto.MatchFK !== undefined) {
-      await this.verificarMatch(updateChatDto.MatchFK);
+    if (
+      idNuevoMatch !== undefined &&
+      idNuevoMatch !== chatActual.MatchFK
+    ) {
+      if (chatActual.mensajes.length > 0) {
+        throw new ConflictException(
+          'No se puede cambiar el match del chat porque contiene mensajes.',
+        );
+      }
+
+      await this.verificarMatch(idNuevoMatch);
 
       const chatDelMatch =
         await this.prismaInteracciones.chat.findUnique({
           where: {
-            MatchFK: updateChatDto.MatchFK,
+            MatchFK: idNuevoMatch,
           },
         });
 
       if (chatDelMatch && chatDelMatch.IdChat !== id) {
         throw new ConflictException(
-          `El match con el ID ${updateChatDto.MatchFK} ya tiene un chat.`,
+          `El match con el ID ${idNuevoMatch} ya tiene un chat.`,
         );
       }
     }
@@ -137,15 +149,18 @@ export class ChatsService {
     });
   }
 
-  private async verificarMatch(idMatch: number): Promise<void> {
-    const match = await this.prismaInteracciones.match.findUnique({
-      where: {
-        IdMatch: idMatch,
-      },
-      select: {
-        IdMatch: true,
-      },
-    });
+  private async verificarMatch(
+    idMatch: number,
+  ): Promise<void> {
+    const match =
+      await this.prismaInteracciones.match.findUnique({
+        where: {
+          IdMatch: idMatch,
+        },
+        select: {
+          IdMatch: true,
+        },
+      });
 
     if (!match) {
       throw new NotFoundException(

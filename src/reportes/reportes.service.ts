@@ -1,9 +1,5 @@
 /* src/reportes/reportes.service.ts: */
-import {
-  BadRequestException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException, } from '@nestjs/common';
 import { PrismaInteraccionesService } from '../prisma-interacciones/prisma-interacciones.service';
 import { PrismaUsuariosService } from '../prisma-usuarios/prisma-usuarios.service';
 import { CreateReporteDto } from './dto/create-reporte.dto';
@@ -17,8 +13,10 @@ export class ReportesService {
   ) { }
 
   async create(createReporteDto: CreateReporteDto) {
-    const { UsuarioReportanteFK, UsuarioReportadoFK } =
-      createReporteDto;
+    const {
+      UsuarioReportanteFK,
+      UsuarioReportadoFK,
+    } = createReporteDto;
 
     this.verificarUsuariosDiferentes(
       UsuarioReportanteFK,
@@ -55,24 +53,30 @@ export class ReportesService {
       return [];
     }
 
-    const usuariosPorId = await this.obtenerUsuariosPorIds(
-      reportes.flatMap((reporte) => [
-        reporte.UsuarioReportanteFK,
-        reporte.UsuarioReportadoFK,
-      ]),
-    );
+    const usuariosPorId =
+      await this.obtenerUsuariosPorIds(
+        reportes.flatMap((reporte) => [
+          reporte.UsuarioReportanteFK,
+          reporte.UsuarioReportadoFK,
+        ]),
+      );
 
     return reportes.map((reporte) => ({
       ...reporte,
       usuarioReportante:
-        usuariosPorId.get(reporte.UsuarioReportanteFK) ?? null,
+        usuariosPorId.get(
+          reporte.UsuarioReportanteFK,
+        ) ?? null,
       usuarioReportado:
-        usuariosPorId.get(reporte.UsuarioReportadoFK) ?? null,
+        usuariosPorId.get(
+          reporte.UsuarioReportadoFK,
+        ) ?? null,
     }));
   }
 
   async findByReportante(idUsuario: number) {
-    await this.verificarUsuario(idUsuario);
+    const usuarioReportante =
+      await this.obtenerUsuario(idUsuario);
 
     const reportes =
       await this.prismaInteracciones.reporte.findMany({
@@ -84,19 +88,26 @@ export class ReportesService {
         },
       });
 
-    const usuariosPorId = await this.obtenerUsuariosPorIds(
-      reportes.map((reporte) => reporte.UsuarioReportadoFK),
-    );
+    const usuariosPorId =
+      await this.obtenerUsuariosPorIds(
+        reportes.map(
+          (reporte) => reporte.UsuarioReportadoFK,
+        ),
+      );
 
     return reportes.map((reporte) => ({
       ...reporte,
+      usuarioReportante,
       usuarioReportado:
-        usuariosPorId.get(reporte.UsuarioReportadoFK) ?? null,
+        usuariosPorId.get(
+          reporte.UsuarioReportadoFK,
+        ) ?? null,
     }));
   }
 
   async findByReportado(idUsuario: number) {
-    await this.verificarUsuario(idUsuario);
+    const usuarioReportado =
+      await this.obtenerUsuario(idUsuario);
 
     const reportes =
       await this.prismaInteracciones.reporte.findMany({
@@ -108,14 +119,21 @@ export class ReportesService {
         },
       });
 
-    const usuariosPorId = await this.obtenerUsuariosPorIds(
-      reportes.map((reporte) => reporte.UsuarioReportanteFK),
-    );
+    const usuariosPorId =
+      await this.obtenerUsuariosPorIds(
+        reportes.map(
+          (reporte) =>
+            reporte.UsuarioReportanteFK,
+        ),
+      );
 
     return reportes.map((reporte) => ({
       ...reporte,
       usuarioReportante:
-        usuariosPorId.get(reporte.UsuarioReportanteFK) ?? null,
+        usuariosPorId.get(
+          reporte.UsuarioReportanteFK,
+        ) ?? null,
+      usuarioReportado,
     }));
   }
 
@@ -124,8 +142,12 @@ export class ReportesService {
 
     const [usuarioReportante, usuarioReportado] =
       await Promise.all([
-        this.obtenerUsuario(reporte.UsuarioReportanteFK),
-        this.obtenerUsuario(reporte.UsuarioReportadoFK),
+        this.obtenerUsuario(
+          reporte.UsuarioReportanteFK,
+        ),
+        this.obtenerUsuario(
+          reporte.UsuarioReportadoFK,
+        ),
       ]);
 
     return {
@@ -139,7 +161,8 @@ export class ReportesService {
     id: number,
     updateReporteDto: UpdateReporteDto,
   ) {
-    const reporteActual = await this.obtenerReporte(id);
+    const reporteActual =
+      await this.obtenerReporte(id);
 
     const idUsuarioReportante =
       updateReporteDto.UsuarioReportanteFK ??
@@ -203,11 +226,12 @@ export class ReportesService {
   }
 
   private async obtenerUsuario(idUsuario: number) {
-    const usuario = await this.prismaUsuarios.usuario.findUnique({
-      where: {
-        IdUsuario: idUsuario,
-      },
-    });
+    const usuario =
+      await this.prismaUsuarios.usuario.findUnique({
+        where: {
+          IdUsuario: idUsuario,
+        },
+      });
 
     if (!usuario) {
       throw new NotFoundException(
@@ -218,38 +242,27 @@ export class ReportesService {
     return usuario;
   }
 
-  private async verificarUsuario(
-    idUsuario: number,
-  ): Promise<void> {
-    const usuario = await this.prismaUsuarios.usuario.findUnique({
-      where: {
-        IdUsuario: idUsuario,
-      },
-      select: {
-        IdUsuario: true,
-      },
-    });
+  private async obtenerUsuariosPorIds(
+    idsUsuarios: number[],
+  ) {
+    const identificadoresUnicos = [
+      ...new Set(idsUsuarios),
+    ];
 
-    if (!usuario) {
-      throw new NotFoundException(
-        `No existe un usuario con el ID ${idUsuario}.`,
-      );
-    }
-  }
-
-  private async obtenerUsuariosPorIds(idsUsuarios: number[]) {
-    const identificadoresUnicos = [...new Set(idsUsuarios)];
-
-    const usuarios = await this.prismaUsuarios.usuario.findMany({
-      where: {
-        IdUsuario: {
-          in: identificadoresUnicos,
+    const usuarios =
+      await this.prismaUsuarios.usuario.findMany({
+        where: {
+          IdUsuario: {
+            in: identificadoresUnicos,
+          },
         },
-      },
-    });
+      });
 
     return new Map(
-      usuarios.map((usuario) => [usuario.IdUsuario, usuario]),
+      usuarios.map((usuario) => [
+        usuario.IdUsuario,
+        usuario,
+      ]),
     );
   }
 
@@ -257,7 +270,9 @@ export class ReportesService {
     idUsuarioReportante: number,
     idUsuarioReportado: number,
   ): void {
-    if (idUsuarioReportante === idUsuarioReportado) {
+    if (
+      idUsuarioReportante === idUsuarioReportado
+    ) {
       throw new BadRequestException(
         'Un usuario no puede reportarse a sí mismo.',
       );

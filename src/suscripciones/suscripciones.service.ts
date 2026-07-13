@@ -1,9 +1,5 @@
 /* src/suscripciones/suscripciones.service.ts: */
-import {
-  ConflictException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { ConflictException, Injectable, NotFoundException, } from '@nestjs/common';
 import { PrismaSuscripcionesService } from '../prisma-suscripciones/prisma-suscripciones.service';
 import { PrismaUsuariosService } from '../prisma-usuarios/prisma-usuarios.service';
 import { CreateSuscripcionDto } from './dto/create-suscripcion.dto';

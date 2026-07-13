@@ -1,9 +1,5 @@
 /* src/donaciones/donaciones.service.ts: */
-import {
-  BadRequestException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException, } from '@nestjs/common';
 import { EstadoTransmision } from '../generated/prisma-usuarios/enums';
 import { PrismaUsuariosService } from '../prisma-usuarios/prisma-usuarios.service';
 import { CreateDonacionDto } from './dto/create-donacion.dto';
@@ -13,19 +9,24 @@ import { UpdateDonacionDto } from './dto/update-donacion.dto';
 export class DonacionesService {
   constructor(
     private readonly prismaUsuarios: PrismaUsuariosService,
-  ) {}
+  ) { }
 
   async create(createDonacionDto: CreateDonacionDto) {
-    const { UsuarioDonanteFK, UsuarioReceptorFK, TransmisionFK } =
-      createDonacionDto;
+    const {
+      UsuarioDonanteFK,
+      UsuarioReceptorFK,
+      TransmisionFK,
+    } = createDonacionDto;
 
     this.verificarUsuariosDiferentes(
       UsuarioDonanteFK,
       UsuarioReceptorFK,
     );
 
-    await this.verificarUsuario(UsuarioDonanteFK);
-    await this.verificarUsuario(UsuarioReceptorFK);
+    await Promise.all([
+      this.verificarUsuario(UsuarioDonanteFK),
+      this.verificarUsuario(UsuarioReceptorFK),
+    ]);
 
     if (TransmisionFK !== undefined) {
       await this.verificarTransmisionParaDonacion(
@@ -65,6 +66,7 @@ export class DonacionesService {
         UsuarioDonanteFK: idUsuario,
       },
       include: {
+        usuarioDonante: true,
         usuarioReceptor: true,
         transmision: true,
       },
@@ -83,6 +85,7 @@ export class DonacionesService {
       },
       include: {
         usuarioDonante: true,
+        usuarioReceptor: true,
         transmision: true,
       },
       orderBy: {
@@ -101,6 +104,7 @@ export class DonacionesService {
       include: {
         usuarioDonante: true,
         usuarioReceptor: true,
+        transmision: true,
       },
       orderBy: {
         fechaDonacion: 'desc',
@@ -145,7 +149,18 @@ export class DonacionesService {
       donacionActual.UsuarioReceptorFK;
 
     const idTransmision =
-      updateDonacionDto.TransmisionFK ??
+      updateDonacionDto.TransmisionFK !== undefined
+        ? updateDonacionDto.TransmisionFK
+        : donacionActual.TransmisionFK;
+
+    const cambiaReceptor =
+      updateDonacionDto.UsuarioReceptorFK !== undefined &&
+      updateDonacionDto.UsuarioReceptorFK !==
+      donacionActual.UsuarioReceptorFK;
+
+    const cambiaTransmision =
+      updateDonacionDto.TransmisionFK !== undefined &&
+      updateDonacionDto.TransmisionFK !==
       donacionActual.TransmisionFK;
 
     this.verificarUsuariosDiferentes(
@@ -153,10 +168,15 @@ export class DonacionesService {
       idUsuarioReceptor,
     );
 
-    await this.verificarUsuario(idUsuarioDonante);
-    await this.verificarUsuario(idUsuarioReceptor);
+    await Promise.all([
+      this.verificarUsuario(idUsuarioDonante),
+      this.verificarUsuario(idUsuarioReceptor),
+    ]);
 
-    if (idTransmision !== null) {
+    if (
+      (cambiaReceptor || cambiaTransmision) &&
+      idTransmision !== null
+    ) {
       await this.verificarTransmisionParaDonacion(
         idTransmision,
         idUsuarioReceptor,
@@ -247,13 +267,17 @@ export class DonacionesService {
       );
     }
 
-    if (transmision.estado !== EstadoTransmision.LIVE) {
+    if (
+      transmision.estado !== EstadoTransmision.LIVE
+    ) {
       throw new BadRequestException(
         'Solo se pueden registrar donaciones en transmisiones LIVE.',
       );
     }
 
-    if (transmision.UsuarioFK !== idUsuarioReceptor) {
+    if (
+      transmision.UsuarioFK !== idUsuarioReceptor
+    ) {
       throw new BadRequestException(
         'El usuario receptor no es el propietario de la transmisión.',
       );

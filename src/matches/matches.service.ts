@@ -1,10 +1,5 @@
 /* src/matches/matches.service.ts: */
-import {
-  BadRequestException,
-  ConflictException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { BadRequestException, ConflictException, Injectable, NotFoundException, } from '@nestjs/common';
 import { TipoInteraccion } from '../generated/prisma-interacciones/enums';
 import { PrismaInteraccionesService } from '../prisma-interacciones/prisma-interacciones.service';
 import { PrismaUsuariosService } from '../prisma-usuarios/prisma-usuarios.service';

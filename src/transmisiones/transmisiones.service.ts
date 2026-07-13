@@ -1,14 +1,6 @@
 /* src/transmisiones/transmisiones.service.ts: */
-import {
-  BadRequestException,
-  ConflictException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
-import {
-  EstadoActividad,
-  EstadoTransmision,
-} from '../generated/prisma-usuarios/enums';
+import { BadRequestException, ConflictException, Injectable, NotFoundException, } from '@nestjs/common';
+import { EstadoActividad, EstadoTransmision, } from '../generated/prisma-usuarios/enums';
 import { PrismaUsuariosService } from '../prisma-usuarios/prisma-usuarios.service';
 import { CreateTransmisionDto } from './dto/create-transmision.dto';
 import { UpdateTransmisionDto } from './dto/update-transmision.dto';
@@ -36,24 +28,26 @@ export class TransmisionesService {
       );
     }
 
-    return this.prismaUsuarios.$transaction(async (transaccion) => {
-      await transaccion.usuario.update({
-        where: {
-          IdUsuario: createTransmisionDto.UsuarioFK,
-        },
-        data: {
-          estadoActividad: EstadoActividad.ONLINE,
-        },
-      });
+    return this.prismaUsuarios.$transaction(
+      async (transaccion) => {
+        await transaccion.usuario.update({
+          where: {
+            IdUsuario: createTransmisionDto.UsuarioFK,
+          },
+          data: {
+            estadoActividad: EstadoActividad.ONLINE,
+          },
+        });
 
-      return transaccion.transmision.create({
-        data: createTransmisionDto,
-        include: {
-          usuario: true,
-          donaciones: true,
-        },
-      });
-    });
+        return transaccion.transmision.create({
+          data: createTransmisionDto,
+          include: {
+            usuario: true,
+            donaciones: true,
+          },
+        });
+      },
+    );
   }
 
   findAll() {
@@ -91,6 +85,7 @@ export class TransmisionesService {
         UsuarioFK: idUsuario,
       },
       include: {
+        usuario: true,
         donaciones: true,
       },
       orderBy: {
@@ -126,8 +121,14 @@ export class TransmisionesService {
   ) {
     const transmisionActual = await this.findOne(id);
 
-    if (transmisionActual.estado === EstadoTransmision.FINALIZADA) {
-      if (updateTransmisionDto.estado === EstadoTransmision.LIVE) {
+    if (
+      transmisionActual.estado ===
+      EstadoTransmision.FINALIZADA
+    ) {
+      if (
+        updateTransmisionDto.estado ===
+        EstadoTransmision.LIVE
+      ) {
         throw new BadRequestException(
           'Una transmisión finalizada no puede volver a estar LIVE.',
         );
@@ -138,36 +139,41 @@ export class TransmisionesService {
       );
     }
 
-    if (updateTransmisionDto.estado === EstadoTransmision.LIVE) {
+    if (
+      updateTransmisionDto.estado === EstadoTransmision.LIVE
+    ) {
       throw new BadRequestException(
         'La transmisión ya se encuentra LIVE.',
       );
     }
 
-    return this.prismaUsuarios.$transaction(async (transaccion) => {
-      await transaccion.usuario.update({
-        where: {
-          IdUsuario: transmisionActual.UsuarioFK,
-        },
-        data: {
-          estadoActividad: EstadoActividad.DESCONECTADO,
-        },
-      });
+    return this.prismaUsuarios.$transaction(
+      async (transaccion) => {
+        await transaccion.usuario.update({
+          where: {
+            IdUsuario: transmisionActual.UsuarioFK,
+          },
+          data: {
+            estadoActividad:
+              EstadoActividad.DESCONECTADO,
+          },
+        });
 
-      return transaccion.transmision.update({
-        where: {
-          IdTransmision: id,
-        },
-        data: {
-          estado: EstadoTransmision.FINALIZADA,
-          fechaFin: new Date(),
-        },
-        include: {
-          usuario: true,
-          donaciones: true,
-        },
-      });
-    });
+        return transaccion.transmision.update({
+          where: {
+            IdTransmision: id,
+          },
+          data: {
+            estado: EstadoTransmision.FINALIZADA,
+            fechaFin: new Date(),
+          },
+          include: {
+            usuario: true,
+            donaciones: true,
+          },
+        });
+      },
+    );
   }
 
   async remove(id: number) {
@@ -179,7 +185,9 @@ export class TransmisionesService {
       );
     }
 
-    if (transmision.estado === EstadoTransmision.LIVE) {
+    if (
+      transmision.estado === EstadoTransmision.LIVE
+    ) {
       return this.prismaUsuarios.$transaction(
         async (transaccion) => {
           await transaccion.usuario.update({
@@ -187,7 +195,8 @@ export class TransmisionesService {
               IdUsuario: transmision.UsuarioFK,
             },
             data: {
-              estadoActividad: EstadoActividad.DESCONECTADO,
+              estadoActividad:
+                EstadoActividad.DESCONECTADO,
             },
           });
 
@@ -207,7 +216,9 @@ export class TransmisionesService {
     });
   }
 
-  private async verificarUsuario(idUsuario: number): Promise<void> {
+  private async verificarUsuario(
+    idUsuario: number,
+  ): Promise<void> {
     const usuario =
       await this.prismaUsuarios.usuario.findUnique({
         where: {
