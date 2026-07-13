@@ -4,20 +4,23 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { PrismaService } from '../prisma/prisma.service';
+import { PrismaSuscripcionesService } from '../prisma-suscripciones/prisma-suscripciones.service';
 import { CreatePlanSuscripcionDto } from './dto/create-plan-suscripcion.dto';
 import { UpdatePlanSuscripcionDto } from './dto/update-plan-suscripcion.dto';
 
 @Injectable()
 export class PlanesSuscripcionService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prismaSuscripciones: PrismaSuscripcionesService,
+  ) { }
 
   async create(createPlanSuscripcionDto: CreatePlanSuscripcionDto) {
-    const planExistente = await this.prisma.planSuscripcion.findUnique({
-      where: {
-        tipoPlan: createPlanSuscripcionDto.tipoPlan,
-      },
-    });
+    const planExistente =
+      await this.prismaSuscripciones.planSuscripcion.findUnique({
+        where: {
+          tipoPlan: createPlanSuscripcionDto.tipoPlan,
+        },
+      });
 
     if (planExistente) {
       throw new ConflictException(
@@ -25,13 +28,13 @@ export class PlanesSuscripcionService {
       );
     }
 
-    return this.prisma.planSuscripcion.create({
+    return this.prismaSuscripciones.planSuscripcion.create({
       data: createPlanSuscripcionDto,
     });
   }
 
   findAll() {
-    return this.prisma.planSuscripcion.findMany({
+    return this.prismaSuscripciones.planSuscripcion.findMany({
       include: {
         ventajas: true,
         restricciones: true,
@@ -40,15 +43,16 @@ export class PlanesSuscripcionService {
   }
 
   async findOne(id: number) {
-    const planSuscripcion = await this.prisma.planSuscripcion.findUnique({
-      where: {
-        IdPlanSuscripcion: id,
-      },
-      include: {
-        ventajas: true,
-        restricciones: true,
-      },
-    });
+    const planSuscripcion =
+      await this.prismaSuscripciones.planSuscripcion.findUnique({
+        where: {
+          IdPlanSuscripcion: id,
+        },
+        include: {
+          ventajas: true,
+          restricciones: true,
+        },
+      });
 
     if (!planSuscripcion) {
       throw new NotFoundException(
@@ -59,18 +63,22 @@ export class PlanesSuscripcionService {
     return planSuscripcion;
   }
 
-  async update(id: number, updatePlanSuscripcionDto: UpdatePlanSuscripcionDto) {
+  async update(
+    id: number,
+    updatePlanSuscripcionDto: UpdatePlanSuscripcionDto,
+  ) {
     await this.findOne(id);
 
     if (updatePlanSuscripcionDto.tipoPlan !== undefined) {
-      const planConMismoTipo = await this.prisma.planSuscripcion.findFirst({
-        where: {
-          tipoPlan: updatePlanSuscripcionDto.tipoPlan,
-          NOT: {
-            IdPlanSuscripcion: id,
+      const planConMismoTipo =
+        await this.prismaSuscripciones.planSuscripcion.findFirst({
+          where: {
+            tipoPlan: updatePlanSuscripcionDto.tipoPlan,
+            NOT: {
+              IdPlanSuscripcion: id,
+            },
           },
-        },
-      });
+        });
 
       if (planConMismoTipo) {
         throw new ConflictException(
@@ -79,7 +87,7 @@ export class PlanesSuscripcionService {
       }
     }
 
-    return this.prisma.planSuscripcion.update({
+    return this.prismaSuscripciones.planSuscripcion.update({
       where: {
         IdPlanSuscripcion: id,
       },
@@ -90,7 +98,7 @@ export class PlanesSuscripcionService {
   async remove(id: number) {
     await this.findOne(id);
 
-    return this.prisma.planSuscripcion.delete({
+    return this.prismaSuscripciones.planSuscripcion.delete({
       where: {
         IdPlanSuscripcion: id,
       },

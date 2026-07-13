@@ -8,7 +8,7 @@ import {
   IsString,
   Min,
 } from 'class-validator';
-import { TipoPlan } from '../../generated/prisma/enums';
+import { TipoPlan } from '../../generated/prisma-suscripciones/enums';
 
 export class CreatePlanSuscripcionDto {
   @IsEnum(TipoPlan)
