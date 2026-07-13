@@ -1,12 +1,13 @@
 /* src/matches/matches.module.ts: */
 import { Module } from '@nestjs/common';
-import { PrismaModule } from '../prisma/prisma.module';
+import { PrismaInteraccionesModule } from '../prisma-interacciones/prisma-interacciones.module';
+import { PrismaUsuariosModule } from '../prisma-usuarios/prisma-usuarios.module';
 import { MatchesController } from './matches.controller';
 import { MatchesService } from './matches.service';
 
 @Module({
-  imports: [PrismaModule],
+  imports: [PrismaInteraccionesModule, PrismaUsuariosModule],
   controllers: [MatchesController],
   providers: [MatchesService],
 })
-export class MatchesModule {}
+export class MatchesModule { }
