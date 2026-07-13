@@ -23,6 +23,7 @@ import { VentajasModule } from './ventajas/ventajas.module';
 import { PrismaUsuariosModule } from './prisma-usuarios/prisma-usuarios.module';
 import { PrismaInteraccionesModule } from './prisma-interacciones/prisma-interacciones.module';
 import { PrismaSuscripcionesModule } from './prisma-suscripciones/prisma-suscripciones.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -47,6 +48,7 @@ import { PrismaSuscripcionesModule } from './prisma-suscripciones/prisma-suscrip
     PrismaUsuariosModule,
     PrismaInteraccionesModule,
     PrismaSuscripcionesModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
