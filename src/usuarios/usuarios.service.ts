@@ -4,11 +4,14 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
+import * as bcrypt from 'bcryptjs';
 import { PrismaInteraccionesService } from '../prisma-interacciones/prisma-interacciones.service';
 import { PrismaSuscripcionesService } from '../prisma-suscripciones/prisma-suscripciones.service';
 import { PrismaUsuariosService } from '../prisma-usuarios/prisma-usuarios.service';
 import { CreateUsuarioDto } from './dto/create-usuario.dto';
 import { UpdateUsuarioDto } from './dto/update-usuario.dto';
+
+const RONDAS_HASH_CONTRASENA = 10;
 
 @Injectable()
 export class UsuariosService {
@@ -38,8 +41,18 @@ export class UsuariosService {
       );
     }
 
+    const { contrasena, ...datosUsuario } = createUsuarioDto;
+
+    const contrasenaHash = await bcrypt.hash(
+      contrasena,
+      RONDAS_HASH_CONTRASENA,
+    );
+
     return this.prismaUsuarios.usuario.create({
-      data: createUsuarioDto,
+      data: {
+        ...datosUsuario,
+        contrasenaHash,
+      },
     });
   }
 

@@ -7,33 +7,35 @@ import { PrismaUsuariosModule } from '../prisma-usuarios/prisma-usuarios.module'
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 
+const DURACION_TOKEN_SEGUNDOS = 60 * 60 * 24 * 30;
+
 function obtenerSecretoJwt(): string {
-    const secretoJwt = process.env['JWT_SECRET'];
+  const secretoJwt = process.env['JWT_SECRET'];
 
-    if (!secretoJwt) {
-        throw new Error(
-            'La variable de entorno JWT_SECRET no está definida en el archivo .env.',
-        );
-    }
+  if (!secretoJwt) {
+    throw new Error(
+      'La variable de entorno JWT_SECRET no está definida en el archivo .env.',
+    );
+  }
 
-    return secretoJwt;
+  return secretoJwt;
 }
 
 @Module({
-    imports: [
-        PrismaUsuariosModule,
-        PassportModule.register({
-            defaultStrategy: 'jwt',
-        }),
-        JwtModule.register({
-            secret: obtenerSecretoJwt(),
-            signOptions: {
-                expiresIn: '1h',
-            },
-        }),
-    ],
-    providers: [AuthService],
-    controllers: [AuthController],
-    exports: [AuthService],
+  imports: [
+    PrismaUsuariosModule,
+    PassportModule.register({
+      defaultStrategy: 'jwt',
+    }),
+    JwtModule.register({
+      secret: obtenerSecretoJwt(),
+      signOptions: {
+        expiresIn: DURACION_TOKEN_SEGUNDOS,
+      },
+    }),
+  ],
+  providers: [AuthService],
+  controllers: [AuthController],
+  exports: [AuthService],
 })
-export class AuthModule { }
+export class AuthModule {}

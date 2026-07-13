@@ -7,6 +7,8 @@ import {
   IsNumber,
   IsOptional,
   IsString,
+  MaxLength,
+  MinLength,
 } from 'class-validator';
 import { Genero } from '../../generated/prisma-usuarios/enums';
 
@@ -51,4 +53,14 @@ export class CreateUsuarioDto {
 
   @IsEmail()
   correo: string;
+
+  @IsString()
+  @IsNotEmpty()
+  @MinLength(6, {
+    message: 'La contraseña debe tener al menos 6 caracteres.',
+  })
+  @MaxLength(100, {
+    message: 'La contraseña no puede superar los 100 caracteres.',
+  })
+  contrasena: string;
 }
