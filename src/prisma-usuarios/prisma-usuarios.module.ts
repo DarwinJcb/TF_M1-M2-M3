@@ -1,6 +1,8 @@
 /* src/prisma-usuarios/prisma-usuarios.module.ts: */
-
 import { Module } from '@nestjs/common';
+import { PrismaUsuariosService } from './prisma-usuarios.service';
 
-@Module({})
+@Module({
+  providers: [PrismaUsuariosService]
+})
 export class PrismaUsuariosModule { }
