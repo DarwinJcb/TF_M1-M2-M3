@@ -8,7 +8,7 @@ import {
   IsOptional,
   IsString,
 } from 'class-validator';
-import { Genero } from '../../generated/prisma/enums';
+import { Genero } from '../../generated/prisma-usuarios/enums';
 
 export class CreateUsuarioDto {
   @IsString()
