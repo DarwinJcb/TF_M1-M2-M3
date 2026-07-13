@@ -1,12 +1,12 @@
 /* src/intereses/intereses.module.ts */
 import { Module } from '@nestjs/common';
-import { PrismaModule } from '../prisma/prisma.module';
+import { PrismaUsuariosModule } from '../prisma-usuarios/prisma-usuarios.module';
 import { InteresesController } from './intereses.controller';
 import { InteresesService } from './intereses.service';
 
 @Module({
-  imports: [PrismaModule],
+  imports: [PrismaUsuariosModule],
   controllers: [InteresesController],
   providers: [InteresesService],
 })
-export class InteresesModule {}
+export class InteresesModule { }

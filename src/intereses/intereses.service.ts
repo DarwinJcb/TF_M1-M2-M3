@@ -4,22 +4,25 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { PrismaService } from '../prisma/prisma.service';
+import { PrismaUsuariosService } from '../prisma-usuarios/prisma-usuarios.service';
 import { CreateInteresDto } from './dto/create-interes.dto';
 import { UpdateInteresDto } from './dto/update-interes.dto';
 
 @Injectable()
 export class InteresesService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prismaUsuarios: PrismaUsuariosService,
+  ) { }
 
   async create(createInteresDto: CreateInteresDto) {
     await this.verificarUsuario(createInteresDto.UsuarioFK);
 
-    const interesExistente = await this.prisma.interes.findUnique({
-      where: {
-        UsuarioFK: createInteresDto.UsuarioFK,
-      },
-    });
+    const interesExistente =
+      await this.prismaUsuarios.interes.findUnique({
+        where: {
+          UsuarioFK: createInteresDto.UsuarioFK,
+        },
+      });
 
     if (interesExistente) {
       throw new ConflictException(
@@ -27,19 +30,19 @@ export class InteresesService {
       );
     }
 
-    return this.prisma.interes.create({
+    return this.prismaUsuarios.interes.create({
       data: createInteresDto,
     });
   }
 
   findAll() {
-    return this.prisma.interes.findMany();
+    return this.prismaUsuarios.interes.findMany();
   }
 
   async findByUsuario(idUsuario: number) {
     await this.verificarUsuario(idUsuario);
 
-    const interes = await this.prisma.interes.findUnique({
+    const interes = await this.prismaUsuarios.interes.findUnique({
       where: {
         UsuarioFK: idUsuario,
       },
@@ -55,7 +58,7 @@ export class InteresesService {
   }
 
   async findOne(id: number) {
-    const interes = await this.prisma.interes.findUnique({
+    const interes = await this.prismaUsuarios.interes.findUnique({
       where: {
         IdInteres: id,
       },
@@ -74,11 +77,12 @@ export class InteresesService {
     if (updateInteresDto.UsuarioFK !== undefined) {
       await this.verificarUsuario(updateInteresDto.UsuarioFK);
 
-      const interesDelUsuario = await this.prisma.interes.findUnique({
-        where: {
-          UsuarioFK: updateInteresDto.UsuarioFK,
-        },
-      });
+      const interesDelUsuario =
+        await this.prismaUsuarios.interes.findUnique({
+          where: {
+            UsuarioFK: updateInteresDto.UsuarioFK,
+          },
+        });
 
       if (interesDelUsuario && interesDelUsuario.IdInteres !== id) {
         throw new ConflictException(
@@ -87,7 +91,7 @@ export class InteresesService {
       }
     }
 
-    return this.prisma.interes.update({
+    return this.prismaUsuarios.interes.update({
       where: {
         IdInteres: id,
       },
@@ -98,7 +102,7 @@ export class InteresesService {
   async remove(id: number) {
     await this.findOne(id);
 
-    return this.prisma.interes.delete({
+    return this.prismaUsuarios.interes.delete({
       where: {
         IdInteres: id,
       },
@@ -106,7 +110,7 @@ export class InteresesService {
   }
 
   private async verificarUsuario(idUsuario: number): Promise<void> {
-    const usuario = await this.prisma.usuario.findUnique({
+    const usuario = await this.prismaUsuarios.usuario.findUnique({
       where: {
         IdUsuario: idUsuario,
       },
