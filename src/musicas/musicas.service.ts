@@ -4,13 +4,15 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { PrismaService } from '../prisma/prisma.service';
+import { PrismaUsuariosService } from '../prisma-usuarios/prisma-usuarios.service';
 import { CreateMusicaDto } from './dto/create-musica.dto';
 import { UpdateMusicaDto } from './dto/update-musica.dto';
 
 @Injectable()
 export class MusicasService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prismaUsuarios: PrismaUsuariosService,
+  ) { }
 
   async create(createMusicaDto: CreateMusicaDto) {
     await this.verificarUsuario(createMusicaDto.UsuarioFK);
@@ -20,19 +22,19 @@ export class MusicasService {
       createMusicaDto.tipoMusica,
     );
 
-    return this.prisma.musica.create({
+    return this.prismaUsuarios.musica.create({
       data: createMusicaDto,
     });
   }
 
   findAll() {
-    return this.prisma.musica.findMany();
+    return this.prismaUsuarios.musica.findMany();
   }
 
   async findByUsuario(idUsuario: number) {
     await this.verificarUsuario(idUsuario);
 
-    return this.prisma.musica.findMany({
+    return this.prismaUsuarios.musica.findMany({
       where: {
         UsuarioFK: idUsuario,
       },
@@ -40,7 +42,7 @@ export class MusicasService {
   }
 
   async findOne(id: number) {
-    const musica = await this.prisma.musica.findUnique({
+    const musica = await this.prismaUsuarios.musica.findUnique({
       where: {
         IdMusica: id,
       },
@@ -74,7 +76,7 @@ export class MusicasService {
 
     this.verificarContenidoMusical(nombreCancion, tipoMusica);
 
-    return this.prisma.musica.update({
+    return this.prismaUsuarios.musica.update({
       where: {
         IdMusica: id,
       },
@@ -85,7 +87,7 @@ export class MusicasService {
   async remove(id: number) {
     await this.findOne(id);
 
-    return this.prisma.musica.delete({
+    return this.prismaUsuarios.musica.delete({
       where: {
         IdMusica: id,
       },
@@ -93,7 +95,7 @@ export class MusicasService {
   }
 
   private async verificarUsuario(idUsuario: number): Promise<void> {
-    const usuario = await this.prisma.usuario.findUnique({
+    const usuario = await this.prismaUsuarios.usuario.findUnique({
       where: {
         IdUsuario: idUsuario,
       },
