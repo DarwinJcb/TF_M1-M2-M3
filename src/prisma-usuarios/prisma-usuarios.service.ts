@@ -23,6 +23,13 @@ export class PrismaUsuariosService extends PrismaClient {
       connectionString: obtenerUrlBaseDatosUsuarios(),
     });
 
-    super({ adapter });
+    super({
+      adapter,
+      omit: {
+        usuario: {
+          contrasenaHash: true,
+        },
+      },
+    });
   }
 }
