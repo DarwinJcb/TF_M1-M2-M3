@@ -58,6 +58,7 @@ model Usuario {
     pais                String
     numeroTelefono      String          @unique
     correo              String          @unique
+    contrasenaHash      String?
     estadoActividad     EstadoActividad @default(DESCONECTADO)
     interes             Interes?
     fotos               Foto[]
