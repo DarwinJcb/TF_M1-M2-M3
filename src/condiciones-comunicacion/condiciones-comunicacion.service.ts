@@ -1,4 +1,4 @@
-/* src/condiciones-comunicacion/condiciones-comunicacion.service.ts: */
+/* tf_m1-m2-m3/src/condiciones-comunicacion/condiciones-comunicacion.service.ts */
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaInteraccionesService } from '../prisma-interacciones/prisma-interacciones.service';
 import { CreateCondicionComunicacionDto } from './dto/create-condicion-comunicacion.dto';

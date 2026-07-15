@@ -1,4 +1,4 @@
-/* src/interacciones/dto/create-interaccion.dto.ts: */
+/* tf_m1-m2-m3/src/interacciones/dto/create-interaccion.dto.ts */
 import { IsEnum, IsInt } from 'class-validator';
 import { TipoInteraccion } from '../../generated/prisma-interacciones/enums';
 

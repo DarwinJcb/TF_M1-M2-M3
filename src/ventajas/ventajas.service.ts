@@ -1,4 +1,4 @@
-/* src/ventajas/ventajas.service.ts: */
+/* tf_m1-m2-m3/src/ventajas/ventajas.service.ts */
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaSuscripcionesService } from '../prisma-suscripciones/prisma-suscripciones.service';
 import { CreateVentajaDto } from './dto/create-ventaja.dto';

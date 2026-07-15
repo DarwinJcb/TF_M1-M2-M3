@@ -1,4 +1,4 @@
-/* src/planes-suscripcion/dto/create-plan-suscripcion.dto.ts: */
+/* tf_m1-m2-m3/src/planes-suscripcion/dto/create-plan-suscripcion.dto.ts */
 import {
   IsBoolean,
   IsEnum,

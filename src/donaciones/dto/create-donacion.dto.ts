@@ -1,4 +1,4 @@
-/* src/donaciones/dto/create-donacion.dto.ts: */
+/* tf_m1-m2-m3/src/donaciones/dto/create-donacion.dto.ts */
 import { IsInt, IsNumber, IsOptional, IsPositive } from 'class-validator';
 
 export class CreateDonacionDto {

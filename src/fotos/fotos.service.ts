@@ -1,4 +1,4 @@
-/* src/fotos/fotos.service.ts: */
+/* tf_m1-m2-m3/src/fotos/fotos.service.ts */
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaUsuariosService } from '../prisma-usuarios/prisma-usuarios.service';
 import { CreateFotoDto } from './dto/create-foto.dto';

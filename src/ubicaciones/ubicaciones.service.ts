@@ -1,4 +1,4 @@
-/* src/ubicaciones/ubicaciones.service.ts: */
+/* tf_m1-m2-m3/src/ubicaciones/ubicaciones.service.ts */
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaUsuariosService } from '../prisma-usuarios/prisma-usuarios.service';
 import { CreateUbicacionDto } from './dto/create-ubicacion.dto';

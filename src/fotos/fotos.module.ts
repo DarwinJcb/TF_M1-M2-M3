@@ -1,4 +1,4 @@
-/* src/fotos/fotos.module.ts: */
+/* tf_m1-m2-m3/src/fotos/fotos.module.ts */
 import { Module } from '@nestjs/common';
 import { PrismaUsuariosModule } from '../prisma-usuarios/prisma-usuarios.module';
 import { FotosController } from './fotos.controller';

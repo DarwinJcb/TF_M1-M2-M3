@@ -1,4 +1,4 @@
-/* src/planes-suscripcion/planes-suscripcion.module.ts: */
+/* tf_m1-m2-m3/src/planes-suscripcion/planes-suscripcion.module.ts */
 import { Module } from '@nestjs/common';
 import { PrismaSuscripcionesModule } from '../prisma-suscripciones/prisma-suscripciones.module';
 import { PlanesSuscripcionController } from './planes-suscripcion.controller';
@@ -9,4 +9,4 @@ import { PlanesSuscripcionService } from './planes-suscripcion.service';
   controllers: [PlanesSuscripcionController],
   providers: [PlanesSuscripcionService],
 })
-export class PlanesSuscripcionModule {}
+export class PlanesSuscripcionModule { }

@@ -1,4 +1,4 @@
-/* src/intereses/intereses.module.ts */
+/* tf_m1-m2-m3/src/intereses/intereses.module.ts */
 import { Module } from '@nestjs/common';
 import { PrismaUsuariosModule } from '../prisma-usuarios/prisma-usuarios.module';
 import { InteresesController } from './intereses.controller';

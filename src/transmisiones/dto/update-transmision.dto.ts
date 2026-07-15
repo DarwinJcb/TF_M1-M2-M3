@@ -1,4 +1,4 @@
-/* src/transmisiones/dto/update-transmision.dto.ts: */
+/* tf_m1-m2-m3/src/transmisiones/dto/update-transmision.dto.ts */
 import { IsEnum } from 'class-validator';
 import { EstadoTransmision } from '../../generated/prisma-usuarios/enums';
 

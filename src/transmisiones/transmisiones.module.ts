@@ -1,4 +1,4 @@
-/* src/transmisiones/transmisiones.module.ts: */
+/* tf_m1-m2-m3/src/transmisiones/transmisiones.module.ts */
 import { Module } from '@nestjs/common';
 import { PrismaUsuariosModule } from '../prisma-usuarios/prisma-usuarios.module';
 import { TransmisionesController } from './transmisiones.controller';

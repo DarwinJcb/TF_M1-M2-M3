@@ -1,4 +1,4 @@
-/* src/auth/config/jwt.config.ts: */
+/* tf_m1-m2-m3/src/auth/config/jwt.config.ts */
 import 'dotenv/config';
 
 export const DURACION_TOKEN_SEGUNDOS = 60 * 60 * 24 * 30;

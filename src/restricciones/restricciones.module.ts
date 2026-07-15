@@ -1,4 +1,4 @@
-/* src/restricciones/restricciones.module.ts: */
+/* tf_m1-m2-m3/src/restricciones/restricciones.module.ts */
 import { Module } from '@nestjs/common';
 import { PrismaSuscripcionesModule } from '../prisma-suscripciones/prisma-suscripciones.module';
 import { RestriccionesController } from './restricciones.controller';

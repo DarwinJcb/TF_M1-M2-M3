@@ -1,4 +1,4 @@
-/* src/ubicaciones/ubicaciones.module.ts: */
+/* tf_m1-m2-m3/src/ubicaciones/ubicaciones.module.ts */
 import { Module } from '@nestjs/common';
 import { PrismaUsuariosModule } from '../prisma-usuarios/prisma-usuarios.module';
 import { UbicacionesController } from './ubicaciones.controller';

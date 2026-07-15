@@ -1,4 +1,4 @@
-/* src/usuarios/usuarios.module.ts: */
+/* tf_m1-m2-m3/src/usuarios/usuarios.module.ts */
 import { Module } from '@nestjs/common';
 import { AuthModule } from '../auth/auth.module';
 import { PrismaInteraccionesModule } from '../prisma-interacciones/prisma-interacciones.module';

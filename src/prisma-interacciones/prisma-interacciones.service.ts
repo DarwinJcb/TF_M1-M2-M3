@@ -1,4 +1,4 @@
-/* src/prisma-interacciones/prisma-interacciones.service.ts: */
+/* tf_m1-m2-m3/src/prisma-interacciones/prisma-interacciones.service.ts */
 import 'dotenv/config';
 import { Injectable } from '@nestjs/common';
 import { PrismaPg } from '@prisma/adapter-pg';

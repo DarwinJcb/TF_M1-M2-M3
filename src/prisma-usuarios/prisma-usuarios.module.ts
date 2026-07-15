@@ -1,4 +1,4 @@
-/* src/prisma-usuarios/prisma-usuarios.module.ts: */
+/* tf_m1-m2-m3/src/prisma-usuarios/prisma-usuarios.module.ts */
 import { Module } from '@nestjs/common';
 import { PrismaUsuariosService } from './prisma-usuarios.service';
 
