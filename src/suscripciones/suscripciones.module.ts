@@ -1,4 +1,4 @@
-/* src/suscripciones/suscripciones.module.ts: */
+/* tf_m1-m2-m3/src/suscripciones/suscripciones.module.ts */
 import { Module } from '@nestjs/common';
 import { PrismaSuscripcionesModule } from '../prisma-suscripciones/prisma-suscripciones.module';
 import { PrismaUsuariosModule } from '../prisma-usuarios/prisma-usuarios.module';
